@@ -3,8 +3,11 @@ import 'package:classbuddy/screens/home_page.dart';
 import 'package:classbuddy/screens/login.dart';
 import 'package:classbuddy/screens/on_boarding.dart';
 import 'package:classbuddy/screens/splash.dart';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart   ';
+import 'package:firebase_core/firebase_core.dart';
+// import 'firebase_options.dart';
 // import 'dart:async';
 import 'package:device_preview/device_preview.dart';
 

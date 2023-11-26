@@ -1,10 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class CB_Login extends StatefulWidget {
   const CB_Login({super.key});
 
   @override
   State<CB_Login> createState() => _CB_LoginState();
+}
+
+String regGoogleAuth() {
+  const awe = "";
+  return awe;
 }
 
 class _CB_LoginState extends State<CB_Login> {
