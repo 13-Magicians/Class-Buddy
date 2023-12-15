@@ -40,6 +40,10 @@ dependencies:
   package_info_plus: ^4.2.0
   firebase_core: ^2.23.0
   firebase_auth: ^4.14.1
+  cloud_firestore: ^4.13.6
+  google_sign_in: ^6.1.6
+  http: ^1.1.2
+  js: ^0.6.7
 
 dev_dependencies:
   flutter_test:
@@ -87,6 +91,7 @@ flutter:
         - asset: assets/fonts/K2D-Light.ttf
         - asset: assets/fonts/K2D-Medium.ttf
         - asset: assets/fonts/K2D-Regular.ttf
+        - asset: assets/fonts/MaterialIcons-Regular.otf
   #   - family: Schyler
   #     fonts:
   #       - asset: fonts/Schyler-Regular.ttf

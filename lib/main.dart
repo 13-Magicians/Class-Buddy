@@ -1,5 +1,6 @@
 import 'package:classbuddy/screens/duo.dart';
 import 'package:classbuddy/screens/home_page.dart';
+import 'package:classbuddy/screens/lec_dash.dart';
 import 'package:classbuddy/screens/login.dart';
 import 'package:classbuddy/screens/on_boarding.dart';
 import 'package:classbuddy/screens/splash.dart';
@@ -7,13 +8,17 @@ import 'package:classbuddy/screens/splash.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart   ';
 import 'package:firebase_core/firebase_core.dart';
-// import 'firebase_options.dart';
+import 'operations/firebase_options.dart';
 // import 'dart:async';
 import 'package:device_preview/device_preview.dart';
 
 const version = ('1.0.0.2');
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   runApp(
     // ClassBuddy(),
     DevicePreview(
@@ -33,13 +38,15 @@ class ClassBuddy extends StatelessWidget {
       builder: DevicePreview.appBuilder,
       title: 'Class Buddy',
       theme: ThemeData.light(),
-      home: const CBSplashScr(version),
+      // home: const CBSplashScr(version),
+      home: const LecDash(),
       routes: <String,WidgetBuilder>{
         '/splash': (context) => CBSplashScr(version),
         '/home': (context) => CBHomeScr(),
         '/duo': (context) => Duo(),
         '/onboard':(context) => OnBoarding(),
         '/login':(context) => CB_Login(),
+        '/lecdash':(context) => LecDash(),
       },
     );
   }

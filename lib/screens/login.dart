@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+
 
 class CB_Login extends StatefulWidget {
   const CB_Login({super.key});
@@ -8,12 +10,51 @@ class CB_Login extends StatefulWidget {
   State<CB_Login> createState() => _CB_LoginState();
 }
 
+GoogleSignIn _googleSignIn = GoogleSignIn(
+
+    scopes: <String>[
+      'email',
+      'https://www.googleapis.com/auth/contacts.readonly'
+    ]
+);
+
+
 String regGoogleAuth() {
+
   const awe = "";
   return awe;
 }
 
 class _CB_LoginState extends State<CB_Login> {
+  late GoogleSignInAccount _currentUser;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _googleSignIn.onCurrentUserChanged.listen((account) {
+      setState(() {
+        _currentUser = account!;
+      });
+      if(_currentUser != null) {
+        print("Already signin");
+      }
+    });
+    _googleSignIn.signInSilently();
+
+  }
+
+  Future<void> handleSignIn() async {
+    try {
+      await _googleSignIn.signIn();
+    } catch(error) {
+      print("error:"+error.toString());
+
+    }
+  }
+
+  Future<void> handleSignOut() => _googleSignIn.disconnect();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -85,7 +126,7 @@ class _CB_LoginState extends State<CB_Login> {
                     margin: EdgeInsets.only(top:40.0),
                     child: ElevatedButton(
                         onPressed: () {
-                          Navigator.pushNamed(context, '/login');
+                          handleSignIn();
                         },
                         child: Text('Sign in with Google',style: TextStyle(letterSpacing: 1.0,fontWeight: FontWeight.w500)),
                         style: ElevatedButton.styleFrom(
@@ -105,3 +146,4 @@ class _CB_LoginState extends State<CB_Login> {
     );
   }
 }
+
