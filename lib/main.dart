@@ -8,17 +8,13 @@ import 'package:classbuddy/screens/splash.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart   ';
 import 'package:firebase_core/firebase_core.dart';
-import 'operations/firebase_options.dart';
+
 // import 'dart:async';
 import 'package:device_preview/device_preview.dart';
 
 const version = ('1.0.0.2');
 
-void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
+void main() {
   runApp(
     // ClassBuddy(),
     DevicePreview(
