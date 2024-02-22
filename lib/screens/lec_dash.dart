@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../operations/opfirestore.dart';
+
 
 class LecDash extends StatefulWidget {
   const LecDash({super.key});
@@ -33,47 +33,6 @@ class _LecDashState extends State<LecDash> {
       body: Center(
         child: _widgetOptions.elementAt(currentPageIndex),
       ),
-      // Center(
-      //   child: Column(
-      //     mainAxisAlignment: MainAxisAlignment.center,
-      //     children: <Widget>[
-      //       Text('Label behavior: ${labelBehavior.name}'),
-      //       const SizedBox(height: 10),
-      //       OverflowBar(
-      //         spacing: 10.0,
-      //         children: <Widget>[
-      //           ElevatedButton(
-      //             onPressed: () {
-      //               setState(() {
-      //                 labelBehavior =
-      //                     NavigationDestinationLabelBehavior.alwaysShow;
-      //               });
-      //             },
-      //             child: const Text('alwaysShow'),
-      //           ),
-      //           ElevatedButton(
-      //             onPressed: () {
-      //               setState(() {
-      //                 labelBehavior =
-      //                     NavigationDestinationLabelBehavior.onlyShowSelected;
-      //               });
-      //             },
-      //             child: const Text('onlyShowSelected'),
-      //           ),
-      //           ElevatedButton(
-      //             onPressed: () {
-      //               setState(() {
-      //                 labelBehavior =
-      //                     NavigationDestinationLabelBehavior.alwaysHide;
-      //               });
-      //             },
-      //             child: const Text('alwaysHide'),
-      //           ),
-      //         ],
-      //       ),
-      //     ],
-      //   ),
-      // ),
       bottomNavigationBar: NavigationBar(
         backgroundColor: Color(0xFFF9DEC9),
         labelBehavior: labelBehavior,
@@ -147,9 +106,9 @@ class _Explore_LDState extends State<Explore_LD> {
               height: 400.0,
               child: ListView(
                 children: [
-                  ElevatedButton(onPressed: getStarted_readData, child: Text('Press'))
+                  ElevatedButton(onPressed: () =>{}, child: Text('Press'))
                 ],
-              )
+              ),
 
             ),
 
