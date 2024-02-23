@@ -64,6 +64,3 @@ class authMethods {
 
 
 }
-
-class _auth {
-}

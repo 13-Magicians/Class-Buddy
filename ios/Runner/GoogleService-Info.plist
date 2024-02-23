@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>192050550184-uqe56oditoqml00v6a9dm884ulqi5fl2.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.192050550184-uqe56oditoqml00v6a9dm884ulqi5fl2</string>
+	<key>ANDROID_CLIENT_ID</key>
+	<string>192050550184-5deiosts09osahjacfoo8j6agveu7u7o.apps.googleusercontent.com</string>
+	<key>API_KEY</key>
+	<string>AIzaSyBS1bsTs5OEIfmUlpoYvA0Gwd36XlgINXA</string>
+	<key>GCM_SENDER_ID</key>
+	<string>192050550184</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.magicians.classbuddy</string>
+	<key>PROJECT_ID</key>
+	<string>classbuddy-4785b</string>
+	<key>STORAGE_BUCKET</key>
+	<string>classbuddy-4785b.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:192050550184:ios:54be2834fcf63efa38799d</string>
+	<key>DATABASE_URL</key>
+	<string>https://classbuddy-4785b-default-rtdb.firebaseio.com</string>
+</dict>
+</plist>

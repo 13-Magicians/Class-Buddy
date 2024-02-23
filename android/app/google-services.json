@@ -13,7 +13,20 @@
           "package_name": "com.magicians.classbuddy"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "192050550184-5deiosts09osahjacfoo8j6agveu7u7o.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.magicians.classbuddy",
+            "certificate_hash": "f6b4c94f07efe13bcba6196444b7f72efc26ec59"
+          }
+        },
+        {
+          "client_id": "192050550184-oe5nlk6897jpjoerdmqn9oqatetui038.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyBUGBOe_IOuFwT7eyeFbFdBN2cY0t4beiE"
@@ -21,7 +34,12 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "192050550184-oe5nlk6897jpjoerdmqn9oqatetui038.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }
