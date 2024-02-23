@@ -15,11 +15,11 @@
       },
       "oauth_client": [
         {
-          "client_id": "192050550184-5deiosts09osahjacfoo8j6agveu7u7o.apps.googleusercontent.com",
+          "client_id": "192050550184-bcjurhshvgjoe9n4g46f1t8o2i35pctn.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.magicians.classbuddy",
-            "certificate_hash": "f6b4c94f07efe13bcba6196444b7f72efc26ec59"
+            "certificate_hash": "eb43c697761557cdad3947d7a108b0797f94f7db"
           }
         },
         {
@@ -38,6 +38,13 @@
             {
               "client_id": "192050550184-oe5nlk6897jpjoerdmqn9oqatetui038.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "192050550184-uqe56oditoqml00v6a9dm884ulqi5fl2.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.magicians.classbuddy"
+              }
             }
           ]
         }

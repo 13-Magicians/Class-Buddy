@@ -1,3 +1,4 @@
+import 'package:classbuddy/services/auth.dart';
 import 'package:flutter/material.dart';
 
 
@@ -93,7 +94,7 @@ class _Explore_LDState extends State<Explore_LD> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    "Hello $userData",
+                    "Hello Lecture",
                     style: TextStyle(fontSize: 20.0),
                   ),
                   IconButton(
@@ -106,7 +107,16 @@ class _Explore_LDState extends State<Explore_LD> {
               height: 400.0,
               child: ListView(
                 children: [
-                  ElevatedButton(onPressed: () =>{}, child: Text('Press'))
+                  ElevatedButton(
+                      onPressed: () {
+                        authMethods().userSignOut(context);
+                        },
+                      child: Text('Press')),
+                  ElevatedButton(
+                      onPressed: () {
+                        authMethods().getCurrentUser();
+                      },
+                      child: Text('Get'))
                 ],
               ),
 
