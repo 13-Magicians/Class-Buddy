@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 
 import '../services/auth.dart';
 
-
 class AdminDash extends StatefulWidget {
   const AdminDash({super.key});
 
@@ -27,7 +26,6 @@ class _AdminDashState extends State<AdminDash> {
       currentPageIndex = index;
     });
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -57,27 +55,139 @@ class _AdminDashState extends State<AdminDash> {
                 ],
               ),
             ),
-            Container(),
             Container(
               height: 400.0,
               child: ListView(
-                children: [
-                  ElevatedButton(
-                      onPressed: () {
-                        authMethods().userSignOut(context);
-                      },
-                      child: Text('Press')),
-                  ElevatedButton(
-                      onPressed: () {
-                        authMethods().getCurrentUser();
-                      },
-                      child: Text('Get'))
-                ],
+                padding: EdgeInsets.all(10.0),
+                children: ListTile.divideTiles(
+                    context: context,
+                    color: Colors.white,
+                    tiles: [
+                      ExpansionTile(
+                        leading: Icon(Icons.add_card),
+                        title: Text('Manage Department'),
+                        trailing: Icon(Icons.arrow_right_rounded),
+                        children: [
+                          Text('Make Your department changes'),
+                          ButtonBar(children: [
+                            ElevatedButton(onPressed: () {}, child:Icon(Icons.construction_sharp)),
+                            ElevatedButton(onPressed: () {}, child:Icon(Icons.add)),
+                            ElevatedButton(onPressed: () {}, child:Icon(Icons.remove)),
+                          ],)
+                        ],
+                        // onTap: () {
+                        //   print('Manage Department');
+                        // },
+                        // tileColor: Colors.red[100],
+                        // horizontalTitleGap: 20,
+                        // contentPadding: EdgeInsets.all(5.0),
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(15.0)),
+                        // focusColor: Colors.amberAccent,
+                        // hoverColor: Colors.blue,
+                        // selectedTileColor: Colors.brown,
+                      ),
+                      ListTile(
+                        leading: Icon(Icons.add_card),
+                        title: Text('Manage Lectures'),
+                        trailing: Icon(Icons.arrow_right_rounded),
+                        onTap: () {
+                          print('Manage Lectures');
+                        },
+                        tileColor: Colors.red[100],
+                        horizontalTitleGap: 20,
+                        contentPadding: EdgeInsets.all(5.0),
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(15.0)),
+                        focusColor: Colors.amberAccent,
+                        hoverColor: Colors.blue,
+                        selectedTileColor: Colors.brown,
+                      ),
+                      ListTile(
+                        leading: Icon(Icons.add_card),
+                        title: Text('Manage Student'),
+                        trailing: Icon(Icons.arrow_right_rounded),
+                        onTap: () {
+                          print('Manage Student');
+                        },
+                        tileColor: Colors.red[100],
+                        horizontalTitleGap: 20,
+                        contentPadding: EdgeInsets.all(5.0),
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(15.0)),
+                        focusColor: Colors.amberAccent,
+                        hoverColor: Colors.blue,
+                        selectedTileColor: Colors.brown,
+                      )
+                    ]).toList(),
+                // ListTile(
+                //   leading: Icon(Icons.add_card),
+                //   title: Text('Manage Department'),
+                //   trailing: Icon(Icons.arrow_right_rounded),
+                //   onTap: () {
+                //     print('Manage Department');
+                //   },
+                //   tileColor: Colors.teal,
+                //   horizontalTitleGap: 20,
+                //   contentPadding: EdgeInsets.all(5.0),
+                //   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15.0)),
+                //   focusColor: Colors.amberAccent,
+                //   hoverColor: Colors.blue,
+                //   selectedTileColor: Colors.brown,
+                // ),
+                // ListTile(
+                //   leading: Icon(Icons.add_card),
+                //   title: Text('Manage Lectures'),
+                //   trailing: Icon(Icons.arrow_right_rounded),
+                //   onTap: () {
+                //     print('Manage Lectures');
+                //   },
+                //   tileColor: Colors.teal,
+                //   horizontalTitleGap: 20,
+                //   contentPadding: EdgeInsets.all(5.0),
+                //   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15.0)),
+                //   focusColor: Colors.amberAccent,
+                //   hoverColor: Colors.blue,
+                //   selectedTileColor: Colors.brown,
+                // )
+                // ],
               ),
-
             ),
 
-
+            // Container(
+            //   height: 200.0,
+            //   child: Column(mainAxisAlignment: MainAxisAlignment.center,
+            //   children: [
+            //     Card(clipBehavior: Clip.hardEdge,
+            //     child: InkWell(
+            //       splashColor: Colors.blue,
+            //       onTap: () {print('--------cardTap--------');},
+            //       child: SizedBox(
+            //         width: 300.0,
+            //         height: 100.0,
+            //         child: Text("Set Card Text"),
+            //       ),
+            //     ),)
+            //   ]),
+            // ),
+            // Container(
+            //   height: 200.0,
+            //   child: ListView(
+            //     children: [
+            //       ElevatedButton(
+            //           onPressed: () {
+            //             authMethods().userSignOut(context);
+            //           },
+            //           child: Text('Press')),
+            //       ElevatedButton(
+            //           onPressed: () {
+            //             authMethods().getCurrentUser();
+            //           },
+            //           child: Text('Get'))
+            //     ],
+            //   ),
+            //
+            // ),
           ],
         ),
       ),
@@ -140,14 +250,10 @@ class _Explore_LDState extends State<Explore_LD> {
                       child: Text('Get'))
                 ],
               ),
-
             ),
-
-
           ],
         ),
       ),
     );
   }
 }
-

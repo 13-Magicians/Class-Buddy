@@ -3,6 +3,9 @@ import 'package:classbuddy/services/auth.dart';
 import 'package:classbuddy/services/fireDatabase.dart';
 
 class checkUser {
+
+  //-------------------------------------
+  //
   Future userExist() async {
     if (DatabaseMethods().checkUser != null) {
 

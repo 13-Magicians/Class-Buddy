@@ -78,7 +78,7 @@ class ClassBuddy extends StatelessWidget {
       title: 'Class Buddy',
       theme: ThemeData.light(),
       // home: const CBSplashScr(version),
-      home: const CB_Login(),
+      home: const AdminDash(),
       routes: <String,WidgetBuilder>{
         '/splash': (context) => CBSplashScr(version),
         '/home': (context) => CBHomeScr(),
