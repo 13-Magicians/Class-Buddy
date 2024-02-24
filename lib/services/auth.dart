@@ -38,7 +38,7 @@ class authMethods {
 
     //------------------------
     print('---------------------------------------------------');
-    print('qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq');
+
 
     if (userDetails != null) {
       final userIdValue = await DatabaseMethods().checkUser(userDetails.uid);
@@ -49,16 +49,13 @@ class authMethods {
         };
         await DatabaseMethods()
             .updateUser(userDetails.uid, userLastLog)
-            .then((value) {
-              final scrPath = checkUser().userRole(userDetails.uid);
-
-              print('0000000000000000000000000000000000000000000000');
-              print(scrPath);
-              print('0000000000000000000000000000000000000000000000');
-              Navigator.pushNamed(context, '/dashStu');
+            .then((value) async {
+              final scrPath = await checkUser().userRole(userDetails.uid);
+              Navigator.pushNamed(context, '$scrPath');
             });
       }
       else {
+        print('qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq');
         Map<String, dynamic> userInfoMap = {
           "email": userDetails!.email,
           "id": userDetails.uid,

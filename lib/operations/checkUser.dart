@@ -22,14 +22,20 @@ class checkUser {
 
   }
 
-  userRole(String userId) {
-    if (DatabaseMethods().userRole(userId) == 'Student') {
+  userRole(String userId) async {
+    final retrieveUserRole = await DatabaseMethods().userRole(userId);
+    print(retrieveUserRole);
+    print('zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz');
+    if (retrieveUserRole == "Student") {
+      print('aaaaaaaaaaaaaaaaaaaaaaaa');
       return '/dashStu';
     }
-    else if(DatabaseMethods().userRole(userId) == 'Lecture'){
+    else if(retrieveUserRole == "Lecture"){
+      print('bbbbbbbbbbbbbbbbbbbbbbbbbb');
       return '/dashLec';
     }
-    else if(DatabaseMethods().userRole(userId) == 'Admin'){
+    else if(retrieveUserRole == "Admin"){
+      print('ccccccccccccccccccccccccc');
       return '/dashAdmin';
     }
     else {
