@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 import '../services/auth.dart';
 
 class AdminDash extends StatefulWidget {
@@ -14,11 +13,10 @@ class _AdminDashState extends State<AdminDash> {
   NavigationDestinationLabelBehavior labelBehavior =
       NavigationDestinationLabelBehavior.alwaysShow;
   static const List<Widget> _widgetOptions = <Widget>[
-    Explore_LD(),
+    eExplore_LD(),
     Text('Search Page',
         style: TextStyle(fontSize: 35, fontWeight: FontWeight.bold)),
-    Text('Profile Page',
-        style: TextStyle(fontSize: 35, fontWeight: FontWeight.bold)),
+    aProfile(),
   ];
 
   void _onItemTapped(int index) {
@@ -26,6 +24,55 @@ class _AdminDashState extends State<AdminDash> {
       currentPageIndex = index;
     });
   }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Center(
+        child: _widgetOptions.elementAt(currentPageIndex),
+      ),
+      bottomNavigationBar: NavigationBar(
+        backgroundColor: Color(0xFFF9DEC9),
+        labelBehavior: labelBehavior,
+        selectedIndex: currentPageIndex,
+        elevation: 0.2,
+        onDestinationSelected: (int index) {
+          setState(() {
+            currentPageIndex = index;
+          });
+        },
+        destinations: const [
+          NavigationDestination(
+            icon: Icon(Icons.explore),
+            label: 'Explore',
+          ),
+          NavigationDestination(
+            icon: Icon(Icons.corporate_fare),
+            label: 'Classes',
+          ),
+          NavigationDestination(
+            selectedIcon: Icon(Icons.account_circle_outlined),
+            icon: Icon(Icons.account_circle),
+            label: 'Profile',
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+
+class eExplore_LD extends StatefulWidget {
+  const eExplore_LD({super.key});
+
+
+  @override
+  State<eExplore_LD> createState() => _eExplore_LDState();
+}
+
+class _eExplore_LDState extends State<eExplore_LD> {
+  var userData = 'User';
+  var items = List<String>.generate(10, (index) => 'Item $index');
 
   @override
   Widget build(BuildContext context) {
@@ -56,7 +103,7 @@ class _AdminDashState extends State<AdminDash> {
               ),
             ),
             Container(
-              height: 400.0,
+              height: 200.0,
               child: ListView(
                 padding: EdgeInsets.all(10.0),
                 children: ListTile.divideTiles(
@@ -154,6 +201,7 @@ class _AdminDashState extends State<AdminDash> {
               ),
             ),
 
+
             // Container(
             //   height: 200.0,
             //   child: Column(mainAxisAlignment: MainAxisAlignment.center,
@@ -195,17 +243,14 @@ class _AdminDashState extends State<AdminDash> {
   }
 }
 
-class Explore_LD extends StatefulWidget {
-  const Explore_LD({super.key});
+class aProfile extends StatefulWidget {
+  const aProfile({super.key});
 
   @override
-  State<Explore_LD> createState() => _Explore_LDState();
+  State<aProfile> createState() => _aProfileState();
 }
 
-class _Explore_LDState extends State<Explore_LD> {
-  var userData = 'User';
-  var items = List<String>.generate(10, (index) => 'Item $index');
-
+class _aProfileState extends State<aProfile> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -235,7 +280,7 @@ class _Explore_LDState extends State<Explore_LD> {
               ),
             ),
             Container(
-              height: 400.0,
+              height: 200.0,
               child: ListView(
                 children: [
                   ElevatedButton(
@@ -257,3 +302,4 @@ class _Explore_LDState extends State<Explore_LD> {
     );
   }
 }
+

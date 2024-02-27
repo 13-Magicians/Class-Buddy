@@ -1,8 +1,6 @@
 import 'package:classbuddy/services/auth.dart';
 import 'package:flutter/material.dart';
 
-
-
 class LecDash extends StatefulWidget {
   const LecDash({super.key});
 
@@ -104,7 +102,7 @@ class _Explore_LDState extends State<Explore_LD> {
               ),
             ),
             Container(
-              height: 400.0,
+              height: 200.0,
               child: ListView(
                 children: [
                   ElevatedButton(

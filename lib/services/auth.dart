@@ -13,10 +13,12 @@ class authMethods {
     await _auth.authStateChanges().listen((User? user) {
       if (user != null) {
         userId = user.uid;
+        print(userId);
       } else {
         userId = null;
       }
     });
+    print('ffffffffffffffffffff');
     return userId;
   }
 
@@ -38,6 +40,7 @@ class authMethods {
 
     //------------------------
     print('---------------------------------------------------');
+    print('9999999999999999999999999999999999');
 
 
     if (userDetails != null) {
@@ -74,10 +77,10 @@ class authMethods {
 
     }
 
-      if (result != null) {
-        print('111111111111111111111111111111111111');
-
-      }
+      // if (result != null) {
+      //   print('111111111111111111111111111111111111');
+      //
+      // }
       // else {
       //   print('============================');
       //   if (checkUser().userRole(userDetails!.uid) == 1) {
@@ -98,7 +101,7 @@ class authMethods {
 
   userSignOut(BuildContext context) async {
     await FirebaseAuth.instance.signOut();
-    Navigator.pushNamed(context, '/login');
+    // Navigator.pushNamed(context, '/login');
   }
 
   userChanges() {

@@ -15,7 +15,7 @@ import 'package:flutter/material.dart';
 import 'package:device_preview/device_preview.dart';
 
 import 'firebase_options.dart';
-import 'operations/mongodb.dart';
+// import 'operations/mongodb.dart';
 
 const version = ('1.0.0.2');
 
@@ -77,8 +77,8 @@ class ClassBuddy extends StatelessWidget {
       builder: DevicePreview.appBuilder,
       title: 'Class Buddy',
       theme: ThemeData.light(),
-      // home: const CBSplashScr(version),
-      home: const AdminDash(),
+      home: const CBSplashScr(version),
+      // home: const AdminDash(),
       routes: <String,WidgetBuilder>{
         '/splash': (context) => CBSplashScr(version),
         '/home': (context) => CBHomeScr(),

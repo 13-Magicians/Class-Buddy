@@ -6,8 +6,6 @@ class CB_Login extends StatefulWidget {
 
   @override
   State<CB_Login> createState() => _CB_LoginState();
-
-
 }
 
 class _CB_LoginState extends State<CB_Login> {
