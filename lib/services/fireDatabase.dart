@@ -14,7 +14,13 @@ class DatabaseMethods {
 
   Future checkUser(String userId) async {
     DocumentSnapshot docSnap = await db.collection("Users").doc(userId).get();
-    return docSnap.get('id');
+    var dSnapId;
+    if (docSnap.exists) {
+      dSnapId = docSnap.get('id');
+    } else {
+      dSnapId = 'noExtUser';
+    }
+    return dSnapId;
   }
 
   Future userRole(String userId) async {

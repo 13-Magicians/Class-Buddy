@@ -52,9 +52,9 @@ class _OnBoardingState extends State<OnBoarding> {
                     margin: EdgeInsets.only(top:20.0),
                     child: ElevatedButton(
                         onPressed: () {
-                          Navigator.pushNamed(context, '/login');
+                          Navigator.pushReplacementNamed(context, '/login');
                         },
-                        child: Text('Lets Get Started'),
+                        child: Text('Lets Get Started',style: TextStyle(color: Color(0xFFEAEAEA))),
                         style: ElevatedButton.styleFrom(
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(8.0)

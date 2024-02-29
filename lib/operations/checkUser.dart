@@ -6,10 +6,15 @@ class checkUser {
 
   //-------------------------------------
   //
-  Future userExist() async {
-    if (DatabaseMethods().checkUser != null) {
+  Future userExist(userId) async {
+    final userExist = await DatabaseMethods().checkUser(userId);
+    if (userExist != null) {
+      print(userExist);
 
+    }else {
+      print("-------------error-----------");
     }
+    return userExist;
 
   }
 

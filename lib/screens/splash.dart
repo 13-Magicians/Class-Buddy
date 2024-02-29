@@ -23,7 +23,7 @@ class _CBSplashScrState extends State<CBSplashScr>  with TickerProviderStateMixi
     controller = AnimationController(vsync: this, duration: const Duration(seconds: 4)
     )..addListener(() {setState(() {
       if (controller.value == 1) {
-        Navigator.pushNamed(context, '/onboard');
+        Navigator.pushReplacementNamed(context, '/onboard');
         super.dispose();
       }
     });});

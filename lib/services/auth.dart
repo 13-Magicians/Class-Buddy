@@ -6,10 +6,10 @@ import 'package:google_sign_in/google_sign_in.dart';
 
 class authMethods {
   final _auth = FirebaseAuth.instance;
+  final GoogleSignIn _googleSignIn = GoogleSignIn();
 
   getCurrentUser() async {
     var userId;
-    print("-----------------------------------------------Test");
     await _auth.authStateChanges().listen((User? user) {
       if (user != null) {
         userId = user.uid;
@@ -18,7 +18,6 @@ class authMethods {
         userId = null;
       }
     });
-    print('ffffffffffffffffffff');
     return userId;
   }
 
@@ -39,12 +38,12 @@ class authMethods {
     // Create email validation
 
     //------------------------
-    print('---------------------------------------------------');
-    print('9999999999999999999999999999999999');
 
 
     if (userDetails != null) {
-      final userIdValue = await DatabaseMethods().checkUser(userDetails.uid);
+
+      // final userIdValue = await DatabaseMethods().checkUser(userDetails.uid);
+      final userIdValue = await checkUser().userExist(userDetails.uid);
 
       if (userIdValue == userDetails.uid) {
         Map<String, dynamic> userLastLog = {
@@ -54,11 +53,10 @@ class authMethods {
             .updateUser(userDetails.uid, userLastLog)
             .then((value) async {
               final scrPath = await checkUser().userRole(userDetails.uid);
-              Navigator.pushNamed(context, '$scrPath');
+              Navigator.pushReplacementNamed(context, '$scrPath');
             });
       }
       else {
-        print('qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq');
         Map<String, dynamic> userInfoMap = {
           "email": userDetails!.email,
           "id": userDetails.uid,
@@ -71,28 +69,11 @@ class authMethods {
         await DatabaseMethods()
             .addUser(userDetails.uid, userInfoMap)
             .then((value) {
-          Navigator.pushNamed(context, '/dashStu');
+          Navigator.pushReplacementNamed(context, '/dashStu');
         });
       }
 
     }
-
-      // if (result != null) {
-      //   print('111111111111111111111111111111111111');
-      //
-      // }
-      // else {
-      //   print('============================');
-      //   if (checkUser().userRole(userDetails!.uid) == 1) {
-      //     Navigator.pushNamed(context, '/dashStu');
-      //   }
-      //   else if (checkUser().userRole(userDetails!.uid) == 2) {
-      //     Navigator.pushNamed(context, '/dashLec');
-      //   }
-      //   else if (checkUser().userRole(userDetails!.uid) == 3) {
-      //     Navigator.pushNamed(context, '/dashAdmin');
-      //   }
-
 
 
 
@@ -101,7 +82,8 @@ class authMethods {
 
   userSignOut(BuildContext context) async {
     await FirebaseAuth.instance.signOut();
-    // Navigator.pushNamed(context, '/login');
+    await _googleSignIn.signOut();
+    Navigator.pushReplacementNamed(context, '/login');
   }
 
   userChanges() {
