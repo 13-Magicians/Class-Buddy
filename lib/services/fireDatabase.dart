@@ -28,4 +28,20 @@ class DatabaseMethods {
     return docSnap.get('role');
   }
 
+  List<Map<String, dynamic>> userData = [];
+
+  Future getCurrentUserData(String userID) async {
+    DocumentSnapshot doc = await db.collection("Users").doc(userID).get();
+    if (doc.exists) {
+      Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
+      userData.add(data);
+      print('---------------done-------------');
+      print(userData);
+    } else {
+      print("Document does not exist on the database");
+    }
+    return userData;
+
+  }
+
 }

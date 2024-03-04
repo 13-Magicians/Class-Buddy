@@ -47,7 +47,7 @@ class authMethods {
 
       if (userIdValue == userDetails.uid) {
         Map<String, dynamic> userLastLog = {
-          "lastLog": new DateTime.now().microsecondsSinceEpoch,
+          "lastLog": new DateTime.now().millisecondsSinceEpoch,
         };
         await DatabaseMethods()
             .updateUser(userDetails.uid, userLastLog)

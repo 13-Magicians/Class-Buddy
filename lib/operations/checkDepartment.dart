@@ -4,11 +4,11 @@ import '../services/fireManageDep.dart';
 
 class manageDepartment {
 
-  Future depList() {
-    final alldep = DataOrgManage().getAllDepartment();
-    var allDep = null;
-    return allDep;
-  }
+  // Future depList() {
+  //   final alldep = DataOrgManage().getAllDepartment();
+  //   var allDep = null;
+  //   return allDep;
+  // }
 
 
 
