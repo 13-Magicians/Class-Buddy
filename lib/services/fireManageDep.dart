@@ -6,6 +6,8 @@ import 'package:flutter/material.dart';
 class DataOrgManage {
   FirebaseFirestore db = FirebaseFirestore.instance;
 
+
+
   Future createDepartment (String fcName, String fcCode) async {
     try {
       // Add a new field "fcName" with the fcName value to the "Organization" collection document
@@ -29,7 +31,13 @@ class DataOrgManage {
     DocumentSnapshot doc = await db.collection("Organization").doc("Department").get();
     if (doc.exists) {
       Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
-      depList.add(data);
+      data.forEach((key, value) {
+        print(key);
+        print(value);
+        depList.add({key:value});
+      });
+      print(data);
+
       print('---------------done-------------');
       print(depList);
     } else {

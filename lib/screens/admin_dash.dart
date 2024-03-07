@@ -89,19 +89,22 @@ class aMangeDep extends StatefulWidget {
   State<aMangeDep> createState() => _aMangeDepState();
 }
 
-class _aMangeDepState extends State<aMangeDep> {
+class _aMangeDepState extends State<aMangeDep> with TickerProviderStateMixin {
   List<Map<String, dynamic>> depList = [];
+
 
   @override
   void initState() {
     super.initState();
     loadData();
+
   }
 
   loadData() async {
     depList = await DataOrgManage().departmentList();
     print('[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[');
     print(depList);
+    print(depList.length);
     setState(() {});
   }
 
@@ -110,37 +113,96 @@ class _aMangeDepState extends State<aMangeDep> {
 
   // @override
   Widget build(BuildContext context) {
+    TabController _mOrgController = TabController(length: 3, vsync: this);
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: SafeArea(
         child: Container(
-          height: 700.0,
-          decoration: BoxDecoration(borderRadius: BorderRadius.circular(6.0), color: Colors.amberAccent),
+          height: double.maxFinite,
+          padding: EdgeInsets.all(4.0),
+          decoration: BoxDecoration(borderRadius: BorderRadius.circular(6.0)),
           margin: EdgeInsets.all(4.0),
           child: Column(
+            mainAxisSize: MainAxisSize.max,
             children: [
+              // Container(
+              //   height: 60.0,
+              //   margin: EdgeInsets.symmetric(horizontal: 6.0, vertical: 6.0),
+              //   padding: EdgeInsets.all(10.0),
+              //   decoration: BoxDecoration(
+              //     borderRadius: BorderRadius.circular(10.0),
+              //     color: Color(0xFFA56757),
+              //   ),
+              //   child: Row(
+              //     crossAxisAlignment: CrossAxisAlignment.center,
+              //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              //     children: [
+              //       Text(
+              //         "Hello Admin",
+              //         style: TextStyle(fontSize: 20.0),
+              //       ),
+              //       IconButton(
+              //           onPressed: () => {},
+              //           icon: Icon(Icons.notifications_active))
+              //     ],
+              //   ),
+              // ),
               Container(
-                height: 70.0,
-                margin: EdgeInsets.symmetric(horizontal: 6.0, vertical: 6.0),
-                padding: EdgeInsets.all(10.0),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10.0),
-                  color: Color(0xFFA56757),
-                ),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      "Hello Admin",
-                      style: TextStyle(fontSize: 20.0),
+                height: 60,
+                child: TabBar(
+                  indicator: BoxDecoration(color: Colors.cyanAccent,borderRadius: BorderRadius.all(Radius.circular(10.0)),boxShadow: [ BoxShadow(color: Colors.grey.withOpacity(0.5),spreadRadius: 5,blurRadius: 7,offset: Offset(0, 3), // changes position of shadow
                     ),
-                    IconButton(
-                        onPressed: () => {},
-                        icon: Icon(Icons.notifications_active))
+                  ] ),
+                  indicatorPadding: EdgeInsets.all(2.0),
+                  indicatorSize: TabBarIndicatorSize.tab,
+                  indicatorColor: Colors.deepOrange,
+                  automaticIndicatorColorAdjustment: true,
+                  controller: _mOrgController,
+                  enableFeedback: true,
+                  padding: EdgeInsets.symmetric(horizontal: 20.0,vertical: 0.0),
+                  dividerHeight: 0.0,
+                  tabs: [
+                    Tab(text: 'Department',icon: Icon(Icons.home_work_outlined,),iconMargin: EdgeInsets.all(6.0),),
+                    Tab(text: 'Lectures',icon: Icon(Icons.people_alt_outlined),),
+                    Tab(text: 'Users',icon: Icon(Icons.groups_outlined),),
+
                   ],
                 ),
               ),
+              Container(
+                padding: EdgeInsets.all(10.0),
+                width: double.maxFinite,
+                height: 300,
+                child: TabBarView(
+                  controller: _mOrgController,
+                  children: [
+                    ListView.builder(itemCount: depList.length, itemBuilder: (context, index){
+                      return ListTile(
+                        title: Text(depList[index].keys.toString().replaceAll(RegExp(r'[()]'), '')),
+                        subtitle: Text(depList[index].values.toString().replaceAll(RegExp(r'[()]'), '')),
+                        selectedTileColor: Colors.cyanAccent,
+                        hoverColor: Colors.lightGreen,
+                        enableFeedback: true,
+                        focusColor: Colors.redAccent,
+                        tileColor: Colors.teal,
+                        onTap: () {
+                          print('tap');
+                        },
+                        horizontalTitleGap: 2.0,
+
+                        visualDensity: VisualDensity.comfortable,
+                      );
+                    }),
+                    Text('Lectures'),
+                    Text('Users'),
+
+                  ],
+                ),
+              ),
+              
+
+
+
 
 
 
@@ -420,4 +482,6 @@ class _aProfileState extends State<aProfile> {
     );
   }
 }
+
+
 
