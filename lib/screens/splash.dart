@@ -24,7 +24,7 @@ class _CBSplashScrState extends State<CBSplashScr>  with TickerProviderStateMixi
     )..addListener(() {setState(() {
       if (controller.value == 1) {
         Navigator.pushReplacementNamed(context, '/onboard');
-        super.dispose();
+        // super.dispose();
       }
     });});
     controller.forward();

@@ -44,4 +44,39 @@ class DatabaseMethods {
 
   }
 
+  List<Map<String, dynamic>> userList = [];
+  
+  Future getAllUsers() async {
+    QuerySnapshot querySnapshot = await db.collection('Users').get();
+    querySnapshot.docs.forEach((doc) {
+      Map<String, dynamic> userData = {
+        'email': doc['email'],
+        'id': doc['id'],
+        'imgUrl': doc['imgUrl'],
+        'lastLogin': doc['lastLog'],
+        'name': doc['name'],
+        'role': doc['role'],
+      };
+      userList.add(userData);
+      print('111111111111111--------done-------111111111111');
+    });
+
+    // if (doc.exists) {
+    //   Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
+    //   data.forEach((key, value) {
+    //     print(key);
+    //     print(value);
+    //     userList.add({key:value});
+    //   });
+    //   print(data);
+    //
+    //   print('---------------done-------------');
+    //   print(userList);
+    // } else {
+    //   print("Document does not exist on the database");
+    // }
+    return userList;
+  }
+  
+
 }

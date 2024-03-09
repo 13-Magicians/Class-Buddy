@@ -32,24 +32,37 @@ class checkUser {
 
   userRole(String userId) async {
     final retrieveUserRole = await DatabaseMethods().userRole(userId);
-    print(retrieveUserRole);
-    print('zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz');
     if (retrieveUserRole == "Student") {
-      print('aaaaaaaaaaaaaaaaaaaaaaaa');
       return '/dashStu';
     }
     else if(retrieveUserRole == "Lecture"){
-      print('bbbbbbbbbbbbbbbbbbbbbbbbbb');
       return '/dashLec';
     }
     else if(retrieveUserRole == "Admin"){
-      print('ccccccccccccccccccccccccc');
       return '/dashAdmin';
     }
     else {
-      print('Something Error');
+      print('Something Error in userRole function');
     }
     return null;
   }
+
+
+
+  Future retLecUserList() async {
+    List<Map<String, dynamic>> lecturesList = [];
+    List<Map<String, dynamic>> userList = await DatabaseMethods().getAllUsers();
+    userList.forEach((userData) {
+      if (userData['role'] == "Lecture") {
+        lecturesList.add(userData);
+      }
+      print(userData);
+    });
+    print('-==============================================-');
+    // if (userList[0].keys) {}
+    print(lecturesList);
+    return lecturesList;
+  }
+
 
 }

@@ -1,10 +1,9 @@
+import 'package:classbuddy/operations/checkUser.dart';
 import 'package:classbuddy/services/fireDatabase.dart';
 import 'package:flutter/material.dart';
 import '../services/auth.dart';
 import '../services/fireManageDep.dart';
 import 'package:intl/intl.dart';
-
-
 
 class AdminDash extends StatefulWidget {
   const AdminDash({super.key});
@@ -14,7 +13,6 @@ class AdminDash extends StatefulWidget {
 }
 
 class _AdminDashState extends State<AdminDash> {
-
   int currentPageIndex = 0;
   NavigationDestinationLabelBehavior labelBehavior =
       NavigationDestinationLabelBehavior.alwaysShow;
@@ -22,6 +20,7 @@ class _AdminDashState extends State<AdminDash> {
     Text('Explore Page',
         style: TextStyle(fontSize: 35, fontWeight: FontWeight.bold)),
     aMangeDep(),
+    Text('Chat'),
     aProfile(),
   ];
 
@@ -39,13 +38,18 @@ class _AdminDashState extends State<AdminDash> {
         child: _widgetOptions.elementAt(currentPageIndex),
       ),
       appBar: AppBar(
-        title: Text('Explore Page'),
-        backgroundColor: Color(0xFFF9DEC9),
-        shape:
-            RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
-        shadowColor: Colors.black,
-        centerTitle: true,
-      ),
+          title: Text('Hello Admin'),
+          backgroundColor: Color(0xFFF9DEC9),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
+          shadowColor: Colors.black,
+          centerTitle: true,
+          actions: [
+            Icon(Icons.notifications),
+            Container(
+              width: 20,
+            )
+          ]),
       bottomNavigationBar: Container(
         child: NavigationBar(
           backgroundColor: Color(0xFFF9DEC9),
@@ -71,6 +75,10 @@ class _AdminDashState extends State<AdminDash> {
               label: 'Manage',
             ),
             NavigationDestination(
+                selectedIcon: Icon(Icons.chat_outlined),
+                icon: Icon(Icons.chat_rounded),
+                label: 'Chat'),
+            NavigationDestination(
               selectedIcon: Icon(Icons.account_circle_outlined),
               icon: Icon(Icons.account_circle),
               label: 'Profile',
@@ -91,20 +99,21 @@ class aMangeDep extends StatefulWidget {
 
 class _aMangeDepState extends State<aMangeDep> with TickerProviderStateMixin {
   List<Map<String, dynamic>> depList = [];
-
+  List<Map<String, dynamic>> lecList = [];
+  List<Map<String, dynamic>> usrList = [];
 
   @override
   void initState() {
     super.initState();
     loadData();
-
   }
 
   loadData() async {
     depList = await DataOrgManage().departmentList();
+    lecList = await checkUser().retLecUserList();
     print('[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[');
-    print(depList);
-    print(depList.length);
+    print(lecList);
+    print(lecList.length);
     setState(() {});
   }
 
@@ -113,108 +122,174 @@ class _aMangeDepState extends State<aMangeDep> with TickerProviderStateMixin {
 
   // @override
   Widget build(BuildContext context) {
-    TabController _mOrgController = TabController(length: 3, vsync: this);
+    TabController _mOrgController = TabController(
+        length: 3,
+        vsync: this,
+        initialIndex: 1);
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: SafeArea(
         child: Container(
-          height: double.maxFinite,
-          padding: EdgeInsets.all(4.0),
+          padding: EdgeInsets.all(0.0),
           decoration: BoxDecoration(borderRadius: BorderRadius.circular(6.0)),
-          margin: EdgeInsets.all(4.0),
+          margin: EdgeInsets.all(0.0),
           child: Column(
-            mainAxisSize: MainAxisSize.max,
             children: [
-              // Container(
-              //   height: 60.0,
-              //   margin: EdgeInsets.symmetric(horizontal: 6.0, vertical: 6.0),
-              //   padding: EdgeInsets.all(10.0),
-              //   decoration: BoxDecoration(
-              //     borderRadius: BorderRadius.circular(10.0),
-              //     color: Color(0xFFA56757),
-              //   ),
-              //   child: Row(
-              //     crossAxisAlignment: CrossAxisAlignment.center,
-              //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              //     children: [
-              //       Text(
-              //         "Hello Admin",
-              //         style: TextStyle(fontSize: 20.0),
-              //       ),
-              //       IconButton(
-              //           onPressed: () => {},
-              //           icon: Icon(Icons.notifications_active))
-              //     ],
-              //   ),
-              // ),
               Container(
+                margin: EdgeInsetsDirectional.symmetric(vertical: 10),
                 height: 60,
                 child: TabBar(
-                  indicator: BoxDecoration(color: Colors.cyanAccent,borderRadius: BorderRadius.all(Radius.circular(10.0)),boxShadow: [ BoxShadow(color: Colors.grey.withOpacity(0.5),spreadRadius: 5,blurRadius: 7,offset: Offset(0, 3), // changes position of shadow
-                    ),
-                  ] ),
+                  indicator: BoxDecoration(
+                      color: Colors.cyanAccent,
+                      borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.grey.withOpacity(0.5),
+                          spreadRadius: 5,
+                          blurRadius: 7,
+                          offset: Offset(0, 3), // changes position of shadow
+                        ),
+                      ]),
                   indicatorPadding: EdgeInsets.all(2.0),
                   indicatorSize: TabBarIndicatorSize.tab,
                   indicatorColor: Colors.deepOrange,
                   automaticIndicatorColorAdjustment: true,
                   controller: _mOrgController,
                   enableFeedback: true,
-                  padding: EdgeInsets.symmetric(horizontal: 20.0,vertical: 0.0),
+                  padding:
+                      EdgeInsets.symmetric(horizontal: 20.0, vertical: 0.0),
                   dividerHeight: 0.0,
                   tabs: [
-                    Tab(text: 'Department',icon: Icon(Icons.home_work_outlined,),iconMargin: EdgeInsets.all(6.0),),
-                    Tab(text: 'Lectures',icon: Icon(Icons.people_alt_outlined),),
-                    Tab(text: 'Users',icon: Icon(Icons.groups_outlined),),
+                    Tab(
+                      text: 'Department',
+                      icon: Icon(
+                        Icons.home_work_outlined,
+                      ),
+                      iconMargin: EdgeInsets.all(6.0),
+                    ),
+                    Tab(
+                      text: 'Lectures',
+                      icon: Icon(Icons.people_alt_outlined),
+                      iconMargin: EdgeInsets.all(6.0),
+                    ),
+                    Tab(
+                      text: 'Users',
+                      icon: Icon(Icons.groups_outlined),
+                      iconMargin: EdgeInsets.all(6.0),
+                    ),
+                  ],
+                ),
+              ),
 
+              Flexible(
+                child: TabBarView(
+                  controller: _mOrgController,
+                  children: [
+                    SizedBox(
+                      child: ListView.builder(
+                          scrollDirection: Axis.vertical,
+                          addAutomaticKeepAlives: true,
+                          itemCount: depList.length,
+                          itemBuilder: (context, index) {
+                            return Card(
+                              child: ListTile(
+                                leading: Icon(Icons.home_max_outlined),
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.all(
+                                        Radius.circular(10.0))),
+                                minLeadingWidth: 40,
+                                title: Text(depList[index]
+                                    .keys
+                                    .toString()
+                                    .replaceAll(RegExp(r'[()]'), '')),
+                                subtitle: Text(depList[index]
+                                    .values
+                                    .toString()
+                                    .replaceAll(RegExp(r'[()]'), '')),
+                                selectedTileColor: Colors.cyanAccent,
+                                hoverColor: Colors.lightGreen,
+                                focusColor: Colors.redAccent,
+                                tileColor: Colors.teal,
+                                onTap: () {
+                                  print('tap');
+                                },
+                                horizontalTitleGap: 2.0,
+                              ),
+                            );
+                          }),
+                    ),
+                    SizedBox(
+                      child:
+                        ListView.builder(
+                          scrollDirection: Axis.vertical,
+                            itemCount: lecList.length,
+                            itemBuilder: (context, index) {
+                              return Card(
+                                child: ListTile(
+                                  leading: CircleAvatar(backgroundImage: NetworkImage(lecList[index]['imgUrl']),),
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.all(
+                                          Radius.circular(10.0))),
+                                  minLeadingWidth: 40,
+                                  title: Text(lecList[index]['name']),
+                                  subtitle: Text(lecList[index]['email']),
+                                  selectedTileColor: Colors.cyanAccent,
+                                  hoverColor: Colors.lightGreen,
+                                  focusColor: Colors.redAccent,
+                                  tileColor: Colors.teal,
+                                  onTap: () {
+                                    print('tap');
+                                  },
+                                  horizontalTitleGap: 2.0,
+                                ),
+                              );
+                            } )
+                      // Container(
+                      //   height: 100.0,
+                      //   width: 100.0,
+                      //   color: Colors.cyanAccent,
+                      //   child: TextButton(
+                      //     clipBehavior: Clip.hardEdge,
+                      //     onPressed: () {
+                      //       print('LecPress');
+                      //       checkUser().retUserList();
+                      //     },
+                      //     child: Text('Presss'),),
+                      // ),
+                    ),
+                    Text('Users'),
                   ],
                 ),
               ),
               Container(
-                padding: EdgeInsets.all(10.0),
-                width: double.maxFinite,
-                height: 300,
+                height: 50,
+                color: Colors.black12,
                 child: TabBarView(
                   controller: _mOrgController,
                   children: [
-                    ListView.builder(itemCount: depList.length, itemBuilder: (context, index){
-                      return ListTile(
-                        title: Text(depList[index].keys.toString().replaceAll(RegExp(r'[()]'), '')),
-                        subtitle: Text(depList[index].values.toString().replaceAll(RegExp(r'[()]'), '')),
-                        selectedTileColor: Colors.cyanAccent,
-                        hoverColor: Colors.lightGreen,
-                        enableFeedback: true,
-                        focusColor: Colors.redAccent,
-                        tileColor: Colors.teal,
-                        onTap: () {
-                          print('tap');
-                        },
-                        horizontalTitleGap: 2.0,
-
-                        visualDensity: VisualDensity.comfortable,
-                      );
-                    }),
-                    Text('Lectures'),
-                    Text('Users'),
-
+                    ButtonBar(
+                      alignment: MainAxisAlignment.center,
+                      children: [
+                        ElevatedButton(
+                            onPressed: () {
+                              print("xxxxxxxxxx");
+                              showDialog(
+                                  context: context,
+                                  builder: (context) {
+                                    return AddDepartmentDialog();
+                                  });
+                              // DepAddOpenDialog();
+                            },
+                            child: Icon(Icons.add_home_work_outlined)),
+                        // ElevatedButton(
+                        //     onPressed: () {}, child: Icon(Icons.highlight_remove_outlined)),
+                      ],
+                    ),
+                    Text('Second'),
+                    Text('Third'),
                   ],
                 ),
-              ),
-              
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+              )
 
               // Container(
               //   height: double.maxFinite,
@@ -405,7 +480,6 @@ class aProfile extends StatefulWidget {
 class _aProfileState extends State<aProfile> {
   List<Map<String, dynamic>> userData = [];
 
-
   @override
   void initState() {
     super.initState();
@@ -426,8 +500,8 @@ class _aProfileState extends State<aProfile> {
     print(user['lastLog'] ?? '');
     final lastLog = user['lastLog'] != null
         ? DateFormat(' EEE d MMM y \n hh:mm a').format(
-      DateTime.fromMillisecondsSinceEpoch(user['lastLog'] as int),
-    )
+            DateTime.fromMillisecondsSinceEpoch(user['lastLog'] as int),
+          )
         : '';
     // final String lastLog = DateFormat(' EEE d MMM y \n hh:mm a').format(DateTime.fromMillisecondsSinceEpoch((user['lastLog'] ?? '')));
     // print(lastLog);
@@ -439,11 +513,11 @@ class _aProfileState extends State<aProfile> {
       body: SafeArea(
         child: Container(
           margin: EdgeInsets.all(10.0),
-            height: double.maxFinite,
-            width: double.maxFinite,
-          decoration:BoxDecoration(
-            color: Color(0xB69D0000),
-              borderRadius: BorderRadius.circular(20.0)) ,
+          height: double.maxFinite,
+          width: double.maxFinite,
+          decoration: BoxDecoration(
+              color: Color(0xB69D0000),
+              borderRadius: BorderRadius.circular(20.0)),
           child: Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -453,12 +527,15 @@ class _aProfileState extends State<aProfile> {
                   backgroundImage: NetworkImage(imgUrl),
                 ),
                 Chip(
-                  label: Text(role,style: TextStyle(fontWeight: FontWeight.bold)),
+                  label:
+                      Text(role, style: TextStyle(fontWeight: FontWeight.bold)),
                   backgroundColor: Color(0xFFFFDCDC),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(25.0))),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(25.0))),
                 ),
                 SizedBox(height: 16),
-                Text(name,
+                Text(
+                  name,
                   style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
                 ),
                 SizedBox(height: 2),
@@ -467,7 +544,7 @@ class _aProfileState extends State<aProfile> {
                   style: TextStyle(fontSize: 16, color: Colors.grey),
                 ),
                 SizedBox(height: 32),
-                Text('Last Login:'+ lastLog,style: TextStyle(fontSize: 18)),
+                Text('Last Login:' + lastLog, style: TextStyle(fontSize: 18)),
                 ElevatedButton(
                   onPressed: () {
                     authMethods().userSignOut(context);
@@ -482,6 +559,3 @@ class _aProfileState extends State<aProfile> {
     );
   }
 }
-
-
-

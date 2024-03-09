@@ -32,14 +32,9 @@ class DataOrgManage {
     if (doc.exists) {
       Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
       data.forEach((key, value) {
-        print(key);
-        print(value);
         depList.add({key:value});
       });
-      print(data);
 
-      print('---------------done-------------');
-      print(depList);
     } else {
       print("Document does not exist on the database");
     }
