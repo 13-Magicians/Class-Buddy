@@ -10,7 +10,6 @@ class DataOrgManage {
 
   Future createDepartment (String fcName, String fcCode) async {
     try {
-      // Add a new field "fcName" with the fcName value to the "Organization" collection document
       await db.collection("Organization").doc("Department").update({
         fcCode: fcName,
       });
@@ -21,23 +20,34 @@ class DataOrgManage {
 
   
   Future removeDepartment() {
-    return db.collection("Organization").doc("Departments").delete();
+    return db.collection("Organization").doc("Department").delete();
     
   }
 
-  List<Map<String, dynamic>> depList = [];
+  Future<void> deleteDepartment(String departmentId) async {
+    try {
+      await db.collection('Organization').doc('Department').update({
+        departmentId: FieldValue.delete(),
+      });
+      print('Department deleted successfully');
+    } catch (error) {
+      print('Error deleting department: $error');
+    }
+  }
+
+
 
   Future departmentList() async {
+    List<Map<String, dynamic>> depList = [];
     DocumentSnapshot doc = await db.collection("Organization").doc("Department").get();
-    if (doc.exists) {
-      Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
-      data.forEach((key, value) {
-        depList.add({key:value});
-      });
-
-    } else {
-      print("Document does not exist on the database");
-    }
+    Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
+    data.forEach((key, value) {
+      Map<String, dynamic> department = {
+        'id': key,
+        'name': value,
+      };
+      depList.add(department);
+    });
 
     return depList;
   }

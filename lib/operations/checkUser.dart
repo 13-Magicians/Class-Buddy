@@ -64,5 +64,18 @@ class checkUser {
     return lecturesList;
   }
 
+  Future retAdminUserList() async {
+    List<Map<String, dynamic>> AdminsList = [];
+
+  }
+
+  Future changeRole(userId, gRole) {
+    Map<String, dynamic> userRole = {
+      'role': "$gRole",
+    };
+
+    return DatabaseMethods().updateUserRole(userId, userRole);
+  }
+
 
 }

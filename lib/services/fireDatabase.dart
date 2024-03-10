@@ -77,6 +77,53 @@ class DatabaseMethods {
     // }
     return userList;
   }
+
+  Future getAdminsOnly() async {
+    List<Map<String, dynamic>> adminUsers = [];
+
+    QuerySnapshot querySnapshot = await db.collection('Users').where(
+        'role', isEqualTo: 'Admin').get();
+    querySnapshot.docs.forEach((doc) {
+      Map<String, dynamic> userData = {
+        'name': doc['name'],
+        'email': doc['email'],
+        'id': doc['id'],
+        'imgUrl': doc['imgUrl'],
+        'lastLogin': doc['lastLog'],
+        'role': doc['role'],
+      };
+      adminUsers.add(userData);
+    });
+
+    return adminUsers;
+  }
+
+    Future getStudentsOnly() async {
+      List<Map<String, dynamic>> studentUsers = [];
+
+      QuerySnapshot querySnapshot = await db.collection('Users').where('role', isEqualTo: 'Student').get();
+      querySnapshot.docs.forEach((doc) {
+        Map<String, dynamic> userData = {
+          'name': doc['name'],
+          'email': doc['email'],
+          'id': doc['id'],
+          'imgUrl': doc['imgUrl'],
+          'lastLogin': doc['lastLog'],
+          'role': doc['role'],
+        };
+        studentUsers.add(userData);
+      });
+
+      return studentUsers;
+
+
+  }
+
+  Future updateUserRole(userId, gRole) async {
+    return db.collection("Users").doc(userId).update(gRole);
+  }
+
+
   
 
 }

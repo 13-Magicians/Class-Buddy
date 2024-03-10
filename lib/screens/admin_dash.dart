@@ -99,6 +99,7 @@ class aMangeDep extends StatefulWidget {
 
 class _aMangeDepState extends State<aMangeDep> with TickerProviderStateMixin {
   List<Map<String, dynamic>> depList = [];
+  List<Map<String, dynamic>> admList = [];
   List<Map<String, dynamic>> lecList = [];
   List<Map<String, dynamic>> usrList = [];
 
@@ -111,9 +112,15 @@ class _aMangeDepState extends State<aMangeDep> with TickerProviderStateMixin {
   loadData() async {
     depList = await DataOrgManage().departmentList();
     lecList = await checkUser().retLecUserList();
+    admList = await DatabaseMethods().getAdminsOnly();
+    usrList = await DatabaseMethods().getStudentsOnly();
     print('[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[');
     print(lecList);
     print(lecList.length);
+    // if (depList.length == 0) {depList = [{'No User':'No User'}];}
+    // if (admList.length == 0) {admList = [{'No User':'No User'}];}
+    // if (usrList.length == 0) {usrList = [{'No User':'No User'}];}
+    // if (lecList.length == 0) {lecList = [{'No User':'No User'}];}
     setState(() {});
   }
 
@@ -122,25 +129,24 @@ class _aMangeDepState extends State<aMangeDep> with TickerProviderStateMixin {
 
   // @override
   Widget build(BuildContext context) {
-    TabController _mOrgController = TabController(
-        length: 3,
-        vsync: this,
-        initialIndex: 1);
+    TabController _mOrgController =
+        TabController(length: 4, vsync: this,initialIndex: 1);
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: SafeArea(
         child: Container(
-          padding: EdgeInsets.all(0.0),
+          padding: EdgeInsets.all(2.0),
           decoration: BoxDecoration(borderRadius: BorderRadius.circular(6.0)),
-          margin: EdgeInsets.all(0.0),
+          margin: EdgeInsets.all(4.0),
           child: Column(
             children: [
               Container(
-                margin: EdgeInsetsDirectional.symmetric(vertical: 10),
+                margin:
+                    EdgeInsetsDirectional.symmetric(vertical: 8, horizontal: 4),
                 height: 60,
                 child: TabBar(
                   indicator: BoxDecoration(
-                      color: Colors.cyanAccent,
+                      color: Colors.orangeAccent,
                       borderRadius: BorderRadius.all(Radius.circular(10.0)),
                       boxShadow: [
                         BoxShadow(
@@ -153,28 +159,47 @@ class _aMangeDepState extends State<aMangeDep> with TickerProviderStateMixin {
                   indicatorPadding: EdgeInsets.all(2.0),
                   indicatorSize: TabBarIndicatorSize.tab,
                   indicatorColor: Colors.deepOrange,
-                  automaticIndicatorColorAdjustment: true,
+                  // automaticIndicatorColorAdjustment: true,
                   controller: _mOrgController,
-                  enableFeedback: true,
-                  padding:
-                      EdgeInsets.symmetric(horizontal: 20.0, vertical: 0.0),
+                  // enableFeedback: true,
+                  padding: EdgeInsets.symmetric(horizontal: 0.0, vertical: 0.0),
                   dividerHeight: 0.0,
                   tabs: [
                     Tab(
-                      text: 'Department',
-                      icon: Icon(
-                        Icons.home_work_outlined,
+                      text: 'Divisions',
+                      // child: Text('Department',style: TextStyle(fontSize: 12),),
+                      // icon: Icon(Icons.home_work_outlined,
+                      icon: Badge(
+                        label: Text(depList.length.toString()),
+                        child: Icon(Icons.home_work_outlined),
                       ),
                       iconMargin: EdgeInsets.all(6.0),
                     ),
                     Tab(
                       text: 'Lectures',
-                      icon: Icon(Icons.people_alt_outlined),
+                      // icon: Icon(Icons.people_alt_outlined),
+                      icon: Badge(
+                        label: Text(lecList.length.toString()),
+                        child: Icon(Icons.people_alt_outlined),
+                      ),
                       iconMargin: EdgeInsets.all(6.0),
                     ),
                     Tab(
-                      text: 'Users',
-                      icon: Icon(Icons.groups_outlined),
+                      text: 'Students',
+                      // icon: Icon(Icons.groups_outlined),
+                      icon: Badge(
+                        label: Text(usrList.length.toString()),
+                        child: Icon(Icons.school_outlined),
+                      ),
+                      iconMargin: EdgeInsets.all(6.0),
+                    ),
+                    Tab(
+                      text: 'Admins',
+                      // icon: Icon(Icons.admin_panel_settings_outlined),
+                      icon: Badge(
+                        label: Text(admList.length.toString()),
+                        child: Icon(Icons.admin_panel_settings_outlined),
+                      ),
                       iconMargin: EdgeInsets.all(6.0),
                     ),
                   ],
@@ -185,6 +210,7 @@ class _aMangeDepState extends State<aMangeDep> with TickerProviderStateMixin {
                 child: TabBarView(
                   controller: _mOrgController,
                   children: [
+                    // Department Section
                     SizedBox(
                       child: ListView.builder(
                           scrollDirection: Axis.vertical,
@@ -198,14 +224,8 @@ class _aMangeDepState extends State<aMangeDep> with TickerProviderStateMixin {
                                     borderRadius: BorderRadius.all(
                                         Radius.circular(10.0))),
                                 minLeadingWidth: 40,
-                                title: Text(depList[index]
-                                    .keys
-                                    .toString()
-                                    .replaceAll(RegExp(r'[()]'), '')),
-                                subtitle: Text(depList[index]
-                                    .values
-                                    .toString()
-                                    .replaceAll(RegExp(r'[()]'), '')),
+                                title: Text(depList[index]['id']),
+                                subtitle: Text(depList[index]['name']),
                                 selectedTileColor: Colors.cyanAccent,
                                 hoverColor: Colors.lightGreen,
                                 focusColor: Colors.redAccent,
@@ -213,51 +233,237 @@ class _aMangeDepState extends State<aMangeDep> with TickerProviderStateMixin {
                                 onTap: () {
                                   print('tap');
                                 },
+                                trailing:
+                                    PopupMenuButton(
+                                      color: Colors.deepOrange,
+                                      itemBuilder: (context) {
+                                        return [
+                                          PopupMenuItem(
+                                            child: Text("Delete"),
+                                            onTap: () {
+                                              print(depList[index]['id']);
+                                              DataOrgManage().deleteDepartment(depList[index]['id']);
+                                              loadData();
+
+                                            },
+                                          ),
+
+                                        ];
+                                      },
+                                    ),
+                                  // IconButton(
+                                  //   icon: Icon(Icons.more_vert),
+                                  //   onPressed: () {  },
+                                  //   style: ButtonStyle(),
+                                  // ),
+                                  
+                                
+
                                 horizontalTitleGap: 2.0,
                               ),
                             );
                           }),
                     ),
+                    // Lecture Section
                     SizedBox(
-                      child:
-                        ListView.builder(
-                          scrollDirection: Axis.vertical,
+                        child: ListView.builder(
+                            scrollDirection: Axis.vertical,
                             itemCount: lecList.length,
                             itemBuilder: (context, index) {
                               return Card(
                                 child: ListTile(
-                                  leading: CircleAvatar(backgroundImage: NetworkImage(lecList[index]['imgUrl']),),
+                                  contentPadding: EdgeInsets.symmetric(horizontal: 8),
+                                  leading: CircleAvatar(
+                                    backgroundImage:
+                                        NetworkImage(lecList[index]['imgUrl']),
+                                  ),
                                   shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.all(
                                           Radius.circular(10.0))),
-                                  minLeadingWidth: 40,
+                                  minLeadingWidth: 50,
                                   title: Text(lecList[index]['name']),
                                   subtitle: Text(lecList[index]['email']),
                                   selectedTileColor: Colors.cyanAccent,
                                   hoverColor: Colors.lightGreen,
                                   focusColor: Colors.redAccent,
                                   tileColor: Colors.teal,
+                                  trailing: PopupMenuButton(
+                                    icon: Chip(
+                                      label: Text(lecList[index]['role'].toString()),
+                                      padding: EdgeInsets.all(0),
+                                      side: BorderSide.none,
+                                    ),
+                                    color: Colors.deepOrange,
+                                    itemBuilder: (context) {
+                                      return [
+                                        PopupMenuItem(
+                                          child: Text("Admin"),
+                                          onTap: () {
+                                            if (lecList.length > 1) {
+                                              print(lecList[index]['id']);
+                                              checkUser().changeRole(
+                                                  lecList[index]['id'],
+                                                  "Admin");
+                                              loadData();
+                                            }
+
+                                          },
+                                        ),
+                                        PopupMenuItem(
+                                          child: Text("Student"),
+                                          onTap: () {
+                                            if (lecList.length > 1) {
+                                              checkUser().changeRole(
+                                                  lecList[index]['id'],
+                                                  "Student");
+                                              loadData();
+                                            }
+                                          },
+                                        ),
+
+                                      ];
+                                    },
+                                  ),
+                                  onTap: () {
+                                    print('tap');
+                                    print(lecList.length);
+                                  },
+                                  horizontalTitleGap: 2.0,
+                                ),
+                              );
+                            })
+                        ),
+                    // User Section
+                    SizedBox(
+                        child: ListView.builder(
+                            scrollDirection: Axis.vertical,
+                            itemCount: usrList.length,
+                            itemBuilder: (context, index) {
+                              return Card(
+                                child: ListTile(
+                                  leading: CircleAvatar(
+                                    backgroundImage:
+                                    NetworkImage(usrList[index]['imgUrl']),
+                                  ),
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.all(
+                                          Radius.circular(10.0))),
+                                  minLeadingWidth: 40,
+                                  title: Text(usrList[index]['name']),
+                                  subtitle: Text(usrList[index]['email']),
+                                  selectedTileColor: Colors.cyanAccent,
+                                  hoverColor: Colors.lightGreen,
+                                  focusColor: Colors.redAccent,
+                                  tileColor: Colors.teal,
+                                  trailing: PopupMenuButton(
+                                    icon: Chip(
+                                      label: Text(usrList[index]['role'].toString()),
+                                      padding: EdgeInsets.all(0),
+                                      side: BorderSide.none,
+                                    ),
+                                    color: Colors.deepOrange,
+                                    itemBuilder: (context) {
+                                      return [
+                                        PopupMenuItem(
+                                          child: Text("Lecture"),
+                                          onTap: () {
+                                            if (usrList.length > 1) {
+                                              checkUser().changeRole(
+                                                  usrList[index]['id'],
+                                                  "Lecture");
+                                              loadData();
+                                            }
+
+                                          },
+                                        ),
+                                        PopupMenuItem(
+                                          child: Text("Admin"),
+                                          onTap: () {
+                                            if (usrList.length > 1) {
+                                              checkUser().changeRole(
+                                                  usrList[index]['id'],
+                                                  "Admin");
+                                              loadData();
+                                            }
+                                            },
+                                        ),
+
+                                      ];
+                                    },
+                                  ),
                                   onTap: () {
                                     print('tap');
                                   },
                                   horizontalTitleGap: 2.0,
                                 ),
                               );
-                            } )
-                      // Container(
-                      //   height: 100.0,
-                      //   width: 100.0,
-                      //   color: Colors.cyanAccent,
-                      //   child: TextButton(
-                      //     clipBehavior: Clip.hardEdge,
-                      //     onPressed: () {
-                      //       print('LecPress');
-                      //       checkUser().retUserList();
-                      //     },
-                      //     child: Text('Presss'),),
-                      // ),
+                            })
+
                     ),
-                    Text('Users'),
+                    // Admin Section
+                    SizedBox(
+                        child: ListView.builder(
+                            scrollDirection: Axis.vertical,
+                            itemCount: admList.length,
+                            itemBuilder: (context, index) {
+                              return Card(
+                                child: ListTile(
+                                  leading: CircleAvatar(
+                                    backgroundImage:
+                                        NetworkImage(admList[index]['imgUrl']),
+                                  ),
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.all(
+                                          Radius.circular(10.0))),
+                                  minLeadingWidth: 40,
+                                  title: Text(admList[index]['name']),
+                                  subtitle: Text(admList[index]['email']),
+                                  selectedTileColor: Colors.cyanAccent,
+                                  hoverColor: Colors.lightGreen,
+                                  focusColor: Colors.redAccent,
+                                  tileColor: Colors.teal,
+                                  trailing: PopupMenuButton(
+                                    icon: Chip(
+                                      label: Text(admList[index]['role'].toString()),
+                                      padding: EdgeInsets.all(0),
+                                      side: BorderSide.none,
+                                    ),
+                                    color: Colors.deepOrange,
+                                    itemBuilder: (context) {
+                                      return [
+                                        PopupMenuItem(
+                                          child: Text("Lecture"),
+                                          onTap: () {
+                                            if (admList.length > 1) {
+                                            checkUser().changeRole(
+                                                admList[index]['id'],
+                                                "Lecture");
+                                            loadData();
+                                          }
+                                          },
+                                        ),
+                                        PopupMenuItem(
+                                          child: Text("Student"),
+                                          onTap: () {
+                                            if (admList.length > 1) {
+                                            checkUser().changeRole(admList[index]['id'], "Student");
+                                            loadData();
+                                            }
+                                          },
+                                        ),
+
+                                      ];
+                                    },
+                                  ),
+                                  onTap: () {
+                                    print('tap');
+                                  },
+                                  horizontalTitleGap: 2.0,
+                                ),
+                              );
+                            })
+
+                        ),
                   ],
                 ),
               ),
@@ -271,132 +477,34 @@ class _aMangeDepState extends State<aMangeDep> with TickerProviderStateMixin {
                       alignment: MainAxisAlignment.center,
                       children: [
                         ElevatedButton(
-                            onPressed: () {
-                              print("xxxxxxxxxx");
-                              showDialog(
-                                  context: context,
-                                  builder: (context) {
-                                    return AddDepartmentDialog();
-                                  });
-                              // DepAddOpenDialog();
-                            },
-                            child: Icon(Icons.add_home_work_outlined)),
+                          onPressed: () {
+                            print("xxxxxxxxxx");
+                            showDialog(
+                              context: context,
+                              builder: (context) {
+                                return AddDepartmentDialog();
+                              },
+                            ).then((value) {
+                              // This function will be called when the dialog is dismissed
+                              print("Dialog closed");
+                              // Call your function here
+                              loadData();
+                            });
+                          },
+                          child: Icon(Icons.add_home_work_outlined),
+                        ),
                         // ElevatedButton(
                         //     onPressed: () {}, child: Icon(Icons.highlight_remove_outlined)),
                       ],
                     ),
                     Text('Second'),
                     Text('Third'),
+                    Text('Fourth'),
                   ],
                 ),
               )
 
-              // Container(
-              //   height: double.maxFinite,
-              //   color: Colors.cyanAccent,
-              //   child: ListView(
-              //     padding: EdgeInsets.all(10.0),
-              //     children: ListTile.divideTiles(
-              //         context: context,
-              //         color: Colors.white,
-              //         tiles: [
-              //           ExpansionTile(
-              //             leading: Icon(Icons.add_card),
-              //             title: Text('Manage Department'),
-              //             trailing: Icon(Icons.arrow_drop_down),
-              //             backgroundColor: Color(0xFFFF8766),
-              //             collapsedBackgroundColor: Color(0xFFF9DEC9),
-              //             collapsedShape: RoundedRectangleBorder(
-              //                 borderRadius: BorderRadius.circular(15.0)),
-              //             children: [
-              //               // Text('Make Your department changes'),
-              //               // ButtonBar(
-              //               //   children: [
-              //               //     ElevatedButton(
-              //               //         onPressed: () {
-              //               //           // DataOrgManage().departmentList();
-              //               //         },
-              //               //         child: Icon(Icons.construction_sharp)),
-              //               //     ElevatedButton(
-              //               //         onPressed: () {
-              //               //           print("xxxxxxxxxx");
-              //               //           showDialog(
-              //               //               context: context,
-              //               //               builder: (context) {
-              //               //                 return AddDepartmentDialog();
-              //               //               });
-              //               //           // DepAddOpenDialog();
-              //               //         },
-              //               //         child: Icon(Icons.add)),
-              //               //     ElevatedButton(
-              //               //         onPressed: () {}, child: Icon(Icons.remove)),
-              //               //   ],
-              //               // ),
-              //             //   Text('data'),
-              //             //   ListView.separated(
-              //             //     itemBuilder: (context, index) {
-              //             //       return ListTile(
-              //             //         title: Text(depList[index].keys.first),
-              //             //         subtitle: Text(depList[index].values.first),
-              //             //       );
-              //             //     },
-              //             //     separatorBuilder: (context, index) {
-              //             //       return Divider(
-              //             //         height: 20.0,
-              //             //         thickness: 1,
-              //             //       );
-              //             //     },
-              //             //     itemCount: depList.length,
-              //             //   ),
-              //             // ],
-              //             // shape: RoundedRectangleBorder(
-              //             //     borderRadius: BorderRadius.circular(15.0)),
-              //           ),
-              //           // ExpansionTile(
-              //           //   leading: Icon(Icons.add_card),
-              //           //   title: Text('Manage Lectures'),
-              //           //   trailing: Icon(Icons.arrow_drop_down),
-              //           //   children: [
-              //           //     Text("Make Your Lecturer's changes"),
-              //           //     ButtonBar(children: [
-              //           //       ElevatedButton(onPressed: () {}, child:Icon(Icons.construction_sharp)),
-              //           //       ElevatedButton(onPressed: () {}, child:Icon(Icons.add)),
-              //           //       ElevatedButton(onPressed: () {}, child:Icon(Icons.remove)),
-              //           //     ],)
-              //           //   ],
-              //           //   shape: RoundedRectangleBorder(
-              //           //       borderRadius: BorderRadius.circular(15.0)),
-              //           //
-              //           // ),
-              //           // ExpansionTile(
-              //           //   leading: Icon(Icons.add_card),
-              //           //   title: Text('Manage Student'),
-              //           //   trailing: Icon(Icons.arrow_drop_down),
-              //           //   children: [
-              //           //     Text("Make Your Student's changes"),
-              //           //     ButtonBar(children: [
-              //           //       ElevatedButton(onPressed: () {}, child:Icon(Icons.construction_sharp)),
-              //           //       ElevatedButton(onPressed: () {
-              //           //
-              //           //       }, child:Icon(Icons.add)),
-              //           //       ElevatedButton(onPressed: () {}, child:Icon(Icons.remove)),
-              //           //     ],)
-              //           //   ],
-              //           //   shape: RoundedRectangleBorder(
-              //           //       borderRadius: BorderRadius.circular(15.0)),
-              //           // ),
-              //         ]).toList(),
-              //   ),
-              // ),
-              // ListView.builder(
-              //   itemCount: depList.length,
-              //   itemBuilder: (context, index) {
-              //     return ListTile(
-              //       title: Text(depList[index].keys.first),
-              //       subtitle: Text(depList[index].values.first),
-              //     );
-              //   },
-              // ),
+
             ],
           ),
         ),
@@ -418,19 +526,29 @@ class _AddDepartmentDialogState extends State<AddDepartmentDialog> {
     if (fcCode.text.isNotEmpty && fcName.text.isNotEmpty) {
       await DataOrgManage().createDepartment(fcName.text, fcCode.text);
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Department added successfully'),
-          backgroundColor: Colors.green,
-        ),
-      );
+      try {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Department added successfully'),
+            backgroundColor: Colors.green,
+          ),
+        );
+      }
+      catch (e) {
+        print(e);
+      }
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Please enter valid department code and name'),
-          backgroundColor: Colors.red,
-        ),
-      );
+      try {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Please enter valid department code and name'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      } catch (e) {
+        print(e);
+      }
+
     }
   }
 
