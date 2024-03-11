@@ -1,12 +1,9 @@
 import 'package:classbuddy/screens/admin_dash.dart';
-import 'package:classbuddy/screens/duo.dart';
-import 'package:classbuddy/screens/home_page.dart';
 import 'package:classbuddy/screens/lec_dash.dart';
 import 'package:classbuddy/screens/login.dart';
 import 'package:classbuddy/screens/on_boarding.dart';
 import 'package:classbuddy/screens/splash.dart';
 import 'package:classbuddy/screens/stu_dash.dart';
-import 'package:classbuddy/services/fireDatabase.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -81,8 +78,6 @@ class ClassBuddy extends StatelessWidget {
       // home: const AdminDash(),
       routes: <String,WidgetBuilder>{
         '/splash': (context) => CBSplashScr(version),
-        '/home': (context) => CBHomeScr(),
-        '/duo': (context) => Duo(),
         '/onboard':(context) => OnBoarding(),
         '/login':(context) => CB_Login(),
         '/dashLec':(context) => LecDash(),
