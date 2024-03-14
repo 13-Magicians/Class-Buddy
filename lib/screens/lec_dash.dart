@@ -189,8 +189,9 @@ class _mangeCourseState extends State<mangeCourse> with TickerProviderStateMixin
                 children: [
                   SizedBox(
                     child: Column(
-                      children: [ ListTile(leading: Icon(Icons.add)),
-
+                      children: [
+                        ExpansionPanelList(
+                          children: [],)
                       ],
                     ),
                   ),
@@ -332,3 +333,42 @@ class _lProfileState extends State<lProfile> {
     );
   }
 }
+
+
+
+////////////////////////////////// Sub parts ////////////////////////////////////
+
+
+
+class ListMyCourse extends StatefulWidget {
+  const ListMyCourse({super.key});
+
+  @override
+  State<ListMyCourse> createState() => _ListMyCourseState();
+}
+
+class _ListMyCourseState extends State<ListMyCourse> {
+  List<Map<String, dynamic>> acYearList = [];
+
+  void initState() {
+    super.initState();
+    loadData();
+  }
+
+  loadData() async {
+    // acYearList = await DataOrgManage().departmentList();
+
+
+
+    setState(() {});
+  }
+
+
+
+  @override
+  Widget build(BuildContext context) {
+    return const Placeholder();
+  }
+}
+
+

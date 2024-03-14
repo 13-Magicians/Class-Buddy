@@ -14,7 +14,7 @@ import 'package:device_preview/device_preview.dart';
 import 'firebase_options.dart';
 // import 'operations/mongodb.dart';
 
-const version = ('1.0.0.2');
+const version = ('1.0.4.6');
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
