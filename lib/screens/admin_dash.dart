@@ -39,7 +39,7 @@ class _AdminDashState extends State<AdminDash> {
       ),
       appBar: AppBar(
         title: Text('Hello Admin'),
-        backgroundColor: Color(0xFFF9DEC9),
+        backgroundColor: Color(0xFFF8CFAE),
         shape:
             RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
         shadowColor: Colors.black,
