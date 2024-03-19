@@ -37,9 +37,9 @@ dependencies:
   cupertino_icons: ^1.0.2
   device_preview: ^1.1.0
   simple_progress_indicators: ^0.2.0
-  firebase_core: ^2.25.4
+  firebase_core: ^2.27.1
   firebase_auth: ^4.13.0
-  cloud_firestore: ^4.13.6
+  cloud_firestore: ^4.15.9
   google_sign_in: ^6.1.6
 
 
