@@ -1,7 +1,7 @@
 import 'package:classbuddy/operations/checkUser.dart';
 import 'package:classbuddy/services/fireDatabase.dart';
 import 'package:flutter/material.dart';
-import '../operations/studentCourse.dart';
+import '../operations/lectureCourse.dart';
 import '../services/auth.dart';
 import '../services/fireCourseData.dart';
 import '../services/fireManageDep.dart';

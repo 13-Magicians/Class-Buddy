@@ -1,5 +1,4 @@
 import 'package:classbuddy/services/auth.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import '../operations/lectureCourse.dart';
@@ -173,12 +172,19 @@ class _mangeCourseState extends State<mangeCourse>
   void initState() {
     super.initState();
     _mcwidgetOptions = [
-      MenuCardsMC(onCardPressed: (index) {
+      MenuCardsMC(
+        onCardPressed: (index) {
+          setState(() {
+            currentPageIndex = index;
+          });
+          },
+      ),
+      ACYFirst(onCardPressed: (index) {
         setState(() {
           currentPageIndex = index;
         });
       },),
-      ACYFirst(onCardPressed: (index) {
+      ACYSecond(onCardPressed: (index) {
         setState(() {
           currentPageIndex = index;
         });
@@ -417,8 +423,10 @@ class _MenuCardsMCState extends State<MenuCardsMC> {
   Widget _buildCard(String year, int index) {
     return Container(
       child: Card(
+        elevation: 10,
+        surfaceTintColor: Colors.pink,
         clipBehavior: Clip.hardEdge,
-        color: Colors.lime,
+        color: Colors.teal,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
@@ -430,7 +438,7 @@ class _MenuCardsMCState extends State<MenuCardsMC> {
                   style: TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
-                    color: Colors.deepOrangeAccent,
+                    color: Colors.tealAccent,
                   ),
                 ),
               ),
@@ -447,7 +455,7 @@ class _MenuCardsMCState extends State<MenuCardsMC> {
                 child: Icon(
                   Icons.arrow_circle_right_outlined,
                   size: 60,
-                  color: Colors.deepOrange,
+                  color: Colors.greenAccent,
                 ),
               ),
             ),
@@ -699,3 +707,73 @@ class _ACYFirstState extends State<ACYFirst> {
     );
   }
 }
+
+class ACYSecond extends StatefulWidget {
+  final Function(int) onCardPressed;
+
+  const ACYSecond({Key? key, required this.onCardPressed}) : super(key: key);
+
+  @override
+  State<ACYSecond> createState() => _ACYSecondState();
+}
+
+class _ACYSecondState extends State<ACYSecond> {
+  List<Map<String, dynamic>> acYearList = [];
+
+  @override
+  void initState() {
+    super.initState();
+    loadData();
+  }
+
+  loadData() async {
+    acYearList = await AcademicOperation().getAcYears();
+    print(acYearList);
+
+    setState(() {});
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: EdgeInsets.all(2),
+      padding: EdgeInsets.all(6),
+      decoration: BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(6)),color: Colors.black12),
+      child: Column(
+        children: [
+          ExpansionPanelList.radio(
+            animationDuration: Duration(milliseconds: 800),
+            expandedHeaderPadding: EdgeInsets.all(10.0),
+            initialOpenPanelValue: 1,
+            children: acYearList.map((item) {
+              return ExpansionPanelRadio(
+                backgroundColor: Colors.lightBlue,
+                canTapOnHeader: true,
+                headerBuilder: (BuildContext context, bool isExpanded) {
+                  return ListTile(
+                    title: Text(item['documentID']),
+                  );
+                },
+                body: Container(
+                  color: Colors.lightBlueAccent,
+                  child: Card(
+                    child: Text('afsassas'),
+                  ),
+                  // Add any additional content you want to show when the panel is expanded
+                  // This can be any widget or UI you want to display
+                ),
+                value: item['documentID'],
+              );
+            }).toList(),
+            materialGapSize: 16,
+          ),
+          ElevatedButton(onPressed: () {
+            widget.onCardPressed(0);
+
+          }, child: Text('back'))
+        ],
+      ),
+    );
+  }
+}
+
