@@ -1,6 +1,8 @@
 import 'package:classbuddy/services/auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import '../operations/lectureCourse.dart';
 import '../services/fireDatabase.dart';
 
 class LecDash extends StatefulWidget {
@@ -38,7 +40,8 @@ class _LecDashState extends State<LecDash> {
       appBar: AppBar(
           title: Text('Hello Lecture'),
           backgroundColor: Color(0xFFF9DEC9),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
           shadowColor: Colors.black,
           centerTitle: true,
           actions: [
@@ -133,7 +136,7 @@ class _Explore_LDState extends State<Explore_LD> {
                   ElevatedButton(
                       onPressed: () {
                         authMethods().userSignOut(context);
-                        },
+                      },
                       child: Text('Press')),
                   ElevatedButton(
                       onPressed: () {
@@ -142,10 +145,7 @@ class _Explore_LDState extends State<Explore_LD> {
                       child: Text('Get'))
                 ],
               ),
-
             ),
-
-
           ],
         ),
       ),
@@ -160,73 +160,87 @@ class mangeCourse extends StatefulWidget {
   State<mangeCourse> createState() => _mangeCourseState();
 }
 
-class _mangeCourseState extends State<mangeCourse> with TickerProviderStateMixin {
+class _mangeCourseState extends State<mangeCourse>
+    with TickerProviderStateMixin {
+  List<Map<String, dynamic>> acYearList = [];
+  int currentPageIndex = 0;
+
+  List<Widget> _mcwidgetOptions = [];
+
+
+
+  @override
+  void initState() {
+    super.initState();
+    _mcwidgetOptions = [
+      MenuCardsMC(onCardPressed: (index) {
+        setState(() {
+          currentPageIndex = index;
+        });
+      },),
+      ACYFirst(onCardPressed: (index) {
+        setState(() {
+          currentPageIndex = index;
+        });
+      },),
+      Text('11Chat'),
+    ];
+    loadData();
+  }
+
+  loadData() async {
+    acYearList = await AcademicOperation().getAcYears();
+    print(acYearList);
+
+    setState(() {});
+  }
+
+  int _expandedPanelIndex = -1;
 
   @override
   Widget build(BuildContext context) {
-    TabController _mCourController = TabController(length: 2, vsync: this,);
+    TabController _mCourController = TabController(
+      length: 2,
+      vsync: this,
+    );
     return Padding(
       padding: const EdgeInsets.all(4.0),
       child: Column(
         children: [
           Container(
-            decoration: BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(8)),color: Colors.lightGreen,),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.all(Radius.circular(8)),
+              color: Colors.lightGreen,
+            ),
             child: TabBar(
-                    controller: _mCourController,
-                    tabs: [
-                      Tab(
-                        text: 'My Course',
-                      ),
-                      Tab(
-                        text: 'Division',
-                      )
-                    ],
-                  ),
+              controller: _mCourController,
+              tabs: [
+                Tab(
+                  text: 'My Course',
+                ),
+                Tab(
+                  text: 'Division',
+                )
+              ],
+            ),
           ),
           Flexible(
               child: TabBarView(
-                controller: _mCourController,
-                children: [
-                  SizedBox(
-                    child: Column(
-                      children: [
-                        ExpansionPanelList(
-                          children: [],)
-                      ],
-                    ),
-                  ),
-                  SizedBox(
-                    child: Text('division'),
-                  )
-                ],)
-          ),
+            controller: _mCourController,
+            children: [
+              SizedBox(
+                child: _mcwidgetOptions.elementAt(currentPageIndex),
+              ),
+              SizedBox(
+                child: Text('division'),
+              )
+            ],
+          )),
         ],
       ),
     );
   }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 class lProfile extends StatefulWidget {
   const lProfile({super.key});
@@ -256,8 +270,11 @@ class _lProfileState extends State<lProfile> {
     final name = user['name'] ?? '';
     final email = user['email'] ?? '';
     print(user['lastLog'] ?? '');
-    final lastLog = user['lastLog'] != null ? DateFormat(' EEE d MMM y \n hh:mm a')
-        .format(DateTime.fromMillisecondsSinceEpoch(user['lastLog'] as int),): '';
+    final lastLog = user['lastLog'] != null
+        ? DateFormat(' EEE d MMM y \n hh:mm a').format(
+            DateTime.fromMillisecondsSinceEpoch(user['lastLog'] as int),
+          )
+        : '';
     // final String lastLog = DateFormat(' EEE d MMM y \n hh:mm a').format(DateTime.fromMillisecondsSinceEpoch((user['lastLog'] ?? '')));
     // print(lastLog);
     final role = user['role'] ?? '';
@@ -273,7 +290,10 @@ class _lProfileState extends State<lProfile> {
               children: [
                 Card(
                   color: Colors.redAccent,
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.only(topLeft: Radius.circular(100),topRight:Radius.circular(100) )),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(100),
+                          topRight: Radius.circular(100))),
                   child: Center(
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -285,16 +305,18 @@ class _lProfileState extends State<lProfile> {
                         Chip(
                           padding: EdgeInsets.all(4),
                           side: BorderSide.none,
-                          label:
-                          Text(role, style: TextStyle(fontWeight: FontWeight.bold)),
+                          label: Text(role,
+                              style: TextStyle(fontWeight: FontWeight.bold)),
                           backgroundColor: Color(0xFFFFDCDC),
                           shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.all(Radius.circular(25.0))),
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(25.0))),
                         ),
                         SizedBox(height: 26),
                         Text(
                           name,
-                          style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                          style: TextStyle(
+                              fontSize: 24, fontWeight: FontWeight.bold),
                         ),
                         SizedBox(height: 2),
                         Text(
@@ -302,7 +324,8 @@ class _lProfileState extends State<lProfile> {
                           style: TextStyle(fontSize: 16, color: Colors.grey),
                         ),
                         SizedBox(height: 42),
-                        Text('Last Login:' + lastLog, style: TextStyle(fontSize: 14)),
+                        Text('Last Login:' + lastLog,
+                            style: TextStyle(fontSize: 14)),
                         SizedBox(height: 42),
                         ElevatedButton(
                           onPressed: () {
@@ -334,11 +357,7 @@ class _lProfileState extends State<lProfile> {
   }
 }
 
-
-
 ////////////////////////////////// Sub parts ////////////////////////////////////
-
-
 
 class ListMyCourse extends StatefulWidget {
   const ListMyCourse({super.key});
@@ -358,12 +377,8 @@ class _ListMyCourseState extends State<ListMyCourse> {
   loadData() async {
     // acYearList = await DataOrgManage().departmentList();
 
-
-
     setState(() {});
   }
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -371,4 +386,316 @@ class _ListMyCourseState extends State<ListMyCourse> {
   }
 }
 
+/////////////////////////////  My Course Sub sections  //////////////////////////
 
+class MenuCardsMC extends StatefulWidget {
+  final Function(int) onCardPressed;
+
+  const MenuCardsMC({Key? key, required this.onCardPressed}) : super(key: key);
+
+  @override
+  State<MenuCardsMC> createState() => _MenuCardsMCState();
+}
+
+class _MenuCardsMCState extends State<MenuCardsMC> {
+  @override
+  Widget build(BuildContext context) {
+    return GridView.count(
+      crossAxisCount: 2,
+      padding: EdgeInsets.all(20),
+      crossAxisSpacing: 20,
+      mainAxisSpacing: 20,
+      children: [
+        _buildCard('First Year', 1),
+        _buildCard('Second Year', 2),
+        _buildCard('Third Year', 3),
+        _buildCard('Fourth Year', 4),
+      ],
+    );
+  }
+
+  Widget _buildCard(String year, int index) {
+    return Container(
+      child: Card(
+        clipBehavior: Clip.hardEdge,
+        color: Colors.lime,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            SizedBox(
+              height: 60,
+              child: Center(
+                child: Text(
+                  year,
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.deepOrangeAccent,
+                  ),
+                ),
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.all(2),
+              child: InkWell(
+                splashColor: Colors.blue.withAlpha(30),
+                onTap: () {
+                  widget.onCardPressed(index);// Call the callback function
+                  print(index);
+                },
+                borderRadius: BorderRadius.circular(25),
+                child: Icon(
+                  Icons.arrow_circle_right_outlined,
+                  size: 60,
+                  color: Colors.deepOrange,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+
+
+
+// class MenuCardsMC extends StatefulWidget {
+//   final Function(int) onCardPressed;
+//   const MenuCardsMC({Key key, this.onCardPressed}) : super(key: key);
+//
+//   @override
+//   State<MenuCardsMC> createState() => _MenuCardsMCState();
+// }
+//
+// class _MenuCardsMCState extends State<MenuCardsMC> {
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     return GridView.count(
+//         crossAxisCount: 2,
+//         padding: EdgeInsets.all(20),
+//         crossAxisSpacing: 20,
+//         mainAxisSpacing: 20,
+//         children: [
+//           Container(
+//             child: Card(
+//               clipBehavior: Clip.hardEdge,
+//               color: Colors.lime,
+//               child: Column(
+//                 mainAxisAlignment: MainAxisAlignment.start,
+//                 children: [
+//                   SizedBox(
+//                     height: 60,
+//                     child: Center(
+//                         child: Text(
+//                       'First Year',
+//                       style: TextStyle(
+//                           fontSize: 18,
+//                           fontWeight: FontWeight.bold,
+//                           color: Colors.deepOrangeAccent),
+//                     )),
+//                   ),
+//                   Padding(
+//                     padding: EdgeInsets.all(2),
+//                     child: InkWell(
+//                       splashColor: Colors.blue.withAlpha(30),
+//                       onTap: () {
+//                         debugPrint('Card tapped.');
+//                       },
+//                       borderRadius: BorderRadius.circular(25),
+//                       child: Icon(
+//                         Icons.arrow_circle_right_outlined,
+//                         size: 60,
+//                         color: Colors.deepOrange,
+//                       ),
+//                     ),
+//                   ),
+//                 ],
+//               ),
+//             ),
+//           ),
+//           Container(
+//             child: Card(
+//               clipBehavior: Clip.hardEdge,
+//               color: Colors.lime,
+//               child: Column(
+//                 mainAxisAlignment: MainAxisAlignment.start,
+//                 children: [
+//                   SizedBox(
+//                     height: 60,
+//                     child: Center(
+//                         child: Text(
+//                           'Second Year',
+//                           style: TextStyle(
+//                               fontSize: 18,
+//                               fontWeight: FontWeight.bold,
+//                               color: Colors.deepOrangeAccent),
+//                         )),
+//                   ),
+//                   Padding(
+//                     padding: EdgeInsets.all(2),
+//                     child: InkWell(
+//                       splashColor: Colors.blue.withAlpha(30),
+//                       onTap: () {
+//                         debugPrint('Card tapped.');
+//                       },
+//                       borderRadius: BorderRadius.circular(25),
+//                       child: Icon(
+//                         Icons.arrow_circle_right_outlined,
+//                         size: 60,
+//                         color: Colors.deepOrange,
+//                       ),
+//                     ),
+//                   ),
+//                 ],
+//               ),
+//             ),
+//           ),
+//           Container(
+//             child: Card(
+//               clipBehavior: Clip.hardEdge,
+//               color: Colors.lime,
+//               child: Column(
+//                 mainAxisAlignment: MainAxisAlignment.start,
+//                 children: [
+//                   SizedBox(
+//                     height: 60,
+//                     child: Center(
+//                         child: Text(
+//                           'Third Year',
+//                           style: TextStyle(
+//                               fontSize: 18,
+//                               fontWeight: FontWeight.bold,
+//                               color: Colors.deepOrangeAccent),
+//                         )),
+//                   ),
+//                   Padding(
+//                     padding: EdgeInsets.all(2),
+//                     child: InkWell(
+//                       splashColor: Colors.blue.withAlpha(30),
+//                       onTap: () {
+//                         debugPrint('Card tapped.');
+//                       },
+//                       borderRadius: BorderRadius.circular(25),
+//                       child: Icon(
+//                         Icons.arrow_circle_right_outlined,
+//                         size: 60,
+//                         color: Colors.deepOrange,
+//                       ),
+//                     ),
+//                   ),
+//                 ],
+//               ),
+//             ),
+//           ),
+//           Container(
+//             child: Card(
+//               clipBehavior: Clip.hardEdge,
+//               color: Colors.lime,
+//               child: Column(
+//                 mainAxisAlignment: MainAxisAlignment.start,
+//                 children: [
+//                   SizedBox(
+//                     height: 60,
+//                     child: Center(
+//                         child: Text(
+//                           'Fourth Year',
+//                           style: TextStyle(
+//                               fontSize: 18,
+//                               fontWeight: FontWeight.bold,
+//                               color: Colors.deepOrangeAccent),
+//                         )),
+//                   ),
+//                   Padding(
+//                     padding: EdgeInsets.all(2),
+//                     child: InkWell(
+//                       splashColor: Colors.blue.withAlpha(30),
+//                       onTap: () {
+//                         debugPrint('Card tapped.');
+//                       },
+//                       borderRadius: BorderRadius.circular(25),
+//                       child: Icon(
+//                         Icons.arrow_circle_right_outlined,
+//                         size: 60,
+//                         color: Colors.deepOrange,
+//                       ),
+//                     ),
+//                   ),
+//                 ],
+//               ),
+//             ),
+//           ),
+//         ]);
+//   }
+// }
+
+class ACYFirst extends StatefulWidget {
+  final Function(int) onCardPressed;
+
+  const ACYFirst({Key? key, required this.onCardPressed}) : super(key: key);
+
+  @override
+  State<ACYFirst> createState() => _ACYFirstState();
+}
+
+class _ACYFirstState extends State<ACYFirst> {
+  List<Map<String, dynamic>> acYearList = [];
+
+  @override
+  void initState() {
+    super.initState();
+    loadData();
+  }
+
+  loadData() async {
+    acYearList = await AcademicOperation().getAcYears();
+    print(acYearList);
+
+    setState(() {});
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: EdgeInsets.all(2),
+      padding: EdgeInsets.all(6),
+      decoration: BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(6)),color: Colors.black12),
+      child: Column(
+        children: [
+          ExpansionPanelList.radio(
+            animationDuration: Duration(milliseconds: 800),
+            expandedHeaderPadding: EdgeInsets.all(10.0),
+            initialOpenPanelValue: 1,
+            children: acYearList.map((item) {
+              return ExpansionPanelRadio(
+                backgroundColor: Colors.lightBlue,
+                canTapOnHeader: true,
+                headerBuilder: (BuildContext context, bool isExpanded) {
+                  return ListTile(
+                    title: Text(item['documentID']),
+                  );
+                },
+                body: Container(
+                  color: Colors.lightBlueAccent,
+                  child: Card(
+                    child: Text('afsassas'),
+                  ),
+                  // Add any additional content you want to show when the panel is expanded
+                  // This can be any widget or UI you want to display
+                ),
+                value: item['documentID'],
+              );
+            }).toList(),
+            materialGapSize: 16,
+          ),
+          ElevatedButton(onPressed: () {
+            widget.onCardPressed(0);
+
+          }, child: Text('back'))
+        ],
+      ),
+    );
+  }
+}

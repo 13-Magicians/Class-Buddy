@@ -5,16 +5,19 @@ class AcademicOperation {
 
   Future getAcYears() async {
     QuerySnapshot querySnapshot = await db.collection('AcademicYear').get();
-    List<String> documentIds = [];
+    List<Map<String, dynamic>> documentIds = [];
 
     querySnapshot.docs.forEach((doc) {
-      documentIds.add(doc.id);
+      Map<String, dynamic> acY = {
+        'documentID': doc.id,
+      };
+
+      documentIds.add(acY);
     });
 
-    print(documentIds);
+    print(documentIds.length);
 
-
-
+    return documentIds;
 
   }
 
