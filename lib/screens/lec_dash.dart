@@ -1,8 +1,10 @@
 import 'package:classbuddy/services/auth.dart';
+import 'package:classbuddy/services/fireCourseData.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import '../operations/lectureCourse.dart';
 import '../services/fireDatabase.dart';
+import '../services/fireManageDep.dart';
 
 class LecDash extends StatefulWidget {
   const LecDash({super.key});
@@ -23,11 +25,11 @@ class _LecDashState extends State<LecDash> {
     lProfile(),
   ];
 
-  void _onItemTapped(int index) {
-    setState(() {
-      currentPageIndex = index;
-    });
-  }
+  // void _onItemTapped(int index) {
+  //   setState(() {
+  //     currentPageIndex = index;
+  //   });
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -166,8 +168,6 @@ class _mangeCourseState extends State<mangeCourse>
 
   List<Widget> _mcwidgetOptions = [];
 
-
-
   @override
   void initState() {
     super.initState();
@@ -177,31 +177,35 @@ class _mangeCourseState extends State<mangeCourse>
           setState(() {
             currentPageIndex = index;
           });
-          },
+        },
       ),
-      ACYFirst(onCardPressed: (index) {
-        setState(() {
-          currentPageIndex = index;
-        });
-      },),
-      ACYSecond(onCardPressed: (index) {
-        setState(() {
-          currentPageIndex = index;
-        });
-      },),
+      ACYFirst(
+        onCardPressed: (index) {
+          setState(() {
+            currentPageIndex = index;
+          });
+        },
+      ),
+      ACYSecond(
+        onCardPressed: (index) {
+          setState(() {
+            currentPageIndex = index;
+          });
+        },
+      ),
       Text('11Chat'),
     ];
-    loadData();
+    // loadData();
   }
 
-  loadData() async {
-    acYearList = await AcademicOperation().getAcYears();
-    print(acYearList);
+  // loadData() async {
+  //   acYearList = await AcademicOperation().getAcYears();
+  //   print(acYearList);
+  //
+  //   setState(() {});
+  // }
 
-    setState(() {});
-  }
-
-  int _expandedPanelIndex = -1;
+  // int _expandedPanelIndex = -1;
 
   @override
   Widget build(BuildContext context) {
@@ -238,7 +242,16 @@ class _mangeCourseState extends State<mangeCourse>
                 child: _mcwidgetOptions.elementAt(currentPageIndex),
               ),
               SizedBox(
-                child: Text('division'),
+                child: Center(
+                  child: Column(
+                    children: [
+                      Text('division'),
+                      ElevatedButton(onPressed: () {
+                        AcademicOperation().getMyCourse();
+                      }, child: Text('press'))
+                    ],
+                  ),
+                ),
               )
             ],
           )),
@@ -373,18 +386,18 @@ class ListMyCourse extends StatefulWidget {
 }
 
 class _ListMyCourseState extends State<ListMyCourse> {
-  List<Map<String, dynamic>> acYearList = [];
+  // List<Map<String, dynamic>> acYearList = [];
 
-  void initState() {
-    super.initState();
-    loadData();
-  }
-
-  loadData() async {
-    // acYearList = await DataOrgManage().departmentList();
-
-    setState(() {});
-  }
+  // void initState() {
+  //   super.initState();
+  //   loadData();
+  // }
+  //
+  // loadData() async {
+  //   // acYearList = await DataOrgManage().departmentList();
+  //
+  //   setState(() {});
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -448,7 +461,7 @@ class _MenuCardsMCState extends State<MenuCardsMC> {
               child: InkWell(
                 splashColor: Colors.blue.withAlpha(30),
                 onTap: () {
-                  widget.onCardPressed(index);// Call the callback function
+                  widget.onCardPressed(index); // Call the callback function
                   print(index);
                 },
                 borderRadius: BorderRadius.circular(25),
@@ -465,179 +478,6 @@ class _MenuCardsMCState extends State<MenuCardsMC> {
     );
   }
 }
-
-
-
-
-// class MenuCardsMC extends StatefulWidget {
-//   final Function(int) onCardPressed;
-//   const MenuCardsMC({Key key, this.onCardPressed}) : super(key: key);
-//
-//   @override
-//   State<MenuCardsMC> createState() => _MenuCardsMCState();
-// }
-//
-// class _MenuCardsMCState extends State<MenuCardsMC> {
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     return GridView.count(
-//         crossAxisCount: 2,
-//         padding: EdgeInsets.all(20),
-//         crossAxisSpacing: 20,
-//         mainAxisSpacing: 20,
-//         children: [
-//           Container(
-//             child: Card(
-//               clipBehavior: Clip.hardEdge,
-//               color: Colors.lime,
-//               child: Column(
-//                 mainAxisAlignment: MainAxisAlignment.start,
-//                 children: [
-//                   SizedBox(
-//                     height: 60,
-//                     child: Center(
-//                         child: Text(
-//                       'First Year',
-//                       style: TextStyle(
-//                           fontSize: 18,
-//                           fontWeight: FontWeight.bold,
-//                           color: Colors.deepOrangeAccent),
-//                     )),
-//                   ),
-//                   Padding(
-//                     padding: EdgeInsets.all(2),
-//                     child: InkWell(
-//                       splashColor: Colors.blue.withAlpha(30),
-//                       onTap: () {
-//                         debugPrint('Card tapped.');
-//                       },
-//                       borderRadius: BorderRadius.circular(25),
-//                       child: Icon(
-//                         Icons.arrow_circle_right_outlined,
-//                         size: 60,
-//                         color: Colors.deepOrange,
-//                       ),
-//                     ),
-//                   ),
-//                 ],
-//               ),
-//             ),
-//           ),
-//           Container(
-//             child: Card(
-//               clipBehavior: Clip.hardEdge,
-//               color: Colors.lime,
-//               child: Column(
-//                 mainAxisAlignment: MainAxisAlignment.start,
-//                 children: [
-//                   SizedBox(
-//                     height: 60,
-//                     child: Center(
-//                         child: Text(
-//                           'Second Year',
-//                           style: TextStyle(
-//                               fontSize: 18,
-//                               fontWeight: FontWeight.bold,
-//                               color: Colors.deepOrangeAccent),
-//                         )),
-//                   ),
-//                   Padding(
-//                     padding: EdgeInsets.all(2),
-//                     child: InkWell(
-//                       splashColor: Colors.blue.withAlpha(30),
-//                       onTap: () {
-//                         debugPrint('Card tapped.');
-//                       },
-//                       borderRadius: BorderRadius.circular(25),
-//                       child: Icon(
-//                         Icons.arrow_circle_right_outlined,
-//                         size: 60,
-//                         color: Colors.deepOrange,
-//                       ),
-//                     ),
-//                   ),
-//                 ],
-//               ),
-//             ),
-//           ),
-//           Container(
-//             child: Card(
-//               clipBehavior: Clip.hardEdge,
-//               color: Colors.lime,
-//               child: Column(
-//                 mainAxisAlignment: MainAxisAlignment.start,
-//                 children: [
-//                   SizedBox(
-//                     height: 60,
-//                     child: Center(
-//                         child: Text(
-//                           'Third Year',
-//                           style: TextStyle(
-//                               fontSize: 18,
-//                               fontWeight: FontWeight.bold,
-//                               color: Colors.deepOrangeAccent),
-//                         )),
-//                   ),
-//                   Padding(
-//                     padding: EdgeInsets.all(2),
-//                     child: InkWell(
-//                       splashColor: Colors.blue.withAlpha(30),
-//                       onTap: () {
-//                         debugPrint('Card tapped.');
-//                       },
-//                       borderRadius: BorderRadius.circular(25),
-//                       child: Icon(
-//                         Icons.arrow_circle_right_outlined,
-//                         size: 60,
-//                         color: Colors.deepOrange,
-//                       ),
-//                     ),
-//                   ),
-//                 ],
-//               ),
-//             ),
-//           ),
-//           Container(
-//             child: Card(
-//               clipBehavior: Clip.hardEdge,
-//               color: Colors.lime,
-//               child: Column(
-//                 mainAxisAlignment: MainAxisAlignment.start,
-//                 children: [
-//                   SizedBox(
-//                     height: 60,
-//                     child: Center(
-//                         child: Text(
-//                           'Fourth Year',
-//                           style: TextStyle(
-//                               fontSize: 18,
-//                               fontWeight: FontWeight.bold,
-//                               color: Colors.deepOrangeAccent),
-//                         )),
-//                   ),
-//                   Padding(
-//                     padding: EdgeInsets.all(2),
-//                     child: InkWell(
-//                       splashColor: Colors.blue.withAlpha(30),
-//                       onTap: () {
-//                         debugPrint('Card tapped.');
-//                       },
-//                       borderRadius: BorderRadius.circular(25),
-//                       child: Icon(
-//                         Icons.arrow_circle_right_outlined,
-//                         size: 60,
-//                         color: Colors.deepOrange,
-//                       ),
-//                     ),
-//                   ),
-//                 ],
-//               ),
-//             ),
-//           ),
-//         ]);
-//   }
-// }
 
 class ACYFirst extends StatefulWidget {
   final Function(int) onCardPressed;
@@ -660,6 +500,8 @@ class _ACYFirstState extends State<ACYFirst> {
   loadData() async {
     acYearList = await AcademicOperation().getAcYears();
     print(acYearList);
+    acYearList.removeWhere((item) => item['currentYear'] < 1);
+    print(acYearList);
 
     setState(() {});
   }
@@ -669,7 +511,9 @@ class _ACYFirstState extends State<ACYFirst> {
     return Container(
       margin: EdgeInsets.all(2),
       padding: EdgeInsets.all(6),
-      decoration: BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(6)),color: Colors.black12),
+      decoration: BoxDecoration(
+          borderRadius: BorderRadius.all(Radius.circular(6)),
+          color: Colors.black12),
       child: Column(
         children: [
           ExpansionPanelList.radio(
@@ -686,27 +530,186 @@ class _ACYFirstState extends State<ACYFirst> {
                   );
                 },
                 body: Container(
-                  color: Colors.lightBlueAccent,
-                  child: Card(
-                    child: Text('afsassas'),
-                  ),
-                  // Add any additional content you want to show when the panel is expanded
-                  // This can be any widget or UI you want to display
-                ),
+                    child: Column(
+                  children: [
+                    Container(
+                      width: 300,
+                      height: 50,
+                      child: Card(
+                        child: InkWell(
+                          borderRadius: BorderRadius.all(Radius.circular(10)),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              Icon(Icons.add_task_outlined),
+                              Text('Add Course')
+                            ],
+                          ),
+                          splashColor: Colors.deepOrange,
+                          onTap: () {
+                            print(item);
+                            _makeCourse(context, item);
+                          },
+                        ),
+                      ),
+                    ),
+                  ],
+                )
+                    // Add any additional content you want to show when the panel is expanded
+                    // This can be any widget or UI you want to display
+                    ),
                 value: item['documentID'],
               );
             }).toList(),
             materialGapSize: 16,
           ),
-          ElevatedButton(onPressed: () {
-            widget.onCardPressed(0);
-
-          }, child: Text('back'))
+          ElevatedButton(
+              onPressed: () {
+                widget.onCardPressed(0);
+              },
+              child: Text('back'))
         ],
       ),
     );
   }
+
+
+  void _makeCourse(BuildContext context, Map<String, dynamic> item) {
+    final _formKey = GlobalKey<FormState>(); // Add a global key for the form
+    String? _selectedDepartment; // Add a variable to store the selected department
+    TextEditingController _subjectNameController = TextEditingController();
+    TextEditingController _courseCodeController = TextEditingController();
+
+    Navigator.of(context).push(MaterialPageRoute<void>(
+      fullscreenDialog: true,
+      builder: (BuildContext context) {
+        return Scaffold(
+          backgroundColor: Colors.transparent,
+          appBar: AppBar(
+            backgroundColor: Colors.deepOrangeAccent,
+            title: Text('Add New Course'),
+            leading: IconButton(
+              icon: Icon(Icons.close),
+              onPressed: () => Navigator.of(context).pop(),
+            ),
+          ),
+          body: Card(
+            surfaceTintColor: Colors.deepOrange,
+            margin: EdgeInsets.all(10),
+            elevation: 10,
+            child: Padding(
+              padding: EdgeInsets.symmetric(horizontal: 40),
+              child: Form(
+                key: _formKey, // Assign the key to the form
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    TextFormField(
+                      controller: _subjectNameController,
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+                        labelText: 'Subject Name',
+                      ),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter a subject name';
+                        }
+                        return null;
+                      },
+                    ),
+                    SizedBox(height: 16.0),
+                    TextFormField(
+                      controller: _courseCodeController,
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+                        labelText: 'Course Code',
+                        hintText: 'eg: ICT-1305',
+                      ),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter a course code';
+                        }
+                        return null;
+                      },
+                    ),
+                    SizedBox(height: 16.0),
+                    FutureBuilder<List<String>>(
+                      future: _getCourseOptions(), // Replace with your API call
+                      builder: (BuildContext context,
+                          AsyncSnapshot<List<String>> snapshot) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return CircularProgressIndicator();
+                        } else if (snapshot.hasError) {
+                          return Text('Error: ${snapshot.error}');
+                        } else {
+                          return DropdownButtonFormField(
+                            decoration: InputDecoration(
+                              border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+                              labelText: 'Select Department',
+                            ),
+                            value: _selectedDepartment,
+                            validator: (value) {
+                              if (value == null) {
+                                return 'Please select a department';
+                              }
+                              return null;
+                            },
+                            items: snapshot.data!.map((String option) {
+                              return DropdownMenuItem(
+                                value: option,
+                                child: Text(option),
+                              );
+                            }).toList(),
+                            onChanged: (String? value) {
+                              setState(() {
+                                _selectedDepartment = value;
+                              });
+                            },
+                          );
+                        }
+                      },
+                    ),
+                    SizedBox(height: 16.0),
+                    ElevatedButton(
+                      style: ButtonStyle(elevation: MaterialStatePropertyAll(10),),
+                      onPressed: () {
+                        // Validate the form before submission
+                        if (_formKey.currentState!.validate()) {
+                          // Handle form submission here
+                          AcademicOperation().addCourseACY(item['documentID'], _subjectNameController.text, _courseCodeController.text, _selectedDepartment.toString());
+                          Navigator.of(context).pop();
+                        }
+                      },
+                      child: Text('Submit'),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        );
+      },
+    ));
+  }
+
+
+
 }
+
+
+
+
+
+Future<List<String>> _getCourseOptions() async {
+  List<Map<String, dynamic>> departmentList =
+      await DataOrgManage().departmentList();
+  List<String> courseOptions =
+      departmentList.map((department) => department['id'].toString()).toList();
+  return courseOptions;
+}
+
+
 
 class ACYSecond extends StatefulWidget {
   final Function(int) onCardPressed;
@@ -729,6 +732,8 @@ class _ACYSecondState extends State<ACYSecond> {
   loadData() async {
     acYearList = await AcademicOperation().getAcYears();
     print(acYearList);
+    acYearList.removeWhere((item) => item['currentYear'] < 2);
+    print(acYearList);
 
     setState(() {});
   }
@@ -738,7 +743,9 @@ class _ACYSecondState extends State<ACYSecond> {
     return Container(
       margin: EdgeInsets.all(2),
       padding: EdgeInsets.all(6),
-      decoration: BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(6)),color: Colors.black12),
+      decoration: BoxDecoration(
+          borderRadius: BorderRadius.all(Radius.circular(6)),
+          color: Colors.black12),
       child: Column(
         children: [
           ExpansionPanelList.radio(
@@ -767,13 +774,13 @@ class _ACYSecondState extends State<ACYSecond> {
             }).toList(),
             materialGapSize: 16,
           ),
-          ElevatedButton(onPressed: () {
-            widget.onCardPressed(0);
-
-          }, child: Text('back'))
+          ElevatedButton(
+              onPressed: () {
+                widget.onCardPressed(0);
+              },
+              child: Text('back'))
         ],
       ),
     );
   }
 }
-
