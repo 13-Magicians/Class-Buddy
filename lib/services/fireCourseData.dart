@@ -42,13 +42,54 @@ class DbCourseMethods {
   Future getCourseInAY(String documentID, String myID) async {
     List<Map<String, dynamic>> documentIdsList = [];
 
-    try {
-      final DocumentSnapshot<Map<String, dynamic>> batchQuery = await db.collection('AcademicYear').doc(documentID).get();
-      print(batchQuery.reference);
-    } catch (e) {
-      print(e);
+    List<String> collectionNames = [];
 
+    QuerySnapshot<Map<String, dynamic>> collectionsSnapshot = await db.collectionGroup('').get();
+
+    for (QueryDocumentSnapshot<Map<String, dynamic>> snapshot in collectionsSnapshot.docs) {
+      collectionNames.add(snapshot.reference.path.split('/')[0]);
     }
+
+// Remove duplicates if necessary
+    collectionNames = collectionNames.toSet().toList();
+    print(collectionNames);
+
+// Use collectionNames as needed
+
+// Use collectionNames as needed
+
+// Use collectionNames as needed
+
+    // DocumentSnapshot<Map<String, dynamic>> academicYearSnapshot = await db.collection('AcademicYear').doc(documentID).get();
+
+    // if (academicYearSnapshot.exists) {
+    //   List<String> subcollectionNames = [];
+    //   QuerySnapshot<Map<String, dynamic>> collectionsSnapshot = await academicYearSnapshot.reference.collection('agh').get();
+    //   for (DocumentSnapshot<Map<String, dynamic>> collectionSnapshot in collectionsSnapshot.docs) {
+    //     String collectionName = collectionSnapshot.id;
+    //     subcollectionNames.add(collectionName);
+    //     print(collectionName);
+    //   }
+    //
+    //   // Use subcollectionNames as needed
+    // }
+
+    // QuerySnapshot querySnapshot = await db.collection('AcademicYear').doc(documentID).get();
+
+
+    // db.collection('AcademicYear').get().then((value) => {
+    //   value.docs.forEach((results) {
+    //     db.collection('AcademicYear').doc(documentID).collection(collectionPath)
+    //   })
+    // });
+
+    // try {
+    //   final QuerySnapshot<Map<String, dynamic>> batchQuery = await db.collectionGroup('AcademicYear');
+    //   print(batchQuery);
+    // } catch (e) {
+    //   print(e);
+    //
+    // }
 
     // db.collection('AcademicYear').doc(documentID).get().then((QuerySnapshot querySnapshot) {querySnapshot.docs.forEach((doc) {
     //   db.document(doc.id).collection('courseData')
