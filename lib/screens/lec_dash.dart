@@ -1,6 +1,11 @@
 import 'package:classbuddy/services/auth.dart';
 import 'package:classbuddy/services/fireCourseData.dart';
+import 'package:device_preview/device_preview.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
+import 'package:flutter/widgets.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:intl/intl.dart';
 import '../operations/lectureCourse.dart';
 import '../services/fireDatabase.dart';
@@ -246,9 +251,11 @@ class _mangeCourseState extends State<mangeCourse>
                   child: Column(
                     children: [
                       Text('division'),
-                      ElevatedButton(onPressed: () {
-                        AcademicOperation().getMyCourse();
-                      }, child: Text('press'))
+                      ElevatedButton(
+                          onPressed: () {
+                            // AcademicOperation().getMyCourse();
+                          },
+                          child: Text('press'))
                     ],
                   ),
                 ),
@@ -490,6 +497,7 @@ class ACYFirst extends StatefulWidget {
 
 class _ACYFirstState extends State<ACYFirst> {
   List<Map<String, dynamic>> acYearList = [];
+  List<Map<String, dynamic>> acYCourseList = [];
 
   @override
   void initState() {
@@ -501,36 +509,41 @@ class _ACYFirstState extends State<ACYFirst> {
     acYearList = await AcademicOperation().getAcYears();
     print(acYearList);
     acYearList.removeWhere((item) => item['currentYear'] < 1);
-    print(acYearList);
+    // acYCourseList = await AcademicOperation().getMyCourse();
 
     setState(() {});
   }
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: EdgeInsets.all(2),
-      padding: EdgeInsets.all(6),
-      decoration: BoxDecoration(
-          borderRadius: BorderRadius.all(Radius.circular(6)),
-          color: Colors.black12),
-      child: Column(
-        children: [
-          ExpansionPanelList.radio(
-            animationDuration: Duration(milliseconds: 800),
-            expandedHeaderPadding: EdgeInsets.all(10.0),
-            initialOpenPanelValue: 1,
-            children: acYearList.map((item) {
-              return ExpansionPanelRadio(
-                backgroundColor: Colors.lightBlue,
-                canTapOnHeader: true,
-                headerBuilder: (BuildContext context, bool isExpanded) {
-                  return ListTile(
-                    title: Text(item['documentID']),
-                  );
-                },
-                body: Container(
-                    child: Column(
+    return SingleChildScrollView(
+      physics: BouncingScrollPhysics(decelerationRate: ScrollDecelerationRate.normal),
+      child: Container(
+        margin: EdgeInsets.all(2),
+        padding: EdgeInsets.all(6),
+        decoration: BoxDecoration(
+            borderRadius: BorderRadius.all(Radius.circular(6)),),
+        child: Column(
+          children: [
+
+            ClipRRect(
+              borderRadius: BorderRadius.all(Radius.circular(8)),
+              child: ExpansionPanelList.radio(
+        animationDuration: Duration(milliseconds: 800),
+        expandedHeaderPadding: EdgeInsets.all(8.0),
+        initialOpenPanelValue: 1,
+        children: acYearList.map((item) {
+          return ExpansionPanelRadio(
+            backgroundColor: Colors.lightBlue,
+            canTapOnHeader: true,
+            headerBuilder: (BuildContext context, bool isExpanded) {
+              return ListTile(
+                title: Text(item['documentID']),
+              );
+            },
+            body: Container(
+              child: SizedBox(
+                child: Column(
                   children: [
                     Container(
                       width: 300,
@@ -553,30 +566,167 @@ class _ACYFirstState extends State<ACYFirst> {
                         ),
                       ),
                     ),
-                  ],
-                )
-                    // Add any additional content you want to show when the panel is expanded
-                    // This can be any widget or UI you want to display
+                    Container(
+                      child:FutureBuilder<List<Map<String, dynamic>>>(
+                        future: AcademicOperation().getMyCourse(item['documentID']),
+                        builder: (context, AsyncSnapshot<List<Map<String, dynamic>>> snapshot) {
+                          if (snapshot.connectionState == ConnectionState.waiting) {
+                            return CircularProgressIndicator();
+                          } else {
+                            if (snapshot.hasError) {
+                              return Text('Error: ${snapshot.error}');
+                            } else {
+                              if (snapshot.data == null || snapshot.data!.isEmpty) {
+                                return ListTile(
+                                  title: Text('Nothing found'),
+                                );
+                              } else {
+                                return ListView.builder(
+                                  padding: EdgeInsets.all(4),
+                                  physics: NeverScrollableScrollPhysics(),
+                                  shrinkWrap: true,
+                                  itemCount: snapshot.data!.length,
+                                  itemBuilder: (context, index) {
+                                    final courseData = snapshot.data![index];
+                                    final courseName = courseData['id'] as String?;
+                                    return Card(
+                                      child: ListTile(
+                                        title: Text(courseName ?? 'Unknown'),
+                                        trailing: PopupMenuButton(
+                                          color: Colors.cyan,
+                                          elevation: 10,
+                                          shape:RoundedRectangleBorder(borderRadius: BorderRadius.circular(25)),
+                                          popUpAnimationStyle: AnimationStyle(
+                                              curve: Curves.easeInOut,
+                                              duration: Duration(milliseconds: 600)),
+                                          itemBuilder: (context) {
+                                          return [
+                                            PopupMenuItem(
+                                              padding: EdgeInsets.only(left: 30),
+                                              child: Text('Delete'),
+                                              onTap:() {
+                                                DbCourseMethods().deleteCourse(item['documentID'],courseData['id']);
+                                                loadData();
+                                                print('ssss');
+                                                },
+                                            ),
+                                          ];
+                                        },),
+                                        leading: Icon(Icons.cyclone_outlined),
+                                        subtitle: Row(
+                                          children: [
+                                            Text(courseData['subjectName'].toString()),
+                                          ],
+                                        ),
+                                        onTap: () {
+                                          print('tap  $courseName');
+                                        },
+                                      ),
+                                    );
+                                  },
+                                );
+                              }
+                            }
+                          }
+                        },
+                      ),
+
                     ),
-                value: item['documentID'],
-              );
-            }).toList(),
-            materialGapSize: 16,
-          ),
-          ElevatedButton(
-              onPressed: () {
-                widget.onCardPressed(0);
-              },
-              child: Text('back'))
-        ],
+                  ],
+                ),
+              ),
+            ),
+            value: item['documentID'],
+          );
+        }).toList(),
+        materialGapSize: 16,
+        elevation: 8,
+      ),),
+
+
+
+        // ExpansionPanelList.radio(
+            //   animationDuration: Duration(milliseconds: 800),
+            //   expandedHeaderPadding: EdgeInsets.all(10.0),
+            //   initialOpenPanelValue: 1,
+            //   children: acYearList.map((item) {
+            //     return ExpansionPanelRadio(
+            //       backgroundColor: Colors.lightBlue,
+            //       canTapOnHeader: true,
+            //       headerBuilder: (BuildContext context, bool isExpanded) {
+            //         return ListTile(
+            //           title: Text(item['documentID']),
+            //         );
+            //       },
+            //       body: Container(
+            //         child: SizedBox(
+            //           child: Column(
+            //             children: [
+            //               Container(
+            //                 width: 300,
+            //                 height: 50,
+            //                 child: Card(
+            //                   child: InkWell(
+            //                     borderRadius: BorderRadius.all(Radius.circular(10)),
+            //                     child: Row(
+            //                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            //                       children: [
+            //                         Icon(Icons.add_task_outlined),
+            //                         Text('Add Course')
+            //                       ],
+            //                     ),
+            //                     splashColor: Colors.deepOrange,
+            //                     onTap: () {
+            //                       print(item);
+            //                       _makeCourse(context, item);
+            //                       },
+            //                   ),
+            //                 ),
+            //               ),
+            //               Container(child: FutureBuilder(
+            //                 future: AcademicOperation().getMyCourse(item['documentID']), // Call a function to fetch data based on documentID
+            //                 builder: (context, snapshot) {
+            //                   if (snapshot.connectionState == ConnectionState.waiting) {
+            //                     return CircularProgressIndicator(); // Show a loading indicator while fetching data
+            //                   } else {
+            //                     if (snapshot.data == null || snapshot.data.isEmpty) {
+            //                       print(snapshot.data);
+            //                       return ListTile(
+            //                         title: Text('Nothing found'),
+            //                       );
+            //                     } else {
+            //                       print(snapshot.data);
+            //                       return Card(child:ListTile(title: Text(item.length.toString()),)); // Pass the fetched data to your ListView widget
+            //                     }
+            //
+            //                   }
+            //                 },
+            //               ),),
+            //             ],
+            //           ),
+            //         ),
+            //       ),
+            //       value: item['documentID'],
+            //     );
+            //   }).toList(),
+            //   materialGapSize: 16,
+            //   elevation: 8,
+            // ),
+            ElevatedButton(
+                onPressed: () {
+                  widget.onCardPressed(0);
+                },
+                child: Text('back'))
+          ],
+        ),
       ),
     );
   }
 
-
   void _makeCourse(BuildContext context, Map<String, dynamic> item) {
     final _formKey = GlobalKey<FormState>(); // Add a global key for the form
-    String? _selectedDepartment; // Add a variable to store the selected department
+    String?
+        _selectedDepartment; // Add a variable to store the selected department
     TextEditingController _subjectNameController = TextEditingController();
     TextEditingController _courseCodeController = TextEditingController();
 
@@ -607,7 +757,8 @@ class _ACYFirstState extends State<ACYFirst> {
                     TextFormField(
                       controller: _subjectNameController,
                       decoration: InputDecoration(
-                        border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+                        border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10)),
                         labelText: 'Subject Name',
                       ),
                       validator: (value) {
@@ -621,7 +772,8 @@ class _ACYFirstState extends State<ACYFirst> {
                     TextFormField(
                       controller: _courseCodeController,
                       decoration: InputDecoration(
-                        border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+                        border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10)),
                         labelText: 'Course Code',
                         hintText: 'eg: ICT-1305',
                       ),
@@ -645,7 +797,8 @@ class _ACYFirstState extends State<ACYFirst> {
                         } else {
                           return DropdownButtonFormField(
                             decoration: InputDecoration(
-                              border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+                              border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(10)),
                               labelText: 'Select Department',
                             ),
                             value: _selectedDepartment,
@@ -672,12 +825,19 @@ class _ACYFirstState extends State<ACYFirst> {
                     ),
                     SizedBox(height: 16.0),
                     ElevatedButton(
-                      style: ButtonStyle(elevation: MaterialStatePropertyAll(10),),
+                      style: ButtonStyle(
+                        elevation: MaterialStatePropertyAll(10),
+                      ),
                       onPressed: () {
                         // Validate the form before submission
                         if (_formKey.currentState!.validate()) {
                           // Handle form submission here
-                          AcademicOperation().addCourseACY(item['documentID'], _subjectNameController.text, _courseCodeController.text, _selectedDepartment.toString());
+                          AcademicOperation().addCourseACY(
+                              item['documentID'],
+                              _subjectNameController.text,
+                              _courseCodeController.text,
+                              _selectedDepartment.toString());
+                          loadData();
                           Navigator.of(context).pop();
                         }
                       },
@@ -692,14 +852,7 @@ class _ACYFirstState extends State<ACYFirst> {
       },
     ));
   }
-
-
-
 }
-
-
-
-
 
 Future<List<String>> _getCourseOptions() async {
   List<Map<String, dynamic>> departmentList =
@@ -708,8 +861,6 @@ Future<List<String>> _getCourseOptions() async {
       departmentList.map((department) => department['id'].toString()).toList();
   return courseOptions;
 }
-
-
 
 class ACYSecond extends StatefulWidget {
   final Function(int) onCardPressed;

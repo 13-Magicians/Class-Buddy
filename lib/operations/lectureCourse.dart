@@ -48,11 +48,48 @@ class AcademicOperation {
     // Use the provided subjectName, courseCode, and selectedDepartment to send the data
   }
 
-  Future<void> getMyCourse() async {
+  Future<List<Map<String, dynamic>>> getMyCourse(ACYear) async {
+
+    List<Map<String, dynamic>> MyCourseList = [];
+    List<Map<String, dynamic>> CourseList = [];
+
+    CourseList = await DbCourseMethods().getCourseInAY(ACYear);
     final localUser = GetStorage();
     final userData = localUser.read('user');
-    print(userData['id']);
-    await DbCourseMethods().getCourseInAY('18-19-Batch', userData['id']);
+    CourseList.forEach((element) {
+      if (userData['id'] == element['creator']) {
+        print('bbbbbbbbbbbbbbbbbbbbb');
+        MyCourseList.add(element);
+      }
+      print(userData['id']);
+      print(element['creator']);
+      print('jjjjjjjjjjjjjj');
+    });
+    print('jjjjjjjjjjjjjjpppppppppppppppp');
+    print(MyCourseList);
+    print('vvvvvvvvvvvvvvvvvvvvvvvvvvvv');
+
+
+    // try {
+    //   print(ACYear);
+    //
+    //   // final localUser = GetStorage();
+    //   // final userData = localUser.read('user');
+    //   ACYCourseList = await DbCourseMethods().getCourseInAY(ACYear);
+    //   print('vvvvvvvvvvvvvvvvvvvvvvvvvvvv');
+    //   print('vvvvvvvvvvvvvvvvvvvvvvvvvvvv');
+    //   print(ACYCourseList);
+    //
+    //   return ACYCourseList;
+    //
+    // } catch (e) {
+    //   print(e);
+    //   return ACYCourseList;
+    // }
+
+    return MyCourseList;
+
+
   }
 
 
