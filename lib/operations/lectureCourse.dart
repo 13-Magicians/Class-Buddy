@@ -19,17 +19,11 @@ class AcademicOperation {
       documentIds.add(acY);
     });
 
-    print(documentIds.length);
-
     return documentIds;
   }
 
 
   Future<void> addCourseACY(String documentID, String subjectName, String courseCode, String selectedDepartment) async {
-    print(subjectName);
-    print(courseCode);
-    print(selectedDepartment);
-    print(documentID);
     final localUser = GetStorage();
     final userData = localUser.read('user');
     print(userData['id']);
@@ -58,34 +52,11 @@ class AcademicOperation {
     final userData = localUser.read('user');
     CourseList.forEach((element) {
       if (userData['id'] == element['creator']) {
-        print('bbbbbbbbbbbbbbbbbbbbb');
         MyCourseList.add(element);
       }
-      print(userData['id']);
-      print(element['creator']);
-      print('jjjjjjjjjjjjjj');
+
     });
-    print('jjjjjjjjjjjjjjpppppppppppppppp');
-    print(MyCourseList);
-    print('vvvvvvvvvvvvvvvvvvvvvvvvvvvv');
 
-
-    // try {
-    //   print(ACYear);
-    //
-    //   // final localUser = GetStorage();
-    //   // final userData = localUser.read('user');
-    //   ACYCourseList = await DbCourseMethods().getCourseInAY(ACYear);
-    //   print('vvvvvvvvvvvvvvvvvvvvvvvvvvvv');
-    //   print('vvvvvvvvvvvvvvvvvvvvvvvvvvvv');
-    //   print(ACYCourseList);
-    //
-    //   return ACYCourseList;
-    //
-    // } catch (e) {
-    //   print(e);
-    //   return ACYCourseList;
-    // }
 
     return MyCourseList;
 

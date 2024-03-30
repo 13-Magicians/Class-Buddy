@@ -26,11 +26,11 @@ class _AdminDashState extends State<AdminDash> {
     aProfile(),
   ];
 
-  void _onItemTapped(int index) {
-    setState(() {
-      currentPageIndex = index;
-    });
-  }
+  // void _onItemTapped(int index) {
+  //   setState(() {
+  //     currentPageIndex = index;
+  //   });
+  // }
 
   @override
   Widget build(BuildContext context) {

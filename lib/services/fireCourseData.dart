@@ -77,7 +77,7 @@ class DbCourseMethods {
     return subCollectionNames;
   }
 
-  Future<void> deleteCourse(documentID,courseCode) async {
+  Future deleteCourse(documentID,courseCode) async {
     db.collection('AcademicYear').doc(documentID).collection('subjects').doc(courseCode).delete();
   }
 

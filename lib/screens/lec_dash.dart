@@ -1,11 +1,10 @@
+import 'dart:async';
 import 'package:classbuddy/services/auth.dart';
 import 'package:classbuddy/services/fireCourseData.dart';
-import 'package:device_preview/device_preview.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
-import 'package:get_storage/get_storage.dart';
 import 'package:intl/intl.dart';
 import '../operations/lectureCourse.dart';
 import '../services/fireDatabase.dart';
@@ -200,17 +199,7 @@ class _mangeCourseState extends State<mangeCourse>
       ),
       Text('11Chat'),
     ];
-    // loadData();
   }
-
-  // loadData() async {
-  //   acYearList = await AcademicOperation().getAcYears();
-  //   print(acYearList);
-  //
-  //   setState(() {});
-  // }
-
-  // int _expandedPanelIndex = -1;
 
   @override
   Widget build(BuildContext context) {
@@ -499,6 +488,9 @@ class _ACYFirstState extends State<ACYFirst> {
   List<Map<String, dynamic>> acYearList = [];
   List<Map<String, dynamic>> acYCourseList = [];
 
+  List<Map<String, String>> links = [];
+  List<TextEditingController> controllers = [];
+
   @override
   void initState() {
     super.initState();
@@ -507,9 +499,7 @@ class _ACYFirstState extends State<ACYFirst> {
 
   loadData() async {
     acYearList = await AcademicOperation().getAcYears();
-    print(acYearList);
     acYearList.removeWhere((item) => item['currentYear'] < 1);
-    // acYCourseList = await AcademicOperation().getMyCourse();
 
     setState(() {});
   }
@@ -517,201 +507,171 @@ class _ACYFirstState extends State<ACYFirst> {
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
-      physics: BouncingScrollPhysics(decelerationRate: ScrollDecelerationRate.normal),
+      physics: BouncingScrollPhysics(
+          decelerationRate: ScrollDecelerationRate.normal),
       child: Container(
         margin: EdgeInsets.all(2),
         padding: EdgeInsets.all(6),
         decoration: BoxDecoration(
-            borderRadius: BorderRadius.all(Radius.circular(6)),),
+          borderRadius: BorderRadius.all(Radius.circular(6)),
+        ),
         child: Column(
           children: [
-
             ClipRRect(
               borderRadius: BorderRadius.all(Radius.circular(8)),
               child: ExpansionPanelList.radio(
-        animationDuration: Duration(milliseconds: 800),
-        expandedHeaderPadding: EdgeInsets.all(8.0),
-        initialOpenPanelValue: 1,
-        children: acYearList.map((item) {
-          return ExpansionPanelRadio(
-            backgroundColor: Colors.lightBlue,
-            canTapOnHeader: true,
-            headerBuilder: (BuildContext context, bool isExpanded) {
-              return ListTile(
-                title: Text(item['documentID']),
-              );
-            },
-            body: Container(
-              child: SizedBox(
-                child: Column(
-                  children: [
-                    Container(
-                      width: 300,
-                      height: 50,
-                      child: Card(
-                        child: InkWell(
-                          borderRadius: BorderRadius.all(Radius.circular(10)),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                              Icon(Icons.add_task_outlined),
-                              Text('Add Course')
-                            ],
-                          ),
-                          splashColor: Colors.deepOrange,
-                          onTap: () {
-                            print(item);
-                            _makeCourse(context, item);
-                          },
+                animationDuration: Duration(milliseconds: 800),
+                expandedHeaderPadding: EdgeInsets.all(8.0),
+                initialOpenPanelValue: 1,
+                children: acYearList.map((item) {
+                  return ExpansionPanelRadio(
+                    backgroundColor: Colors.cyan.shade400,
+                    canTapOnHeader: true,
+                    headerBuilder: (BuildContext context, bool isExpanded) {
+                      return Container(
+                        padding: EdgeInsets.all(6),
+                        child: ListTile(
+                          leading: Icon(Icons.collections_bookmark_outlined),
+                          tileColor: Colors.cyanAccent.shade400,
+                          shape: RoundedRectangleBorder(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(10))),
+                          title: Text(item['documentID']),
+                        ),
+                      );
+                    },
+                    body: Container(
+                      child: SizedBox(
+                        child: Column(
+                          children: [
+                            Container(
+                              width: 300,
+                              height: 50,
+                              child: Card(
+                                child: InkWell(
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(10)),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceEvenly,
+                                    children: [
+                                      Icon(Icons.add_task_outlined),
+                                      Text('Add Course')
+                                    ],
+                                  ),
+                                  splashColor: Colors.deepOrange,
+                                  onTap: () {
+                                    print(item);
+                                    _makeCourse(context, item);
+                                  },
+                                ),
+                              ),
+                            ),
+                            Container(
+                              child: FutureBuilder<List<Map<String, dynamic>>>(
+                                future: AcademicOperation()
+                                    .getMyCourse(item['documentID']),
+                                builder: (context,
+                                    AsyncSnapshot<List<Map<String, dynamic>>>
+                                        snapshot) {
+                                  if (snapshot.connectionState ==
+                                      ConnectionState.waiting) {
+                                    return CircularProgressIndicator();
+                                  } else {
+                                    if (snapshot.hasError) {
+                                      return Text('Error: ${snapshot.error}');
+                                    } else {
+                                      if (snapshot.data == null ||
+                                          snapshot.data!.isEmpty) {
+                                        return ListTile(
+                                          title: Text('Nothing found'),
+                                        );
+                                      } else {
+                                        return ListView.builder(
+                                          padding: EdgeInsets.all(4),
+                                          physics:
+                                              NeverScrollableScrollPhysics(),
+                                          shrinkWrap: true,
+                                          itemCount: snapshot.data!.length,
+                                          itemBuilder: (context, index) {
+                                            final courseData =
+                                                snapshot.data![index];
+                                            final courseName =
+                                                courseData['id'] as String?;
+                                            return Card(
+                                              child: ListTile(
+                                                title: Text(
+                                                    courseName ?? 'Unknown'),
+                                                trailing: PopupMenuButton(
+                                                  color: Colors.cyan,
+                                                  elevation: 10,
+                                                  shape: RoundedRectangleBorder(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              25)),
+                                                  popUpAnimationStyle:
+                                                      AnimationStyle(
+                                                          curve:
+                                                              Curves.easeInOut,
+                                                          duration: Duration(
+                                                              milliseconds:
+                                                                  600)),
+                                                  itemBuilder: (context) {
+                                                    return [
+                                                      PopupMenuItem(
+                                                        padding:
+                                                            EdgeInsets.only(
+                                                                left: 30),
+                                                        child: Text('Delete'),
+                                                        onTap: () {
+                                                          deleteConfirmDialog(
+                                                              context,
+                                                              item[
+                                                                  'documentID'],
+                                                              courseData['id']);
+                                                          print('ssss');
+                                                        },
+                                                      ),
+                                                    ];
+                                                  },
+                                                ),
+                                                leading: Icon(
+                                                    Icons.cyclone_outlined),
+                                                subtitle: Row(
+                                                  children: [
+                                                    Text(courseData[
+                                                            'subjectName']
+                                                        .toString()),
+                                                  ],
+                                                ),
+                                                onTap: () {
+                                                  print('tap  $courseName');
+                                                  courseInside(
+                                                      context,
+                                                      item['documentID'],
+                                                      courseData);
+                                                },
+                                              ),
+                                            );
+                                          },
+                                        );
+                                      }
+                                    }
+                                  }
+                                },
+                              ),
+                            ),
+                          ],
                         ),
                       ),
                     ),
-                    Container(
-                      child:FutureBuilder<List<Map<String, dynamic>>>(
-                        future: AcademicOperation().getMyCourse(item['documentID']),
-                        builder: (context, AsyncSnapshot<List<Map<String, dynamic>>> snapshot) {
-                          if (snapshot.connectionState == ConnectionState.waiting) {
-                            return CircularProgressIndicator();
-                          } else {
-                            if (snapshot.hasError) {
-                              return Text('Error: ${snapshot.error}');
-                            } else {
-                              if (snapshot.data == null || snapshot.data!.isEmpty) {
-                                return ListTile(
-                                  title: Text('Nothing found'),
-                                );
-                              } else {
-                                return ListView.builder(
-                                  padding: EdgeInsets.all(4),
-                                  physics: NeverScrollableScrollPhysics(),
-                                  shrinkWrap: true,
-                                  itemCount: snapshot.data!.length,
-                                  itemBuilder: (context, index) {
-                                    final courseData = snapshot.data![index];
-                                    final courseName = courseData['id'] as String?;
-                                    return Card(
-                                      child: ListTile(
-                                        title: Text(courseName ?? 'Unknown'),
-                                        trailing: PopupMenuButton(
-                                          color: Colors.cyan,
-                                          elevation: 10,
-                                          shape:RoundedRectangleBorder(borderRadius: BorderRadius.circular(25)),
-                                          popUpAnimationStyle: AnimationStyle(
-                                              curve: Curves.easeInOut,
-                                              duration: Duration(milliseconds: 600)),
-                                          itemBuilder: (context) {
-                                          return [
-                                            PopupMenuItem(
-                                              padding: EdgeInsets.only(left: 30),
-                                              child: Text('Delete'),
-                                              onTap:() {
-                                                DbCourseMethods().deleteCourse(item['documentID'],courseData['id']);
-                                                loadData();
-                                                print('ssss');
-                                                },
-                                            ),
-                                          ];
-                                        },),
-                                        leading: Icon(Icons.cyclone_outlined),
-                                        subtitle: Row(
-                                          children: [
-                                            Text(courseData['subjectName'].toString()),
-                                          ],
-                                        ),
-                                        onTap: () {
-                                          print('tap  $courseName');
-                                        },
-                                      ),
-                                    );
-                                  },
-                                );
-                              }
-                            }
-                          }
-                        },
-                      ),
-
-                    ),
-                  ],
-                ),
+                    value: item['documentID'],
+                  );
+                }).toList(),
+                materialGapSize: 16,
+                elevation: 8,
               ),
             ),
-            value: item['documentID'],
-          );
-        }).toList(),
-        materialGapSize: 16,
-        elevation: 8,
-      ),),
-
-
-
-        // ExpansionPanelList.radio(
-            //   animationDuration: Duration(milliseconds: 800),
-            //   expandedHeaderPadding: EdgeInsets.all(10.0),
-            //   initialOpenPanelValue: 1,
-            //   children: acYearList.map((item) {
-            //     return ExpansionPanelRadio(
-            //       backgroundColor: Colors.lightBlue,
-            //       canTapOnHeader: true,
-            //       headerBuilder: (BuildContext context, bool isExpanded) {
-            //         return ListTile(
-            //           title: Text(item['documentID']),
-            //         );
-            //       },
-            //       body: Container(
-            //         child: SizedBox(
-            //           child: Column(
-            //             children: [
-            //               Container(
-            //                 width: 300,
-            //                 height: 50,
-            //                 child: Card(
-            //                   child: InkWell(
-            //                     borderRadius: BorderRadius.all(Radius.circular(10)),
-            //                     child: Row(
-            //                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            //                       children: [
-            //                         Icon(Icons.add_task_outlined),
-            //                         Text('Add Course')
-            //                       ],
-            //                     ),
-            //                     splashColor: Colors.deepOrange,
-            //                     onTap: () {
-            //                       print(item);
-            //                       _makeCourse(context, item);
-            //                       },
-            //                   ),
-            //                 ),
-            //               ),
-            //               Container(child: FutureBuilder(
-            //                 future: AcademicOperation().getMyCourse(item['documentID']), // Call a function to fetch data based on documentID
-            //                 builder: (context, snapshot) {
-            //                   if (snapshot.connectionState == ConnectionState.waiting) {
-            //                     return CircularProgressIndicator(); // Show a loading indicator while fetching data
-            //                   } else {
-            //                     if (snapshot.data == null || snapshot.data.isEmpty) {
-            //                       print(snapshot.data);
-            //                       return ListTile(
-            //                         title: Text('Nothing found'),
-            //                       );
-            //                     } else {
-            //                       print(snapshot.data);
-            //                       return Card(child:ListTile(title: Text(item.length.toString()),)); // Pass the fetched data to your ListView widget
-            //                     }
-            //
-            //                   }
-            //                 },
-            //               ),),
-            //             ],
-            //           ),
-            //         ),
-            //       ),
-            //       value: item['documentID'],
-            //     );
-            //   }).toList(),
-            //   materialGapSize: 16,
-            //   elevation: 8,
-            // ),
             ElevatedButton(
                 onPressed: () {
                   widget.onCardPressed(0);
@@ -720,6 +680,265 @@ class _ACYFirstState extends State<ACYFirst> {
           ],
         ),
       ),
+    );
+  }
+
+  void courseInside(
+      BuildContext context, String item, Map<String, dynamic> courseData) {
+    print(item);
+    Navigator.of(context).push(MaterialPageRoute<void>(
+      fullscreenDialog: true,
+      builder: (BuildContext context) {
+        return Scaffold(
+          backgroundColor: Colors.transparent,
+          appBar: AppBar(
+            backgroundColor: Colors.deepOrangeAccent.shade100,
+            title: Row(
+              children: [
+                Text(courseData['id']),
+                Text(' - '),
+                Text(courseData['subjectName'])
+              ],
+            ),
+            leading: IconButton(
+              icon: const Icon(Icons.arrow_back_rounded),
+              onPressed: () => Navigator.of(context).pop(),
+            ),
+          ),
+          body: Card(
+            surfaceTintColor: Colors.deepOrange,
+            margin: const EdgeInsets.all(10),
+            elevation: 10,
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Column(
+                children: [
+                  Row(
+                    children: [
+                      Chip(
+                        label: Text(item),
+                      ),
+                      SizedBox(
+                        width: 10,
+                      ),
+                      Chip(
+                        label: Text(courseData['department']),
+                      ),
+                    ],
+                  ),
+                  Text('Course content'),
+                ],
+              ),
+            ),
+          ),
+          floatingActionButton: FloatingActionButton(
+            child: Icon(Icons.display_settings_rounded),
+            onPressed: () {
+              showModalBottomSheet(
+                context: context,
+                builder: (context) {
+                  return Padding(
+                    padding: EdgeInsets.all(20),
+                    child: Container(
+                      height: 400,
+                      width: double.maxFinite,
+                      child: Column(
+                        children: [
+                          Text(
+                            "Change Course Content",
+                            style: TextStyle(fontSize: 18),
+                          ),
+                          SizedBox(
+                            height: 15,
+                          ),
+                          ListTile(
+                            leading: Icon(Icons.add),
+                            title: Text('Add Topics'),
+                            contentPadding:
+                                EdgeInsets.symmetric(horizontal: 20),
+                            tileColor: Colors.deepOrangeAccent.shade100,
+                            onTap: () {
+                              _showAddLinkDialog();
+                            },
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10)),
+                          ),
+                          Divider(
+                            height: 12,
+                          ),
+                          ListTile(
+                            leading: Icon(Icons.add),
+                            title: Text('Add Assignment'),
+                            contentPadding:
+                                EdgeInsets.symmetric(horizontal: 20),
+                            tileColor: Colors.deepOrangeAccent.shade100,
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10)),
+                          )
+                        ],
+                      ),
+                    ),
+                  );
+                },
+              );
+            },
+          ),
+        );
+      },
+    ));
+  }
+
+  Future<void> _showAddLinkDialog() async {
+    String topicName = '';
+    String videoLink = '';
+    String documentLink = '';
+    String topicNote = '';
+
+    bool addLink = true;
+
+    while (addLink) {
+      final result = await showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          title: Text('Add Topic'),
+          scrollable: true,
+          contentPadding: EdgeInsets.symmetric(horizontal: 10,vertical: 6),
+          content: Column(
+            // mainAxisSize: MainAxisSize.min,
+            children: [
+              TextField(
+
+                decoration: InputDecoration(labelText: 'Topic Name',border:OutlineInputBorder(borderRadius: BorderRadius.circular(8))),
+                onChanged: (value) => topicName = value,
+              ),
+              SizedBox(height: 8,),
+              TextField(
+                decoration: InputDecoration(labelText: 'Video Link (Optional)',border:OutlineInputBorder(borderRadius: BorderRadius.circular(8))),
+                onChanged: (value) => videoLink = value,
+              ),
+              SizedBox(height: 8,),
+              TextField(
+                decoration: InputDecoration(labelText: 'Document Link (Optional)',border:OutlineInputBorder(borderRadius: BorderRadius.circular(8))),
+                onChanged: (value) => documentLink = value,
+              ),
+              SizedBox(height: 8,),
+              TextField(
+                maxLines: 3,
+                decoration: InputDecoration(labelText: 'Topic Note (Optional)',border:OutlineInputBorder(borderRadius: BorderRadius.circular(8))),
+                onChanged: (value) => topicNote = value,
+              ),
+            ],
+          ),
+          actions: [
+            ElevatedButton(
+              onPressed: () {
+                Navigator.of(context).pop(false); // Return false to indicate cancellation
+              },
+              child: Text('Cancel'),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                if (topicName.isNotEmpty) {
+                  // Set default values "none" for optional fields if empty
+                  if (videoLink.isEmpty) {
+                    videoLink = 'none';
+                  }
+                  if (documentLink.isEmpty) {
+                    documentLink = 'none';
+                  }
+                  if (topicNote.isEmpty) {
+                    topicNote = 'none';
+                  }
+                  // Add link to the list and return true to indicate successful addition
+                  links.add({
+                    'topicName': topicName,
+                    'videoLink': videoLink,
+                    'documentLink': documentLink,
+                    'topicNote':topicNote,
+                  });
+                  Navigator.of(context).pop(true);
+                } else {
+                  // Show error message if topic name is empty
+                  showDialog(
+                    context: context,
+                    builder: (context) => AlertDialog(
+                      title: Text('Error'),
+                      content: Text('Please enter a topic name.'),
+                      actions: [
+                        ElevatedButton(
+                          onPressed: () {
+                            Navigator.of(context).pop(); // Close the error dialog
+                          },
+                          child: Text('OK'),
+                        ),
+                      ],
+                    ),
+                  );
+                }
+              },
+              child: Text('Add'),
+            ),
+          ],
+        ),
+      );
+
+      if (result == true) {
+        // User successfully added a link
+        setState(() {
+          // Reset fields for next link
+          topicName = '';
+          videoLink = '';
+          documentLink = '';
+          topicNote = '';
+        });
+      } else {
+        // If the dialog is canceled or if the last link is empty, exit the loop
+        addLink = false;
+      }
+    }
+  }
+
+
+
+
+
+
+
+
+
+  Future<void> btnDelete(item, courseData) async {
+    await DbCourseMethods().deleteCourse(item, courseData);
+    loadData();
+  }
+
+  Future deleteConfirmDialog(BuildContext context, item, courseData) async {
+    return showDialog(
+      context: context,
+      barrierDismissible: false, // user must tap button for close dialog!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          backgroundColor: Colors.deepOrangeAccent.shade100,
+          title: Text('Delete This Course?'),
+          content: const Text(
+              'This will delete the Course and it can not be recover.'),
+          actions: [
+            ElevatedButton(
+              child: const Text('Cancel'),
+              onPressed: () {
+                Navigator.pop(context);
+              },
+            ),
+            ElevatedButton(
+              child: const Text('Delete'),
+              onPressed: () {
+                btnDelete(item, courseData);
+                Navigator.pop(context);
+              },
+            )
+          ],
+        );
+      },
     );
   }
 
@@ -737,18 +956,18 @@ class _ACYFirstState extends State<ACYFirst> {
           backgroundColor: Colors.transparent,
           appBar: AppBar(
             backgroundColor: Colors.deepOrangeAccent,
-            title: Text('Add New Course'),
+            title: const Text('Add New Course'),
             leading: IconButton(
-              icon: Icon(Icons.close),
+              icon: const Icon(Icons.close),
               onPressed: () => Navigator.of(context).pop(),
             ),
           ),
           body: Card(
             surfaceTintColor: Colors.deepOrange,
-            margin: EdgeInsets.all(10),
+            margin: const EdgeInsets.all(10),
             elevation: 10,
             child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 40),
+              padding: const EdgeInsets.symmetric(horizontal: 40),
               child: Form(
                 key: _formKey, // Assign the key to the form
                 child: Column(
@@ -768,7 +987,7 @@ class _ACYFirstState extends State<ACYFirst> {
                         return null;
                       },
                     ),
-                    SizedBox(height: 16.0),
+                    const SizedBox(height: 16.0),
                     TextFormField(
                       controller: _courseCodeController,
                       decoration: InputDecoration(
@@ -784,14 +1003,14 @@ class _ACYFirstState extends State<ACYFirst> {
                         return null;
                       },
                     ),
-                    SizedBox(height: 16.0),
+                    const SizedBox(height: 16.0),
                     FutureBuilder<List<String>>(
                       future: _getCourseOptions(), // Replace with your API call
                       builder: (BuildContext context,
                           AsyncSnapshot<List<String>> snapshot) {
                         if (snapshot.connectionState ==
                             ConnectionState.waiting) {
-                          return CircularProgressIndicator();
+                          return const CircularProgressIndicator();
                         } else if (snapshot.hasError) {
                           return Text('Error: ${snapshot.error}');
                         } else {
@@ -823,9 +1042,9 @@ class _ACYFirstState extends State<ACYFirst> {
                         }
                       },
                     ),
-                    SizedBox(height: 16.0),
+                    const SizedBox(height: 16.0),
                     ElevatedButton(
-                      style: ButtonStyle(
+                      style: const ButtonStyle(
                         elevation: MaterialStatePropertyAll(10),
                       ),
                       onPressed: () {
@@ -841,7 +1060,7 @@ class _ACYFirstState extends State<ACYFirst> {
                           Navigator.of(context).pop();
                         }
                       },
-                      child: Text('Submit'),
+                      child: const Text('Submit'),
                     ),
                   ],
                 ),
@@ -882,9 +1101,7 @@ class _ACYSecondState extends State<ACYSecond> {
 
   loadData() async {
     acYearList = await AcademicOperation().getAcYears();
-    print(acYearList);
     acYearList.removeWhere((item) => item['currentYear'] < 2);
-    print(acYearList);
 
     setState(() {});
   }
@@ -892,16 +1109,16 @@ class _ACYSecondState extends State<ACYSecond> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.all(2),
-      padding: EdgeInsets.all(6),
-      decoration: BoxDecoration(
+      margin: const EdgeInsets.all(2),
+      padding: const EdgeInsets.all(6),
+      decoration: const BoxDecoration(
           borderRadius: BorderRadius.all(Radius.circular(6)),
           color: Colors.black12),
       child: Column(
         children: [
           ExpansionPanelList.radio(
-            animationDuration: Duration(milliseconds: 800),
-            expandedHeaderPadding: EdgeInsets.all(10.0),
+            animationDuration: const Duration(milliseconds: 800),
+            expandedHeaderPadding: const EdgeInsets.all(10.0),
             initialOpenPanelValue: 1,
             children: acYearList.map((item) {
               return ExpansionPanelRadio(
@@ -914,7 +1131,7 @@ class _ACYSecondState extends State<ACYSecond> {
                 },
                 body: Container(
                   color: Colors.lightBlueAccent,
-                  child: Card(
+                  child: const Card(
                     child: Text('afsassas'),
                   ),
                   // Add any additional content you want to show when the panel is expanded
@@ -929,7 +1146,7 @@ class _ACYSecondState extends State<ACYSecond> {
               onPressed: () {
                 widget.onCardPressed(0);
               },
-              child: Text('back'))
+              child: const Text('back'))
         ],
       ),
     );
