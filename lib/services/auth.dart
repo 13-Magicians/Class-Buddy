@@ -2,6 +2,7 @@ import 'package:classbuddy/operations/checkUser.dart';
 import 'package:classbuddy/services/fireDatabase.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 class authMethods {
@@ -31,6 +32,7 @@ class authMethods {
     final AuthCredential credential = GoogleAuthProvider.credential(
         idToken: googleSignInAuthentication?.idToken,
         accessToken: googleSignInAuthentication?.accessToken);
+    final loggedUser = GetStorage();
 
     UserCredential result = await firebaseAuth.signInWithCredential(credential);
     User? userDetails = result.user;
@@ -40,7 +42,21 @@ class authMethods {
     //------------------------
 
 
+
+
+
     if (userDetails != null) {
+
+      Map<String, dynamic> userBData = {
+        "email": userDetails.email,
+        "id": userDetails.uid,
+        "name": userDetails.displayName,
+        "imgUrl": userDetails.photoURL,
+      };
+
+      loggedUser.write('user', userBData);
+
+
 
       // final userIdValue = await DatabaseMethods().checkUser(userDetails.uid);
       final userIdValue = await checkUser().userExist(userDetails.uid);
@@ -58,7 +74,7 @@ class authMethods {
       }
       else {
         Map<String, dynamic> userInfoMap = {
-          "email": userDetails!.email,
+          "email": userDetails.email,
           "id": userDetails.uid,
           "name": userDetails.displayName,
           "imgUrl": userDetails.photoURL,

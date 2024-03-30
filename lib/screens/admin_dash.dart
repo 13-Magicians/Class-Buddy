@@ -1,7 +1,9 @@
 import 'package:classbuddy/operations/checkUser.dart';
 import 'package:classbuddy/services/fireDatabase.dart';
 import 'package:flutter/material.dart';
+import '../operations/lectureCourse.dart';
 import '../services/auth.dart';
+import '../services/fireCourseData.dart';
 import '../services/fireManageDep.dart';
 import 'package:intl/intl.dart';
 
@@ -24,11 +26,11 @@ class _AdminDashState extends State<AdminDash> {
     aProfile(),
   ];
 
-  void _onItemTapped(int index) {
-    setState(() {
-      currentPageIndex = index;
-    });
-  }
+  // void _onItemTapped(int index) {
+  //   setState(() {
+  //     currentPageIndex = index;
+  //   });
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -104,6 +106,8 @@ class _aMangeDepState extends State<aMangeDep> with TickerProviderStateMixin {
   List<Map<String, dynamic>> lecList = [];
   List<Map<String, dynamic>> usrList = [];
   List<Map<String, dynamic>> allUsrList = [];
+  List<Map<String, dynamic>> acYearList = [];
+
 
   @override
   void initState() {
@@ -117,6 +121,10 @@ class _aMangeDepState extends State<aMangeDep> with TickerProviderStateMixin {
     admList = await DatabaseMethods().getAdminsOnly();
     usrList = await DatabaseMethods().getStudentsOnly();
     allUsrList = await DatabaseMethods().getAllUsers();
+    acYearList = await DbCourseMethods().getAllCourse();
+    print(acYearList);
+
+
     setState(() {});
   }
 
@@ -125,9 +133,9 @@ class _aMangeDepState extends State<aMangeDep> with TickerProviderStateMixin {
 
   // @override
   Widget build(BuildContext context) {
-    TabController _mainPageDivController = TabController(length: 2, vsync: this);
+    TabController _mainPageDivController = TabController(length: 2, vsync: this,initialIndex: 1);
     TabController _mOrgController = TabController(length: 4, vsync: this);
-    TabController _mAcadController = TabController(length: 3, vsync: this);
+    TabController _mAcadController = TabController(length: 3, vsync: this,initialIndex: 1);
 
     return Scaffold(
       resizeToAvoidBottomInset: false,
@@ -143,6 +151,7 @@ class _aMangeDepState extends State<aMangeDep> with TickerProviderStateMixin {
         physics: const NeverScrollableScrollPhysics(),
         controller: _mainPageDivController,
         children: [
+          //Users Section
           Container(
             padding: EdgeInsets.all(2.0),
             decoration: BoxDecoration(borderRadius: BorderRadius.circular(6.0)),
@@ -460,6 +469,7 @@ class _aMangeDepState extends State<aMangeDep> with TickerProviderStateMixin {
               ],
             ),
           ),
+          //Academic Section
           Container(
               padding: EdgeInsets.all(2.0),
               decoration:
@@ -508,8 +518,8 @@ class _aMangeDepState extends State<aMangeDep> with TickerProviderStateMixin {
                           text: 'AC Year',
                           // icon: Icon(Icons.people_alt_outlined),
                           icon: Badge(
-                            label: Text(lecList.length.toString()),
-                            child: Icon(Icons.people_alt_outlined),
+                            label: Text(acYearList.length.toString()),
+                            child: Icon(Icons.data_thresholding_outlined),
                           ),
                           iconMargin: EdgeInsets.all(6.0),
                         ),
@@ -583,56 +593,35 @@ class _aMangeDepState extends State<aMangeDep> with TickerProviderStateMixin {
                         SizedBox(
                             child: ListView.builder(
                                 scrollDirection: Axis.vertical,
-                                itemCount: lecList.length,
+                                itemCount: acYearList.length,
                                 itemBuilder: (context, index) {
                                   return Card(
                                     child: ListTile(
                                       contentPadding:
                                       EdgeInsets.symmetric(horizontal: 8),
-                                      leading: CircleAvatar(
-                                        backgroundImage: NetworkImage(
-                                            lecList[index]['imgUrl']),
-                                      ),
+                                      leading:Icon(Icons.data_exploration_outlined),
                                       shape: RoundedRectangleBorder(
                                           borderRadius: BorderRadius.all(
                                               Radius.circular(10.0))),
                                       minLeadingWidth: 50,
-                                      title: Text(lecList[index]['name']),
-                                      subtitle: Text(lecList[index]['email']),
+                                      title: Text(acYearList[index]['documentId']),
+                                      // subtitle: Text(lecList[index]['email']),
                                       selectedTileColor: Colors.cyanAccent,
                                       hoverColor: Colors.lightGreen,
                                       focusColor: Colors.redAccent,
                                       tileColor: Colors.teal,
                                       trailing: PopupMenuButton(
-                                        icon: Chip(
-                                          label: Text(
-                                              lecList[index]['role'].toString()),
-                                          padding: EdgeInsets.all(0),
-                                          side: BorderSide.none,
-                                        ),
                                         color: Colors.deepOrange,
                                         itemBuilder: (context) {
                                           return [
                                             PopupMenuItem(
-                                              child: Text("Admin"),
+                                              child: Text("Delete"),
                                               onTap: () {
-                                                if (lecList.length > 1) {
-                                                  print(lecList[index]['id']);
-                                                  checkUser().changeRole(
-                                                      lecList[index]['id'],
-                                                      "Admin");
+                                                if (acYearList.length > 1) {
+                                                  DbCourseMethods().deleteAcademicYear(acYearList[index]['documentId']);
                                                   loadData();
-                                                }
-                                              },
-                                            ),
-                                            PopupMenuItem(
-                                              child: Text("Student"),
-                                              onTap: () {
-                                                if (lecList.length > 1) {
-                                                  checkUser().changeRole(
-                                                      lecList[index]['id'],
-                                                      "Student");
-                                                  loadData();
+                                                } else {
+
                                                 }
                                               },
                                             ),
@@ -642,6 +631,7 @@ class _aMangeDepState extends State<aMangeDep> with TickerProviderStateMixin {
                                       onTap: () {
                                         print('tap');
                                         print(lecList.length);
+                                        AcademicOperation().getAcYears();
                                       },
                                       horizontalTitleGap: 2.0,
                                     ),
@@ -736,7 +726,7 @@ class _aMangeDepState extends State<aMangeDep> with TickerProviderStateMixin {
                                 showDialog(
                                   context: context,
                                   builder: (context) {
-                                    return AddDepartmentDialog();
+                                    return AddAcademicYear();
                                   },
                                 ).then((value) {
                                   // This function will be called when the dialog is dismissed
@@ -751,7 +741,33 @@ class _aMangeDepState extends State<aMangeDep> with TickerProviderStateMixin {
                             //     onPressed: () {}, child: Icon(Icons.highlight_remove_outlined)),
                           ],
                         ),
-                        Text('Second'),
+                      ButtonBar(
+                        alignment: MainAxisAlignment.center,
+                        children: [
+                          ElevatedButton(
+                            style: ButtonStyle(
+                                backgroundColor: MaterialStatePropertyAll(
+                                    Colors.greenAccent)),
+                            onPressed: () {
+                              print("xxxxxxxxxx");
+                              showDialog(
+                                context: context,
+                                builder: (context) {
+                                  return AddAcademicYear();
+                                },
+                              ).then((value) {
+                                // This function will be called when the dialog is dismissed
+                                print("Dialog closed");
+                                // Call your function here
+                                loadData();
+                              });
+                            },
+                            child: Icon(Icons.data_saver_on_outlined),
+                          ),
+                          // ElevatedButton(
+                          //     onPressed: () {}, child: Icon(Icons.highlight_remove_outlined)),
+                        ],
+                      ),
                         Text('Third'),
                       ],
                     ),
@@ -836,6 +852,83 @@ class _AddDepartmentDialogState extends State<AddDepartmentDialog> {
     );
   }
 }
+
+
+
+class AddAcademicYear extends StatefulWidget {
+  const AddAcademicYear({super.key});
+
+  @override
+  State<AddAcademicYear> createState() => _AddAcademicYearState();
+}
+
+class _AddAcademicYearState extends State<AddAcademicYear> {
+  final TextEditingController AcYearName = TextEditingController();
+
+  Future<void> aybtnOk() async {
+    if (AcYearName.text.isNotEmpty) {
+      print('************************************');
+      print(AcYearName.text);
+      await DbCourseMethods().createAcademicYear(AcYearName.text);
+
+      try {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Academic Year added successfully'),
+            backgroundColor: Colors.green,
+          ),
+        );
+      } catch (e) {
+        print(e);
+      }
+    } else {
+      try {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Please enter valid Academic Year name'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      } catch (e) {
+        print(e);
+      }
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      title: Text('Add New Batch'),
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          TextField(
+            controller: AcYearName,
+            autofocus: true,
+            decoration: InputDecoration(hintText: 'Ex: 18-19-Batch'),
+          ),
+        ],
+      ),
+      actions: [
+        TextButton(
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            child: Text('Cancel')),
+        TextButton(
+            onPressed: () {
+              aybtnOk();
+              Navigator.pop(context);
+            },
+            child: Text('OK'))
+      ],
+      backgroundColor: Colors.lightGreenAccent,
+    );
+  }
+}
+
+
+
 
 class aProfile extends StatefulWidget {
   const aProfile({super.key});
