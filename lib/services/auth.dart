@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:classbuddy/operations/checkUser.dart';
 import 'package:classbuddy/services/fireDatabase.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -8,6 +10,23 @@ import 'package:google_sign_in/google_sign_in.dart';
 class authMethods {
   final _auth = FirebaseAuth.instance;
   final GoogleSignIn _googleSignIn = GoogleSignIn();
+
+
+
+  //
+  // Future<String?> getCurrentUser() async {
+  //   Completer<String?> completer = Completer();
+  //
+  //   _auth.authStateChanges().listen((User? user) {
+  //     if (user != null) {
+  //       completer.complete(user.uid);
+  //     } else {
+  //       completer.complete(null);
+  //     }
+  //   });
+  //
+  //   return completer.future;
+  // }
 
   getCurrentUser() async {
     var userId;
@@ -63,12 +82,13 @@ class authMethods {
 
       if (userIdValue == userDetails.uid) {
         Map<String, dynamic> userLastLog = {
-          "lastLog": new DateTime.now().millisecondsSinceEpoch,
+          "lastLog": DateTime.now().millisecondsSinceEpoch,
         };
         await DatabaseMethods()
             .updateUser(userDetails.uid, userLastLog)
             .then((value) async {
               final scrPath = await checkUser().userRole(userDetails.uid);
+              if (!context.mounted) return;
               Navigator.pushReplacementNamed(context, '$scrPath');
             });
       }
@@ -79,7 +99,7 @@ class authMethods {
           "name": userDetails.displayName,
           "imgUrl": userDetails.photoURL,
           "role":"Student",
-          "lastLog": new DateTime.now().microsecondsSinceEpoch,
+          "lastLog": DateTime.now().microsecondsSinceEpoch,
 
         };
         await DatabaseMethods()
@@ -97,6 +117,7 @@ class authMethods {
   }
 
   userSignOut(BuildContext context) async {
+    GetStorage().erase();
     await FirebaseAuth.instance.signOut();
     await _googleSignIn.signOut();
     Navigator.pushReplacementNamed(context, '/login');
