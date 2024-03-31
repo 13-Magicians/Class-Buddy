@@ -9,6 +9,8 @@ class CB_Login extends StatefulWidget {
 }
 
 class _CB_LoginState extends State<CB_Login> {
+  bool _loading = false;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -107,22 +109,49 @@ class _CB_LoginState extends State<CB_Login> {
                   ),
                 ),
                 Container(
-                    width: 280.0,
-                    height: 45.0,
-                    margin: EdgeInsets.only(top: 40.0),
-                    child: ElevatedButton(
-                        onPressed: () {
-                          authMethods().signInWithGoogle(context);
-                        },
-                        child: Text('Sign in with Google',
-                            style: TextStyle(
-                                letterSpacing: 1.0,
-                                fontWeight: FontWeight.w500,
-                                color: Colors.white)),
-                        style: ElevatedButton.styleFrom(
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(12.0)),
-                            backgroundColor: Color(0xFFD13838)))),
+                  width: 280.0,
+                  height: 45.0,
+                  margin: EdgeInsets.only(top: 40.0),
+                  child:
+
+                  ElevatedButton(
+                    onPressed: _loading ? null : () => _signInWithGoogle(context),
+                    child: _loading
+                        ? CircularProgressIndicator(
+                      valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                    )
+                        : Text(
+                      'Sign in with Google',
+                      style: TextStyle(
+                        letterSpacing: 1.0,
+                        fontWeight: FontWeight.w500,
+                        color: Colors.white,
+                      ),
+                    ),
+                    style: ElevatedButton.styleFrom(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12.0),
+                      ),
+                      backgroundColor: Color(0xFFD13838),
+                    ),
+                  ),
+
+
+
+                  // ElevatedButton(
+                  //     onPressed: () {
+                  //       authMethods().signInWithGoogle(context);
+                  //     },
+                  //     child: Text('Sign in with Google',
+                  //         style: TextStyle(
+                  //             letterSpacing: 1.0,
+                  //             fontWeight: FontWeight.w500,
+                  //             color: Colors.white)),
+                  //     style: ElevatedButton.styleFrom(
+                  //         shape: RoundedRectangleBorder(
+                  //             borderRadius: BorderRadius.circular(12.0)),
+                  //         backgroundColor: Color(0xFFD13838))),
+                ),
               ],
             ),
           ),
@@ -130,4 +159,22 @@ class _CB_LoginState extends State<CB_Login> {
       ),
     );
   }
+
+  Future<void> _signInWithGoogle(BuildContext context) async {
+    setState(() {
+      _loading = true;
+    });
+
+    try {
+      await authMethods().signInWithGoogle(context);
+    } catch (e) {
+      // Handle errors
+    } finally {
+      setState(() {
+        _loading = false;
+      });
+    }
+  }
+
+
 }

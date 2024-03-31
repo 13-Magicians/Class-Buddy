@@ -23,7 +23,7 @@ class AcademicOperation {
   }
 
 
-  Future<void> addCourseACY(String documentID, String subjectName, String courseCode, String selectedDepartment) async {
+  Future<void> addCourseACY(String documentID, String subjectName, String courseCode, String selectedDepartment, String passCode, String semNo) async {
     final localUser = GetStorage();
     final userData = localUser.read('user');
     print(userData['id']);
@@ -33,21 +33,22 @@ class AcademicOperation {
       'subjectName':subjectName,
       'department':selectedDepartment,
       'creator':userData['id'],
+      'passCode':passCode,
     };
 
-    DbCourseMethods().createCourse(documentID, courseCode, courseOriginData);
+    DbCourseMethods().createCourse(documentID, courseCode, courseOriginData, semNo);
 
 
     // Implement your API call to send the data to the database
     // Use the provided subjectName, courseCode, and selectedDepartment to send the data
   }
 
-  Future<List<Map<String, dynamic>>> getMyCourse(ACYear) async {
+  Future<List<Map<String, dynamic>>> getMyCourse(ACYear, String semNo) async {
 
     List<Map<String, dynamic>> MyCourseList = [];
     List<Map<String, dynamic>> CourseList = [];
 
-    CourseList = await DbCourseMethods().getCourseInAY(ACYear);
+    CourseList = await DbCourseMethods().getCourseInAY(ACYear, semNo);
     final localUser = GetStorage();
     final userData = localUser.read('user');
     CourseList.forEach((element) {
@@ -61,6 +62,11 @@ class AcademicOperation {
     return MyCourseList;
 
 
+  }
+
+  Future addTopic(acYear, List<Map<String, String>> courseData, List<Map<String, String>> subjectTopic) async  {
+
+    DbCourseMethods().addTopicToCourse(acYear,);
   }
 
 
