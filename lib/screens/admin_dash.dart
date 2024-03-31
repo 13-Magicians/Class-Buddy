@@ -1,6 +1,10 @@
+import 'dart:io';
+
 import 'package:classbuddy/operations/checkUser.dart';
 import 'package:classbuddy/services/fireDatabase.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_markdown/flutter_markdown.dart';
+import 'package:google_generative_ai/google_generative_ai.dart';
 import '../operations/lectureCourse.dart';
 import '../services/auth.dart';
 import '../services/fireCourseData.dart';
@@ -22,7 +26,7 @@ class _AdminDashState extends State<AdminDash> {
     Text('Explore Page',
         style: TextStyle(fontSize: 35, fontWeight: FontWeight.bold)),
     aMangeDep(),
-    Text('Chat'),
+    AIChat(),
     aProfile(),
   ];
 
@@ -108,7 +112,6 @@ class _aMangeDepState extends State<aMangeDep> with TickerProviderStateMixin {
   List<Map<String, dynamic>> allUsrList = [];
   List<Map<String, dynamic>> acYearList = [];
 
-
   @override
   void initState() {
     super.initState();
@@ -124,7 +127,6 @@ class _aMangeDepState extends State<aMangeDep> with TickerProviderStateMixin {
     acYearList = await DbCourseMethods().getAllCourse();
     print(acYearList);
 
-
     setState(() {});
   }
 
@@ -133,9 +135,11 @@ class _aMangeDepState extends State<aMangeDep> with TickerProviderStateMixin {
 
   // @override
   Widget build(BuildContext context) {
-    TabController _mainPageDivController = TabController(length: 2, vsync: this,initialIndex: 1);
+    TabController _mainPageDivController =
+        TabController(length: 2, vsync: this, initialIndex: 1);
     TabController _mOrgController = TabController(length: 4, vsync: this);
-    TabController _mAcadController = TabController(length: 3, vsync: this,initialIndex: 1);
+    TabController _mAcadController =
+        TabController(length: 3, vsync: this, initialIndex: 1);
 
     return Scaffold(
       resizeToAvoidBottomInset: false,
@@ -237,7 +241,7 @@ class _aMangeDepState extends State<aMangeDep> with TickerProviderStateMixin {
                                 return Card(
                                   child: ListTile(
                                     contentPadding:
-                                    EdgeInsets.symmetric(horizontal: 18),
+                                        EdgeInsets.symmetric(horizontal: 18),
                                     leading: CircleAvatar(
                                       backgroundImage: NetworkImage(
                                           allUsrList[index]['imgUrl']),
@@ -465,7 +469,6 @@ class _aMangeDepState extends State<aMangeDep> with TickerProviderStateMixin {
                     ],
                   ),
                 ),
-
               ],
             ),
           ),
@@ -498,7 +501,7 @@ class _aMangeDepState extends State<aMangeDep> with TickerProviderStateMixin {
                       indicatorSize: TabBarIndicatorSize.tab,
                       indicatorColor: Colors.deepOrange,
                       // automaticIndicatorColorAdjustment: true,
-                      controller:  _mAcadController,
+                      controller: _mAcadController,
                       // enableFeedback: true,
                       padding:
                           EdgeInsets.symmetric(horizontal: 0.0, vertical: 0.0),
@@ -537,7 +540,7 @@ class _aMangeDepState extends State<aMangeDep> with TickerProviderStateMixin {
                   ),
                   Flexible(
                     child: TabBarView(
-                      controller:  _mAcadController,
+                      controller: _mAcadController,
                       children: [
                         // Department Section
                         SizedBox(
@@ -598,13 +601,15 @@ class _aMangeDepState extends State<aMangeDep> with TickerProviderStateMixin {
                                   return Card(
                                     child: ListTile(
                                       contentPadding:
-                                      EdgeInsets.symmetric(horizontal: 8),
-                                      leading:Icon(Icons.data_exploration_outlined),
+                                          EdgeInsets.symmetric(horizontal: 8),
+                                      leading:
+                                          Icon(Icons.data_exploration_outlined),
                                       shape: RoundedRectangleBorder(
                                           borderRadius: BorderRadius.all(
                                               Radius.circular(10.0))),
                                       minLeadingWidth: 50,
-                                      title: Text(acYearList[index]['documentId']),
+                                      title:
+                                          Text(acYearList[index]['documentId']),
                                       // subtitle: Text(lecList[index]['email']),
                                       selectedTileColor: Colors.cyanAccent,
                                       hoverColor: Colors.lightGreen,
@@ -618,11 +623,12 @@ class _aMangeDepState extends State<aMangeDep> with TickerProviderStateMixin {
                                               child: Text("Delete"),
                                               onTap: () {
                                                 if (acYearList.length > 1) {
-                                                  DbCourseMethods().deleteAcademicYear(acYearList[index]['documentId']);
+                                                  DbCourseMethods()
+                                                      .deleteAcademicYear(
+                                                          acYearList[index]
+                                                              ['documentId']);
                                                   loadData();
-                                                } else {
-
-                                                }
+                                                } else {}
                                               },
                                             ),
                                           ];
@@ -661,8 +667,8 @@ class _aMangeDepState extends State<aMangeDep> with TickerProviderStateMixin {
                                       tileColor: Colors.teal,
                                       trailing: PopupMenuButton(
                                         icon: Chip(
-                                          label: Text(
-                                              usrList[index]['role'].toString()),
+                                          label: Text(usrList[index]['role']
+                                              .toString()),
                                           padding: EdgeInsets.all(0),
                                           side: BorderSide.none,
                                         ),
@@ -701,7 +707,6 @@ class _aMangeDepState extends State<aMangeDep> with TickerProviderStateMixin {
                                     ),
                                   );
                                 })),
-
                       ],
                     ),
                   ),
@@ -741,33 +746,33 @@ class _aMangeDepState extends State<aMangeDep> with TickerProviderStateMixin {
                             //     onPressed: () {}, child: Icon(Icons.highlight_remove_outlined)),
                           ],
                         ),
-                      ButtonBar(
-                        alignment: MainAxisAlignment.center,
-                        children: [
-                          ElevatedButton(
-                            style: ButtonStyle(
-                                backgroundColor: MaterialStatePropertyAll(
-                                    Colors.greenAccent)),
-                            onPressed: () {
-                              print("xxxxxxxxxx");
-                              showDialog(
-                                context: context,
-                                builder: (context) {
-                                  return AddAcademicYear();
-                                },
-                              ).then((value) {
-                                // This function will be called when the dialog is dismissed
-                                print("Dialog closed");
-                                // Call your function here
-                                loadData();
-                              });
-                            },
-                            child: Icon(Icons.data_saver_on_outlined),
-                          ),
-                          // ElevatedButton(
-                          //     onPressed: () {}, child: Icon(Icons.highlight_remove_outlined)),
-                        ],
-                      ),
+                        ButtonBar(
+                          alignment: MainAxisAlignment.center,
+                          children: [
+                            ElevatedButton(
+                              style: ButtonStyle(
+                                  backgroundColor: MaterialStatePropertyAll(
+                                      Colors.greenAccent)),
+                              onPressed: () {
+                                print("xxxxxxxxxx");
+                                showDialog(
+                                  context: context,
+                                  builder: (context) {
+                                    return AddAcademicYear();
+                                  },
+                                ).then((value) {
+                                  // This function will be called when the dialog is dismissed
+                                  print("Dialog closed");
+                                  // Call your function here
+                                  loadData();
+                                });
+                              },
+                              child: Icon(Icons.data_saver_on_outlined),
+                            ),
+                            // ElevatedButton(
+                            //     onPressed: () {}, child: Icon(Icons.highlight_remove_outlined)),
+                          ],
+                        ),
                         Text('Third'),
                       ],
                     ),
@@ -853,8 +858,6 @@ class _AddDepartmentDialogState extends State<AddDepartmentDialog> {
   }
 }
 
-
-
 class AddAcademicYear extends StatefulWidget {
   const AddAcademicYear({super.key});
 
@@ -927,6 +930,216 @@ class _AddAcademicYearState extends State<AddAcademicYear> {
   }
 }
 
+class AIChat extends StatefulWidget {
+  const AIChat({super.key});
+
+  @override
+  State<AIChat> createState() => _AIChatState();
+}
+
+class _AIChatState extends State<AIChat> {
+  late final GenerativeModel _model;
+  late final ChatSession _chatSession;
+  final FocusNode _textFieldFocus = FocusNode();
+  final TextEditingController _textController = TextEditingController();
+  bool _loading = false;
+  final ScrollController _scrollController = ScrollController();
+  final apiKey = 'AIzaSyCA8yMLvIrsmQDJSJiffuO-MpQr0UZhkas';
+
+  @override
+  void initState() {
+    super.initState();
+
+    _model = GenerativeModel(
+      model: 'gemini-pro',
+      apiKey: apiKey,
+    );
+    _chatSession = _model.startChat();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      resizeToAvoidBottomInset: true,
+      appBar: AppBar(
+        title: Container(child: Text('Chat :Powered by Generative AI')),
+      ),
+      body: Card(
+        elevation: 6,
+        color: Colors.orangeAccent.shade100,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 14),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Expanded(
+                child: ListView.builder(
+                    controller: _scrollController,
+                    itemCount: _chatSession.history.length,
+                    itemBuilder: (context, index) {
+                      final Content content =
+                          _chatSession.history.toList()[index];
+                      final text = content.parts
+                          .whereType<TextPart>()
+                          .map<String>((e) => e.text)
+                          .join('');
+                      return MessageSet(
+                        text: text,
+                        isFromUser: content.role == 'user',
+                      );
+                    }),
+              ),
+              Padding(
+                padding: EdgeInsets.symmetric(vertical: 15, horizontal: 5),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: TextField(
+                        autofocus: true,
+                        focusNode: _textFieldFocus,
+                        decoration: textFieldDecoration(),
+                        controller: _textController,
+                        onSubmitted: _sendChatMessage,
+                      ),
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    IconButton(
+                      onPressed: _loading
+                          ? null
+                          : () => _sendChatMessage(_textController.text),
+                      icon: _loading
+                          ? CircularProgressIndicator()
+                          : Icon(Icons.send),
+                    ),
+                  ],
+                ),
+              )
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  InputDecoration textFieldDecoration() {
+    return InputDecoration(
+      contentPadding: EdgeInsets.all(15),
+      hintText: 'Say Something...!',
+      border: OutlineInputBorder(
+        borderRadius: BorderRadius.all(Radius.circular(14)),
+        borderSide: BorderSide(color: Theme.of(context).colorScheme.secondary),
+      ),
+      focusedBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.all(Radius.circular(14)),
+        borderSide: BorderSide(color: Theme.of(context).colorScheme.secondary),
+      ),
+    );
+  }
+
+  Future<void> _sendChatMessage(String message) async {
+    setState(() {
+      _loading = true;
+    });
+
+    try {
+      final response = await _chatSession.sendMessage(
+        Content.text(message),
+      );
+      final text = response.text;
+      if (text == null) {
+        _showError('No response from AI...!');
+        return;
+      } else {
+        setState(() {
+          _loading = false;
+          _scrollDown();
+        });
+      }
+    } catch (e) {
+      _showError(e.toString());
+      setState(() {
+        _loading = false;
+      });
+    } finally {
+      _textController.clear();
+      setState(() {
+        _loading = false;
+      });
+      _textFieldFocus.requestFocus();
+    }
+  }
+
+  void _scrollDown() {
+    WidgetsBinding.instance.addPostFrameCallback((_) =>
+        _scrollController.animateTo(_scrollController.position.maxScrollExtent,
+            duration: Duration(milliseconds: 750), curve: Curves.easeOutCirc));
+  }
+
+  void _showError(String message) {
+    showDialog<void>(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Text('Something went wrong...!'),
+            content: SingleChildScrollView(
+              child: SelectableText(message),
+            ),
+            actions: [
+              TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: Text('OK'))
+            ],
+          );
+        });
+  }
+}
+
+class MessageSet extends StatelessWidget {
+  const MessageSet({
+    super.key,
+    required this.text,
+    required this.isFromUser,
+  });
+
+  final String text;
+  final bool isFromUser;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment:
+          isFromUser ? MainAxisAlignment.end : MainAxisAlignment.start,
+      children: [
+        Flexible(
+          child: Container(
+            padding: EdgeInsets.symmetric(vertical: 15, horizontal: 20),
+            margin: EdgeInsets.only(bottom: 8),
+            constraints: BoxConstraints(maxWidth: 500),
+            decoration: BoxDecoration(
+              color: isFromUser
+                  ? Colors.deepOrangeAccent.shade200
+                  : Colors.cyan.shade100,
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Column(
+              children: [
+                MarkdownBody(
+                  data: text,
+                  selectable: true,
+                ),
+              ],
+            ),
+          ),
+        )
+      ],
+    );
+  }
+}
 
 
 
