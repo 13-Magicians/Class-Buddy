@@ -62,7 +62,7 @@ class _LecDashState extends State<LecDash> {
           labelBehavior: labelBehavior,
           selectedIndex: currentPageIndex,
           elevation: 0.0,
-          indicatorColor: Color(0xFFF78CA2),
+          indicatorColor: Color(0xFFFF7575),
           animationDuration: Duration(milliseconds: 1000),
           onDestinationSelected: (int index) {
             setState(() {
