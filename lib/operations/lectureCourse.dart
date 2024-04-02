@@ -64,9 +64,12 @@ class AcademicOperation {
 
   }
 
-  Future addTopic(acYear, List<Map<String, String>> courseData, List<Map<String, String>> subjectTopic) async  {
+  Future addTopic(acYear, Map<String, dynamic> courseData, List<Map<String, dynamic>> subjectTopic) async  {
+    print(acYear);
+    print(courseData);
+    print(subjectTopic);
 
-    DbCourseMethods().addTopicToCourse(acYear,);
+    await DbCourseMethods().addTopicToCourse(acYear, subjectTopic);
   }
 
 

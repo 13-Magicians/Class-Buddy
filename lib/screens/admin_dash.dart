@@ -1,4 +1,3 @@
-
 import 'package:classbuddy/operations/checkUser.dart';
 import 'package:classbuddy/services/fireDatabase.dart';
 import 'package:flutter/material.dart';
@@ -135,10 +134,10 @@ class _aMangeDepState extends State<aMangeDep> with TickerProviderStateMixin {
   // @override
   Widget build(BuildContext context) {
     TabController _mainPageDivController =
-        TabController(length: 2, vsync: this, initialIndex: 1);
+        TabController(length: 2, vsync: this,);
     TabController _mOrgController = TabController(length: 4, vsync: this);
     TabController _mAcadController =
-        TabController(length: 3, vsync: this, initialIndex: 1);
+        TabController(length: 3, vsync: this,);
 
     return Scaffold(
       resizeToAvoidBottomInset: false,
@@ -517,7 +516,7 @@ class _aMangeDepState extends State<aMangeDep> with TickerProviderStateMixin {
                           iconMargin: EdgeInsets.all(6.0),
                         ),
                         Tab(
-                          text: 'AC Year',
+                          text: 'Batch Year',
                           // icon: Icon(Icons.people_alt_outlined),
                           icon: Badge(
                             label: Text(acYearList.length.toString()),
@@ -730,7 +729,7 @@ class _aMangeDepState extends State<aMangeDep> with TickerProviderStateMixin {
                                 showDialog(
                                   context: context,
                                   builder: (context) {
-                                    return AddAcademicYear();
+                                    return AddDepartmentDialog();
                                   },
                                 ).then((value) {
                                   // This function will be called when the dialog is dismissed
@@ -866,12 +865,11 @@ class AddAcademicYear extends StatefulWidget {
 
 class _AddAcademicYearState extends State<AddAcademicYear> {
   final TextEditingController AcYearName = TextEditingController();
+  int? _selectedValue;
 
   Future<void> aybtnOk() async {
-    if (AcYearName.text.isNotEmpty) {
-      print('************************************');
-      print(AcYearName.text);
-      await DbCourseMethods().createAcademicYear(AcYearName.text);
+    if (AcYearName.text.isNotEmpty || _selectedValue != null) {
+      await DbCourseMethods().createAcademicYear(AcYearName.text, _selectedValue!);
 
       try {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -887,7 +885,7 @@ class _AddAcademicYearState extends State<AddAcademicYear> {
       try {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Please enter valid Academic Year name'),
+            content: Text('Please enter valid Academic Year name and no'),
             backgroundColor: Colors.red,
           ),
         );
@@ -907,8 +905,47 @@ class _AddAcademicYearState extends State<AddAcademicYear> {
           TextField(
             controller: AcYearName,
             autofocus: true,
-            decoration: InputDecoration(hintText: 'Ex: 18-19-Batch'),
+            decoration: InputDecoration(hintText: 'Batch Name Ex: 18-19-Batch'),
           ),
+          SizedBox(height: 30,),
+          Text(
+            'Select Acdemic Year:',
+            style: TextStyle(fontSize: 16),
+          ),
+          Row(
+            children: [
+              Radio<int>(
+                value: 0,
+                groupValue: _selectedValue,
+                onChanged: (value) {
+                  setState(() {
+                    _selectedValue = value;
+                  });
+                },
+              ),
+              Text('Pre'),
+            ],
+          ),
+          Row(
+            children: [
+              for (int i = 1; i <= 4; i++)
+                Row(
+                  children: [
+                    Radio<int>(
+                      value: i,
+                      groupValue: _selectedValue,
+                      onChanged: (value) {
+                        setState(() {
+                          _selectedValue = value;
+                        });
+                      },
+                    ),
+                    Text(i.toString()),
+                  ],
+                ),
+            ],
+          ),
+          SizedBox(height: 10),
         ],
       ),
       actions: [
@@ -1171,7 +1208,7 @@ class _aProfileState extends State<aProfile> {
     final email = user['email'] ?? '';
     print(user['lastLog'] ?? '');
     final lastLog = user['lastLog'] != null
-        ? DateFormat(' EEE d MMM y \n hh:mm a').format(
+        ? DateFormat('\nhh:mm a  EEE d MMM y').format(
             DateTime.fromMillisecondsSinceEpoch(user['lastLog'] as int),
           )
         : '';
@@ -1225,14 +1262,28 @@ class _aProfileState extends State<aProfile> {
                           style: TextStyle(fontSize: 16, color: Colors.grey),
                         ),
                         SizedBox(height: 42),
-                        Text('Last Login:' + lastLog,
-                            style: TextStyle(fontSize: 14)),
+                        Card(
+                          color: Colors.deepOrange.shade100,
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                          elevation: 4,
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text('Last Login: $lastLog',
+                                style: const TextStyle(fontSize: 14,fontWeight: FontWeight.w400)),
+                          ),
+                        ),
                         SizedBox(height: 42),
                         ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.deepOrangeAccent.shade100,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(16.0),
+                            ),
+                          ),
                           onPressed: () {
                             authMethods().userSignOut(context);
                           },
-                          child: Text('Logout'),
+                          child: Text('Logout',style: TextStyle(color: Colors.black87),),
                         ),
                       ],
                     ),

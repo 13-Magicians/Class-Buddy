@@ -16,10 +16,10 @@ class DbCourseMethods {
     return documentIdsList;
   }
 
-  Future<void> createAcademicYear(String documentId) async {
+  Future<void> createAcademicYear(String documentId, int ACYNo) async {
     try {
       CollectionReference academicYearCollection = db.collection('AcademicYear');
-      await academicYearCollection.doc(documentId).set(<String, dynamic>{});
+      await academicYearCollection.doc(documentId).set(<String, dynamic>{'currentYear':ACYNo});
       print('Document with ID $documentId created successfully');
     } catch (e) {
       print('Error creating document: $e');
@@ -67,7 +67,9 @@ class DbCourseMethods {
   }
 
 
-  Future addTopicToCourse(acYear) async {
+  Future addTopicToCourse(acYear, List<Map<String, dynamic>> subjectTopic) async {
+
+    await db.collection('AcademicYear').doc(acYear);
 
 
   }
