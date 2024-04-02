@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get_storage/get_storage.dart';
-
 import '../services/fireCourseData.dart';
 
 class AcademicOperation {
@@ -10,14 +9,14 @@ class AcademicOperation {
     QuerySnapshot querySnapshot = await db.collection('AcademicYear').get();
     List<Map<String, dynamic>> documentIds = [];
 
-    querySnapshot.docs.forEach((doc) {
+    for (var doc in querySnapshot.docs) {
       Map<String, dynamic> acY = {
         'documentID': doc.id,
         'currentYear': doc['currentYear'],
       };
 
       documentIds.add(acY);
-    });
+    }
 
     return documentIds;
   }
@@ -26,7 +25,6 @@ class AcademicOperation {
   Future<void> addCourseACY(String documentID, String subjectName, String courseCode, String selectedDepartment, String passCode, String semNo) async {
     final localUser = GetStorage();
     final userData = localUser.read('user');
-    print(userData['id']);
 
     Map<String, dynamic> courseOriginData = {
       'courseCode':courseCode,
@@ -43,31 +41,31 @@ class AcademicOperation {
     // Use the provided subjectName, courseCode, and selectedDepartment to send the data
   }
 
-  Future<List<Map<String, dynamic>>> getMyCourse(ACYear, String semNo) async {
+  Future<List<Map<String, dynamic>>> getMyCourse(acYear, String semNo) async {
 
-    List<Map<String, dynamic>> MyCourseList = [];
-    List<Map<String, dynamic>> CourseList = [];
+    List<Map<String, dynamic>> myCourseList = [];
+    List<Map<String, dynamic>> courseList = [];
 
-    CourseList = await DbCourseMethods().getCourseInAY(ACYear, semNo);
+    courseList = await DbCourseMethods().getCourseInAY(acYear, semNo);
     final localUser = GetStorage();
     final userData = localUser.read('user');
-    CourseList.forEach((element) {
+    for (var element in courseList) {
       if (userData['id'] == element['creator']) {
-        MyCourseList.add(element);
+        myCourseList.add(element);
       }
 
-    });
+    }
 
 
-    return MyCourseList;
+    return myCourseList;
 
 
   }
 
   Future addTopic(acYear, Map<String, dynamic> courseData, List<Map<String, dynamic>> subjectTopic) async  {
-    print(acYear);
-    print(courseData);
-    print(subjectTopic);
+    // print(acYear);
+    // print(courseData);
+    // print(subjectTopic);
 
     await DbCourseMethods().addTopicToCourse(acYear, subjectTopic);
   }

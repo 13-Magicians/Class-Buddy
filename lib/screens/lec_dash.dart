@@ -1,6 +1,6 @@
 import 'package:classbuddy/services/auth.dart';
 import 'package:flutter/material.dart';
-import '../operations/lectureCourse.dart';
+import '../operations/lecture_course.dart';
 import 'lec_dash_component/chat_ai/chatwithai.dart';
 import 'lec_dash_component/manage_mycourse/firstyear.dart';
 import 'lec_dash_component/profile_rawdata/profiledata.dart';
