@@ -1,4 +1,5 @@
 import 'package:classbuddy/services/auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import '../operations/lecture_course.dart';
 import 'lec_dash_component/chat_ai/chatwithai.dart';
@@ -20,7 +21,7 @@ class _LecDashState extends State<LecDash> {
     mangeCourse(),
     Explore_LD(),
     AIChat(),
-    lProfile(),
+    LecturerProfile(),
   ];
 
   // void _onItemTapped(int index) {
@@ -265,23 +266,82 @@ class MenuCardsMC extends StatefulWidget {
 class _MenuCardsMCState extends State<MenuCardsMC> {
   @override
   Widget build(BuildContext context) {
-    return GridView.count(
-      crossAxisCount: 2,
-      padding: EdgeInsets.all(20),
-      crossAxisSpacing: 20,
-      mainAxisSpacing: 20,
-      children: [
-        _buildCard('First Year', 1),
-        _buildCard('Second Year', 2),
-        _buildCard('Third Year', 3),
-        _buildCard('Fourth Year', 4),
-      ],
+    return Padding(
+      padding: const EdgeInsets.all(10.0),
+      child: CustomScrollView(
+        slivers: [
+          SliverGrid(
+            gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+              maxCrossAxisExtent: MediaQuery.of(context).size.width / 2, // Set the max width of a card to half the screen width
+              crossAxisSpacing: 20,
+              mainAxisSpacing: 20,
+              childAspectRatio: 1/1, // Adjust the aspect ratio of the cards as needed
+            ),
+            delegate: SliverChildListDelegate(
+              [
+                _buildCard('First Year', 1),
+                _buildCard('Second Year', 2),
+                _buildCard('Third Year', 3),
+                _buildCard('Fourth Year', 4),
+              ],
+            ),
+          ),
+          SliverToBoxAdapter(
+            child: _orientationCard('Orientation ', 0),
+          ),
+        ],
+      ),
     );
   }
 
   Widget _buildCard(String year, int index) {
+    return Card(
+      elevation: 10,
+      surfaceTintColor: Colors.pink,
+      clipBehavior: Clip.hardEdge,
+      color: Colors.teal,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          SizedBox(
+            height: 60,
+            child: Center(
+              child: Text(
+                year,
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.tealAccent,
+                ),
+              ),
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.all(2),
+            child: InkWell(
+              splashColor: Colors.blue.withAlpha(30),
+              onTap: () {
+                widget.onCardPressed(index); // Call the callback function
+                print(index);
+              },
+              borderRadius: BorderRadius.circular(25),
+              child: Icon(
+                Icons.arrow_circle_right_outlined,
+                size: 60,
+                color: Colors.greenAccent,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _orientationCard(String year, int index,) {
     return Container(
+      padding: EdgeInsets.symmetric(horizontal: 80),
       child: Card(
+        margin: EdgeInsets.all(20),
         elevation: 10,
         surfaceTintColor: Colors.pink,
         clipBehavior: Clip.hardEdge,
@@ -318,11 +378,13 @@ class _MenuCardsMCState extends State<MenuCardsMC> {
                 ),
               ),
             ),
+            SizedBox(height: 30,)
           ],
         ),
       ),
     );
   }
+
 }
 
 ///////////////////////////////////// End of Manage Section ////////////////////

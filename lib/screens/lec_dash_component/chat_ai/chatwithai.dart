@@ -36,7 +36,7 @@ class _AIChatState extends State<AIChat> {
     return Scaffold(
       resizeToAvoidBottomInset: true,
       appBar: AppBar(
-        title: Container(child: Text('Chat with AI')),
+        title: const Text('Chat with AI'),
       ),
       body: Card(
         elevation: 6,
@@ -65,7 +65,7 @@ class _AIChatState extends State<AIChat> {
                     }),
               ),
               Padding(
-                padding: EdgeInsets.symmetric(vertical: 15, horizontal: 5),
+                padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 5),
                 child: Row(
                   children: [
                     Expanded(
@@ -77,7 +77,7 @@ class _AIChatState extends State<AIChat> {
                         onSubmitted: _sendChatMessage,
                       ),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 10,
                     ),
                     IconButton(
@@ -85,8 +85,8 @@ class _AIChatState extends State<AIChat> {
                           ? null
                           : () => _sendChatMessage(_textController.text),
                       icon: _loading
-                          ? CircularProgressIndicator()
-                          : Icon(Icons.send),
+                          ? const CircularProgressIndicator()
+                          : const Icon(Icons.send),
                     ),
                   ],
                 ),
@@ -100,14 +100,14 @@ class _AIChatState extends State<AIChat> {
 
   InputDecoration textFieldDecoration() {
     return InputDecoration(
-      contentPadding: EdgeInsets.all(15),
+      contentPadding: const EdgeInsets.all(15),
       hintText: 'Say Something...!',
       border: OutlineInputBorder(
-        borderRadius: BorderRadius.all(Radius.circular(14)),
+        borderRadius: const BorderRadius.all(Radius.circular(14)),
         borderSide: BorderSide(color: Theme.of(context).colorScheme.secondary),
       ),
       focusedBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.all(Radius.circular(14)),
+        borderRadius: const BorderRadius.all(Radius.circular(14)),
         borderSide: BorderSide(color: Theme.of(context).colorScheme.secondary),
       ),
     );
@@ -149,7 +149,7 @@ class _AIChatState extends State<AIChat> {
   void _scrollDown() {
     WidgetsBinding.instance.addPostFrameCallback((_) =>
         _scrollController.animateTo(_scrollController.position.maxScrollExtent,
-            duration: Duration(milliseconds: 750), curve: Curves.easeOutCirc));
+            duration: const Duration(milliseconds: 750), curve: Curves.easeOutCirc));
   }
 
   void _showError(String message) {
@@ -157,7 +157,7 @@ class _AIChatState extends State<AIChat> {
         context: context,
         builder: (context) {
           return AlertDialog(
-            title: Text('Something went wrong...!'),
+            title: const Text('Something went wrong...!'),
             content: SingleChildScrollView(
               child: SelectableText(message),
             ),
@@ -166,7 +166,7 @@ class _AIChatState extends State<AIChat> {
                   onPressed: () {
                     Navigator.of(context).pop();
                   },
-                  child: Text('OK'))
+                  child: const Text('OK'))
             ],
           );
         });
@@ -191,9 +191,9 @@ class MessageSet extends StatelessWidget {
       children: [
         Flexible(
           child: Container(
-            padding: EdgeInsets.symmetric(vertical: 15, horizontal: 20),
-            margin: EdgeInsets.only(bottom: 8),
-            constraints: BoxConstraints(maxWidth: 500),
+            padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 20),
+            margin: const EdgeInsets.only(bottom: 8),
+            constraints: const BoxConstraints(maxWidth: 500),
             decoration: BoxDecoration(
               color: isFromUser
                   ? Colors.deepOrangeAccent.shade200

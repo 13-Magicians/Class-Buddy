@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get_storage/get_storage.dart';
 import '../services/fireCourseData.dart';
 
+
 class AcademicOperation {
   FirebaseFirestore db = FirebaseFirestore.instance;
 
@@ -62,18 +63,18 @@ class AcademicOperation {
 
   }
 
-  Future addTopic(acYear, Map<String, dynamic> courseData, List<Map<String, dynamic>> subjectTopic) async  {
-    // print(acYear);
-    // print(courseData);
-    // print(subjectTopic);
-
-    await DbCourseMethods().addTopicToCourse(acYear, subjectTopic);
+  Future addTopic(acYear, Map<String, dynamic> courseData, Map<String, dynamic> subjectTopic,String semNo) async  {
+    await DbCourseMethods().addTopicToCourse(acYear, subjectTopic, semNo, courseData['courseCode']);
   }
 
+  Future<List<Map<String, dynamic>>> getTopics (acYear, semNo, courseCode) async {
+    // List<Map<String, dynamic>> topicList = [];
+    List<Map<String, dynamic>> receivedList = [];
+    receivedList = await DbCourseMethods().getTopicsInSubject(acYear, semNo, courseCode);
+    print(receivedList);
 
-
-
-
+    return receivedList;
+  }
 
 
 

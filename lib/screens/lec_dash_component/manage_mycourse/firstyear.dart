@@ -1,5 +1,6 @@
-import 'package:flutter/material.dart';
+import 'dart:html';
 
+import 'package:flutter/material.dart';
 import '../../../operations/lecture_course.dart';
 import '../../../services/fireCourseData.dart';
 import '../../../services/fireManageDep.dart';
@@ -181,7 +182,7 @@ class _ACYFirstState extends State<ACYFirst> {
                                                   courseInside(
                                                       context,
                                                       item['documentID'],
-                                                      courseData);
+                                                      courseData, '11');
                                                 },
                                               ),
                                             );
@@ -341,7 +342,7 @@ class _ACYFirstState extends State<ACYFirst> {
                                                       courseInside(
                                                           context,
                                                           item['documentID'],
-                                                          courseData);
+                                                          courseData, '12');
                                                     },
                                                   ),
                                                 );
@@ -378,8 +379,7 @@ class _ACYFirstState extends State<ACYFirst> {
   }
 
   void courseInside(
-      BuildContext context, String item, Map<String, dynamic> courseData) {
-    print(item);
+      BuildContext context, String item, Map<String, dynamic> courseData, String semNo) {
     Navigator.of(context).push(MaterialPageRoute<void>(
       fullscreenDialog: true,
       builder: (BuildContext context) {
@@ -427,6 +427,53 @@ class _ACYFirstState extends State<ACYFirst> {
                     ],
                   ),
                   Text('Course content'),
+                  FutureBuilder<List<Map<String, dynamic>>>(
+                    future: AcademicOperation().getTopics(item, semNo, courseData['courseCode']),
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return CircularProgressIndicator();
+                      } else {
+                        if (snapshot.hasError) {
+                          return Text('Error: ${snapshot.error}');
+                        } else {
+                          final data = snapshot.data;
+                          if (data == null || data.isEmpty) {
+                            return Text('Nothing found');
+                          } else {
+                            return ExpansionPanelList.radio(
+                              expandedHeaderPadding: EdgeInsets.all(0),
+                              children: data.map<ExpansionPanelRadio>((item) {
+                                return ExpansionPanelRadio(
+                                  value: item['topicName'],
+                                  headerBuilder: (context, isExpanded) {
+                                    return ListTile(
+                                      title: Text(item['topicName']),
+                                    );
+                                  },
+                                  body: Card(
+                                    child: ListTile(
+                                      title: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          Text(item['topicNote']),
+                                          SizedBox(height: 10),
+                                          if (item['videoLink'] != null)
+                                            Text('Video Link: ${item['videoLink']}'),
+                                          if (item['documentLink'] != null)
+                                            Text('Document Link: ${item['documentLink']}'),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                );
+                              }).toList(),
+                            );
+                          }
+                        }
+                      }
+                    },
+                  ),
+                  
                 ],
               ),
             ),
@@ -438,6 +485,7 @@ class _ACYFirstState extends State<ACYFirst> {
               child: Icon(Icons.display_settings_rounded),
               onPressed: () {
                 showModalBottomSheet(
+                  isDismissible: true,
                   context: context,
                   builder: (context) {
                     return Padding(
@@ -455,13 +503,17 @@ class _ACYFirstState extends State<ACYFirst> {
                               height: 15,
                             ),
                             ListTile(
+
                               leading: Icon(Icons.add),
                               title: Text('Add Topics'),
                               contentPadding:
                               EdgeInsets.symmetric(horizontal: 20),
                               tileColor: Colors.deepOrangeAccent.shade100,
+
                               onTap: () {
-                                _showAddLinkDialog(item, courseData);
+                                Navigator.pop(context);
+                                _showAddLinkDialog(item, courseData, semNo);
+
                               },
                               shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(10)),
@@ -477,6 +529,23 @@ class _ACYFirstState extends State<ACYFirst> {
                               tileColor: Colors.deepOrangeAccent.shade100,
                               shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(10)),
+                            ),
+                            Divider(
+                              height: 12,
+                            ),
+                            ListTile(
+                              leading: Icon(Icons.add),
+                              title: Text('Add Video'),
+                              contentPadding:
+                              EdgeInsets.symmetric(horizontal: 20),
+                              tileColor: Colors.deepOrangeAccent.shade100,
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10)),
+                              onTap: () {
+
+                                print('tap');
+
+                              },
                             )
                           ],
                         ),
@@ -492,7 +561,17 @@ class _ACYFirstState extends State<ACYFirst> {
     ));
   }
 
-  Future<void> _showAddLinkDialog(item, courseData) async {
+
+
+
+
+
+
+
+
+
+
+  Future<void> _showAddLinkDialog(item, courseData, semNo) async {
     List<Map<String, dynamic>> subjectTopic = [];
     String topicName = '';
     String videoLink = '';
@@ -564,7 +643,7 @@ class _ACYFirstState extends State<ACYFirst> {
                   subjectTopic.add(subjectTopicData);
 
 
-                  AcademicOperation().addTopic(item, courseData, subjectTopic);
+                  AcademicOperation().addTopic(item, courseData, subjectTopicData, semNo);
                   Navigator.of(context).pop(false);
                 } else {
                   // Show error message if topic name is empty
@@ -812,3 +891,5 @@ Future<List<String>> _getCourseOptions() async {
   departmentList.map((department) => department['id'].toString()).toList();
   return courseOptions;
 }
+
+

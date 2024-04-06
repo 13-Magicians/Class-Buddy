@@ -41,6 +41,23 @@ class authMethods {
     return userId;
   }
 
+  getAccessToken() async {
+    final FirebaseAuth firebaseAuth = FirebaseAuth.instance;
+    final GoogleSignIn googleSignIn = GoogleSignIn();
+    final GoogleSignInAccount? googleSignInAccount =
+    await googleSignIn.signIn();
+    final GoogleSignInAuthentication? googleSignInAuthentication =
+    await googleSignInAccount?.authentication;
+    final AuthCredential credential = GoogleAuthProvider.credential(
+        idToken: googleSignInAuthentication?.idToken,
+        accessToken: googleSignInAuthentication?.accessToken);
+    UserCredential result = await firebaseAuth.signInWithCredential(credential);
+    print(result.credential?.accessToken);
+    return result.credential?.accessToken;
+
+  }
+
+
   signInWithGoogle(BuildContext context) async {
     final FirebaseAuth firebaseAuth = FirebaseAuth.instance;
     final GoogleSignIn googleSignIn = GoogleSignIn();
@@ -71,6 +88,7 @@ class authMethods {
         "id": userDetails.uid,
         "name": userDetails.displayName,
         "imgUrl": userDetails.photoURL,
+        "accessToken":credential.accessToken,
       };
 
       loggedUser.write('user', userBData);

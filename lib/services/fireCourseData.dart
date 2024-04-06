@@ -67,11 +67,23 @@ class DbCourseMethods {
   }
 
 
-  Future addTopicToCourse(acYear, List<Map<String, dynamic>> subjectTopic) async {
+  Future addTopicToCourse(acYear, Map<String, dynamic> subjectTopic,String semNo,String courseCode) async {
+    return await db.collection('AcademicYear').doc(acYear).collection(semNo).doc(courseCode).collection('topics').add(subjectTopic);
+  }
 
-    await db.collection('AcademicYear').doc(acYear);
+  Future<List<Map<String, dynamic>>> getTopicsInSubject (acYear, semNo,courseCode) async {
+    List<Map<String, dynamic>> recivedList = [];
+    QuerySnapshot querySnapshot = await db.collection('AcademicYear').doc(acYear).collection(semNo).doc(courseCode).collection('topics').get();
+    querySnapshot.docs.forEach((doc) {
+      recivedList.add({
+        'topicName':doc['topicName'],
+        'documentLink':doc['documentLink'],
+        'topicNote':doc['topicNote'],
+        'videoLink':doc['videoLink'],
+      });
+    });
 
-
+    return recivedList;
   }
 
 
