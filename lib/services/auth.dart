@@ -1,4 +1,3 @@
-import 'dart:async';
 
 import 'package:classbuddy/operations/checkUser.dart';
 import 'package:classbuddy/services/fireDatabase.dart';
@@ -52,7 +51,6 @@ class authMethods {
         idToken: googleSignInAuthentication?.idToken,
         accessToken: googleSignInAuthentication?.accessToken);
     UserCredential result = await firebaseAuth.signInWithCredential(credential);
-    print(result.credential?.accessToken);
     return result.credential?.accessToken;
 
   }

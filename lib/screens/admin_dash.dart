@@ -5,7 +5,7 @@ import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:google_generative_ai/google_generative_ai.dart';
 import '../operations/lecture_course.dart';
 import '../services/auth.dart';
-import '../services/fireCourseData.dart';
+import '../services/fire_course_data.dart';
 import '../services/fireManageDep.dart';
 import 'package:intl/intl.dart';
 

@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get_storage/get_storage.dart';
-import '../services/fireCourseData.dart';
+import '../services/fire_course_data.dart';
 
 
 class AcademicOperation {
@@ -71,7 +71,6 @@ class AcademicOperation {
     // List<Map<String, dynamic>> topicList = [];
     List<Map<String, dynamic>> receivedList = [];
     receivedList = await DbCourseMethods().getTopicsInSubject(acYear, semNo, courseCode);
-    print(receivedList);
 
     return receivedList;
   }

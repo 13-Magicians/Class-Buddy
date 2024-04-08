@@ -1,8 +1,6 @@
-import 'dart:html';
-
 import 'package:flutter/material.dart';
 import '../../../operations/lecture_course.dart';
-import '../../../services/fireCourseData.dart';
+import '../../../services/fire_course_data.dart';
 import '../../../services/fireManageDep.dart';
 
 
@@ -38,23 +36,23 @@ class _ACYFirstState extends State<ACYFirst> {
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
-      physics: BouncingScrollPhysics(
+      physics: const BouncingScrollPhysics(
           decelerationRate: ScrollDecelerationRate.normal),
       child: Container(
-        margin: EdgeInsets.all(2),
-        padding: EdgeInsets.all(6),
-        decoration: BoxDecoration(
+        margin: const EdgeInsets.all(2),
+        padding: const EdgeInsets.all(6),
+        decoration: const BoxDecoration(
           borderRadius: BorderRadius.all(Radius.circular(6)),
         ),
         child: Column(
           children: [
-            ListTile(title: Text('First Year First Semester'),tileColor: Colors.lightBlueAccent,shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),),
-            Divider(height: 10,indent: 50,endIndent: 50,thickness: 2,),
+            ListTile(title: const Text('First Year First Semester'),tileColor: Colors.lightBlueAccent,shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),),
+            const Divider(height: 10,indent: 50,endIndent: 50,thickness: 2,),
             ClipRRect(
-              borderRadius: BorderRadius.all(Radius.circular(8)),
+              borderRadius: const BorderRadius.all(Radius.circular(8)),
               child: ExpansionPanelList.radio(
-                animationDuration: Duration(milliseconds: 800),
-                expandedHeaderPadding: EdgeInsets.all(8.0),
+                animationDuration: const Duration(milliseconds: 800),
+                expandedHeaderPadding: const EdgeInsets.all(8.0),
                 initialOpenPanelValue: 1,
                 children: acYearList.map((item) {
                   return ExpansionPanelRadio(
@@ -62,68 +60,218 @@ class _ACYFirstState extends State<ACYFirst> {
                     canTapOnHeader: true,
                     headerBuilder: (BuildContext context, bool isExpanded) {
                       return Container(
-                        padding: EdgeInsets.all(6),
+                        padding: const EdgeInsets.all(6),
                         child: ListTile(
-                          leading: Icon(Icons.collections_bookmark_outlined),
+                          leading: const Icon(Icons.collections_bookmark_outlined),
                           tileColor: Colors.cyanAccent.shade400,
-                          shape: RoundedRectangleBorder(
+                          shape: const RoundedRectangleBorder(
                               borderRadius:
                               BorderRadius.all(Radius.circular(10))),
                           title: Text(item['documentID']),
                         ),
                       );
                     },
-                    body: Container(
-                      child: SizedBox(
-                        child: Column(
-                          children: [
-                            Container(
-                              width: 300,
-                              height: 50,
-                              child: Card(
-                                child: InkWell(
-                                  borderRadius:
-                                  BorderRadius.all(Radius.circular(10)),
-                                  child: Row(
-                                    mainAxisAlignment:
-                                    MainAxisAlignment.spaceEvenly,
-                                    children: [
-                                      Icon(Icons.add_task_outlined),
-                                      Text('Add Course')
-                                    ],
-                                  ),
-                                  splashColor: Colors.deepOrange,
-                                  onTap: () {
-                                    print(item);
-                                    _makeCourse(context, item, '11');
-                                  },
+                    body: SizedBox(
+                      child: Column(
+                        children: [
+                          SizedBox(
+                            width: 300,
+                            height: 50,
+                            child: Card(
+                              child: InkWell(
+                                borderRadius:
+                                const BorderRadius.all(Radius.circular(10)),
+                                splashColor: Colors.deepOrange,
+                                onTap: () {
+                                  _makeCourse(context, item, '11');
+                                },
+                                child: const Row(
+                                  mainAxisAlignment:
+                                  MainAxisAlignment.spaceEvenly,
+                                  children: [
+                                    Icon(Icons.add_task_outlined),
+                                    Text('Add Course')
+                                  ],
                                 ),
                               ),
                             ),
-                            Container(
-                              child: FutureBuilder<List<Map<String, dynamic>>>(
+                          ),
+                          FutureBuilder<List<Map<String, dynamic>>>(
+                            future: AcademicOperation()
+                                .getMyCourse(item['documentID'],'11'),
+                            builder: (context,
+                                AsyncSnapshot<List<Map<String, dynamic>>>
+                                snapshot) {
+                              if (snapshot.connectionState ==
+                                  ConnectionState.waiting) {
+                                return const CircularProgressIndicator();
+                              } else {
+                                if (snapshot.hasError) {
+                                  return Text('Error: ${snapshot.error}');
+                                } else {
+                                  if (snapshot.data == null ||
+                                      snapshot.data!.isEmpty) {
+                                    return const ListTile(
+                                      title: Text('Nothing found'),
+                                    );
+                                  } else {
+                                    return ListView.builder(
+                                      padding: const EdgeInsets.all(4),
+                                      physics:
+                                      const NeverScrollableScrollPhysics(),
+                                      shrinkWrap: true,
+                                      itemCount: snapshot.data!.length,
+                                      itemBuilder: (context, index) {
+                                        final courseData =
+                                        snapshot.data![index];
+                                        final courseName =
+                                        courseData['id'] as String?;
+                                        return Card(
+                                          child: ListTile(
+                                            title: Text(
+                                                courseName ?? 'Unknown'),
+                                            trailing: PopupMenuButton(
+                                              color: Colors.cyan,
+                                              elevation: 10,
+                                              shape: RoundedRectangleBorder(
+                                                  borderRadius:
+                                                  BorderRadius.circular(
+                                                      25)),
+                                              popUpAnimationStyle:
+                                              AnimationStyle(
+                                                  curve:
+                                                  Curves.easeInOut,
+                                                  duration: const Duration(
+                                                      milliseconds:
+                                                      600)),
+                                              itemBuilder: (context) {
+                                                return [
+                                                  PopupMenuItem(
+                                                    padding:
+                                                    const EdgeInsets.only(
+                                                        left: 30),
+                                                    child: const Text('Delete'),
+                                                    onTap: () {
+                                                      deleteConfirmDialog(
+                                                          context,
+                                                          item[
+                                                          'documentID'],
+                                                          courseData['id'],'11');
+                                                    },
+                                                  ),
+                                                ];
+                                              },
+                                            ),
+                                            leading: const Icon(
+                                                Icons.cyclone_outlined),
+                                            subtitle: Row(
+                                              children: [
+                                                Text(courseData[
+                                                'subjectName']
+                                                    .toString()),
+                                              ],
+                                            ),
+                                            onTap: () {
+                                              courseInside(
+                                                  context,
+                                                  item['documentID'],
+                                                  courseData, '11');
+                                            },
+                                          ),
+                                        );
+                                      },
+                                    );
+                                  }
+                                }
+                              }
+                            },
+                          ),
+                        ],
+                      ),
+                    ),
+                    value: item['documentID'],
+                  );
+                }).toList(),
+                materialGapSize: 16,
+                elevation: 8,
+              ),
+            ),
+            const SizedBox(height: 12,),
+            Column(
+              children: [
+                ListTile(title: const Text('First Year Second Semester'),tileColor: Colors.lightBlueAccent,shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),),
+                const Divider(height: 10,indent: 50,endIndent: 50,thickness: 2,),
+                ClipRRect(
+                  borderRadius: const BorderRadius.all(Radius.circular(8)),
+                  child: ExpansionPanelList.radio(
+                    animationDuration: const Duration(milliseconds: 800),
+                    expandedHeaderPadding: const EdgeInsets.all(8.0),
+                    initialOpenPanelValue: 1,
+                    children: acYearList.map((item) {
+                      return ExpansionPanelRadio(
+                        backgroundColor: Colors.cyan.shade400,
+                        canTapOnHeader: true,
+                        headerBuilder: (BuildContext context, bool isExpanded) {
+                          return Container(
+                            padding: const EdgeInsets.all(6),
+                            child: ListTile(
+                              leading: const Icon(Icons.collections_bookmark_outlined),
+                              tileColor: Colors.cyanAccent.shade400,
+                              shape: const RoundedRectangleBorder(
+                                  borderRadius:
+                                  BorderRadius.all(Radius.circular(10))),
+                              title: Text(item['documentID']),
+                            ),
+                          );
+                        },
+                        body: SizedBox(
+                          child: Column(
+                            children: [
+                              SizedBox(
+                                width: 300,
+                                height: 50,
+                                child: Card(
+                                  child: InkWell(
+                                    borderRadius:
+                                    const BorderRadius.all(Radius.circular(10)),
+                                    splashColor: Colors.deepOrange,
+                                    onTap: () {
+                                      _makeCourse(context, item, '12');
+                                    },
+                                    child: const Row(
+                                      mainAxisAlignment:
+                                      MainAxisAlignment.spaceEvenly,
+                                      children: [
+                                        Icon(Icons.add_task_outlined),
+                                        Text('Add Course')
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              FutureBuilder<List<Map<String, dynamic>>>(
                                 future: AcademicOperation()
-                                    .getMyCourse(item['documentID'],'11'),
+                                    .getMyCourse(item['documentID'],'12'),
                                 builder: (context,
                                     AsyncSnapshot<List<Map<String, dynamic>>>
                                     snapshot) {
                                   if (snapshot.connectionState ==
                                       ConnectionState.waiting) {
-                                    return CircularProgressIndicator();
+                                    return const CircularProgressIndicator();
                                   } else {
                                     if (snapshot.hasError) {
                                       return Text('Error: ${snapshot.error}');
                                     } else {
                                       if (snapshot.data == null ||
                                           snapshot.data!.isEmpty) {
-                                        return ListTile(
+                                        return const ListTile(
                                           title: Text('Nothing found'),
                                         );
                                       } else {
                                         return ListView.builder(
-                                          padding: EdgeInsets.all(4),
+                                          padding: const EdgeInsets.all(4),
                                           physics:
-                                          NeverScrollableScrollPhysics(),
+                                          const NeverScrollableScrollPhysics(),
                                           shrinkWrap: true,
                                           itemCount: snapshot.data!.length,
                                           itemBuilder: (context, index) {
@@ -146,29 +294,28 @@ class _ACYFirstState extends State<ACYFirst> {
                                                   AnimationStyle(
                                                       curve:
                                                       Curves.easeInOut,
-                                                      duration: Duration(
+                                                      duration: const Duration(
                                                           milliseconds:
                                                           600)),
                                                   itemBuilder: (context) {
                                                     return [
                                                       PopupMenuItem(
                                                         padding:
-                                                        EdgeInsets.only(
+                                                        const EdgeInsets.only(
                                                             left: 30),
-                                                        child: Text('Delete'),
+                                                        child: const Text('Delete'),
                                                         onTap: () {
                                                           deleteConfirmDialog(
                                                               context,
                                                               item[
                                                               'documentID'],
-                                                              courseData['id'],'11');
-                                                          print('ssss');
+                                                              courseData['id'],'12');
                                                         },
                                                       ),
                                                     ];
                                                   },
                                                 ),
-                                                leading: Icon(
+                                                leading: const Icon(
                                                     Icons.cyclone_outlined),
                                                 subtitle: Row(
                                                   children: [
@@ -178,11 +325,10 @@ class _ACYFirstState extends State<ACYFirst> {
                                                   ],
                                                 ),
                                                 onTap: () {
-                                                  print('tap  $courseName');
                                                   courseInside(
                                                       context,
                                                       item['documentID'],
-                                                      courseData, '11');
+                                                      courseData, '12');
                                                 },
                                               ),
                                             );
@@ -193,169 +339,7 @@ class _ACYFirstState extends State<ACYFirst> {
                                   }
                                 },
                               ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                    value: item['documentID'],
-                  );
-                }).toList(),
-                materialGapSize: 16,
-                elevation: 8,
-              ),
-            ),
-            SizedBox(height: 12,),
-            Column(
-              children: [
-                ListTile(title: Text('First Year Second Semester'),tileColor: Colors.lightBlueAccent,shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),),
-                Divider(height: 10,indent: 50,endIndent: 50,thickness: 2,),
-                ClipRRect(
-                  borderRadius: BorderRadius.all(Radius.circular(8)),
-                  child: ExpansionPanelList.radio(
-                    animationDuration: Duration(milliseconds: 800),
-                    expandedHeaderPadding: EdgeInsets.all(8.0),
-                    initialOpenPanelValue: 1,
-                    children: acYearList.map((item) {
-                      return ExpansionPanelRadio(
-                        backgroundColor: Colors.cyan.shade400,
-                        canTapOnHeader: true,
-                        headerBuilder: (BuildContext context, bool isExpanded) {
-                          return Container(
-                            padding: EdgeInsets.all(6),
-                            child: ListTile(
-                              leading: Icon(Icons.collections_bookmark_outlined),
-                              tileColor: Colors.cyanAccent.shade400,
-                              shape: RoundedRectangleBorder(
-                                  borderRadius:
-                                  BorderRadius.all(Radius.circular(10))),
-                              title: Text(item['documentID']),
-                            ),
-                          );
-                        },
-                        body: Container(
-                          child: SizedBox(
-                            child: Column(
-                              children: [
-                                Container(
-                                  width: 300,
-                                  height: 50,
-                                  child: Card(
-                                    child: InkWell(
-                                      borderRadius:
-                                      BorderRadius.all(Radius.circular(10)),
-                                      child: Row(
-                                        mainAxisAlignment:
-                                        MainAxisAlignment.spaceEvenly,
-                                        children: [
-                                          Icon(Icons.add_task_outlined),
-                                          Text('Add Course')
-                                        ],
-                                      ),
-                                      splashColor: Colors.deepOrange,
-                                      onTap: () {
-                                        print(item);
-                                        _makeCourse(context, item, '12');
-                                      },
-                                    ),
-                                  ),
-                                ),
-                                Container(
-                                  child: FutureBuilder<List<Map<String, dynamic>>>(
-                                    future: AcademicOperation()
-                                        .getMyCourse(item['documentID'],'12'),
-                                    builder: (context,
-                                        AsyncSnapshot<List<Map<String, dynamic>>>
-                                        snapshot) {
-                                      if (snapshot.connectionState ==
-                                          ConnectionState.waiting) {
-                                        return CircularProgressIndicator();
-                                      } else {
-                                        if (snapshot.hasError) {
-                                          return Text('Error: ${snapshot.error}');
-                                        } else {
-                                          if (snapshot.data == null ||
-                                              snapshot.data!.isEmpty) {
-                                            return ListTile(
-                                              title: Text('Nothing found'),
-                                            );
-                                          } else {
-                                            return ListView.builder(
-                                              padding: EdgeInsets.all(4),
-                                              physics:
-                                              NeverScrollableScrollPhysics(),
-                                              shrinkWrap: true,
-                                              itemCount: snapshot.data!.length,
-                                              itemBuilder: (context, index) {
-                                                final courseData =
-                                                snapshot.data![index];
-                                                final courseName =
-                                                courseData['id'] as String?;
-                                                return Card(
-                                                  child: ListTile(
-                                                    title: Text(
-                                                        courseName ?? 'Unknown'),
-                                                    trailing: PopupMenuButton(
-                                                      color: Colors.cyan,
-                                                      elevation: 10,
-                                                      shape: RoundedRectangleBorder(
-                                                          borderRadius:
-                                                          BorderRadius.circular(
-                                                              25)),
-                                                      popUpAnimationStyle:
-                                                      AnimationStyle(
-                                                          curve:
-                                                          Curves.easeInOut,
-                                                          duration: Duration(
-                                                              milliseconds:
-                                                              600)),
-                                                      itemBuilder: (context) {
-                                                        return [
-                                                          PopupMenuItem(
-                                                            padding:
-                                                            EdgeInsets.only(
-                                                                left: 30),
-                                                            child: Text('Delete'),
-                                                            onTap: () {
-                                                              deleteConfirmDialog(
-                                                                  context,
-                                                                  item[
-                                                                  'documentID'],
-                                                                  courseData['id'],'12');
-                                                              print('ssss');
-                                                            },
-                                                          ),
-                                                        ];
-                                                      },
-                                                    ),
-                                                    leading: Icon(
-                                                        Icons.cyclone_outlined),
-                                                    subtitle: Row(
-                                                      children: [
-                                                        Text(courseData[
-                                                        'subjectName']
-                                                            .toString()),
-                                                      ],
-                                                    ),
-                                                    onTap: () {
-                                                      print('tap  $courseName');
-                                                      courseInside(
-                                                          context,
-                                                          item['documentID'],
-                                                          courseData, '12');
-                                                    },
-                                                  ),
-                                                );
-                                              },
-                                            );
-                                          }
-                                        }
-                                      }
-                                    },
-                                  ),
-                                ),
-                              ],
-                            ),
+                            ],
                           ),
                         ),
                         value: item['documentID'],
@@ -371,7 +355,7 @@ class _ACYFirstState extends State<ACYFirst> {
                 onPressed: () {
                   widget.onCardPressed(0);
                 },
-                child: Text('back'))
+                child: const Text('back'))
           ],
         ),
       ),
@@ -390,7 +374,7 @@ class _ACYFirstState extends State<ACYFirst> {
             title: Row(
               children: [
                 Text(courseData['id']),
-                Text(' - '),
+                const Text(' - '),
                 Text(courseData['subjectName'])
               ],
             ),
@@ -412,13 +396,13 @@ class _ACYFirstState extends State<ACYFirst> {
                       Chip(
                         label: Text(item),
                       ),
-                      SizedBox(
+                      const SizedBox(
                         width: 10,
                       ),
                       Chip(
                         label: Text(courseData['department']),
                       ),
-                      SizedBox(
+                      const SizedBox(
                         width: 10,
                       ),
                       Chip(
@@ -426,22 +410,22 @@ class _ACYFirstState extends State<ACYFirst> {
                       ),
                     ],
                   ),
-                  Text('Course content'),
+                  const Text('Course content'),
                   FutureBuilder<List<Map<String, dynamic>>>(
                     future: AcademicOperation().getTopics(item, semNo, courseData['courseCode']),
                     builder: (context, snapshot) {
                       if (snapshot.connectionState == ConnectionState.waiting) {
-                        return CircularProgressIndicator();
+                        return const CircularProgressIndicator();
                       } else {
                         if (snapshot.hasError) {
                           return Text('Error: ${snapshot.error}');
                         } else {
                           final data = snapshot.data;
                           if (data == null || data.isEmpty) {
-                            return Text('Nothing found');
+                            return const Text('Nothing found');
                           } else {
                             return ExpansionPanelList.radio(
-                              expandedHeaderPadding: EdgeInsets.all(0),
+                              expandedHeaderPadding: const EdgeInsets.all(0),
                               children: data.map<ExpansionPanelRadio>((item) {
                                 return ExpansionPanelRadio(
                                   value: item['topicName'],
@@ -456,7 +440,7 @@ class _ACYFirstState extends State<ACYFirst> {
                                         crossAxisAlignment: CrossAxisAlignment.start,
                                         children: [
                                           Text(item['topicNote']),
-                                          SizedBox(height: 10),
+                                          const SizedBox(height: 10),
                                           if (item['videoLink'] != null)
                                             Text('Video Link: ${item['videoLink']}'),
                                           if (item['documentLink'] != null)
@@ -473,7 +457,7 @@ class _ACYFirstState extends State<ACYFirst> {
                       }
                     },
                   ),
-                  
+
                 ],
               ),
             ),
@@ -482,32 +466,32 @@ class _ACYFirstState extends State<ACYFirst> {
             padding: const EdgeInsets.all(18.0),
             child: FloatingActionButton(
               backgroundColor: Colors.deepOrangeAccent.shade100,
-              child: Icon(Icons.display_settings_rounded),
+              child: const Icon(Icons.display_settings_rounded),
               onPressed: () {
                 showModalBottomSheet(
                   isDismissible: true,
                   context: context,
                   builder: (context) {
                     return Padding(
-                      padding: EdgeInsets.all(20),
-                      child: Container(
+                      padding: const EdgeInsets.all(20),
+                      child: SizedBox(
                         height: 400,
                         width: double.maxFinite,
                         child: Column(
                           children: [
-                            Text(
+                            const Text(
                               "Change Course Content",
                               style: TextStyle(fontSize: 18),
                             ),
-                            SizedBox(
+                            const SizedBox(
                               height: 15,
                             ),
                             ListTile(
 
-                              leading: Icon(Icons.add),
-                              title: Text('Add Topics'),
+                              leading: const Icon(Icons.add),
+                              title: const Text('Add Topics'),
                               contentPadding:
-                              EdgeInsets.symmetric(horizontal: 20),
+                              const EdgeInsets.symmetric(horizontal: 20),
                               tileColor: Colors.deepOrangeAccent.shade100,
 
                               onTap: () {
@@ -518,32 +502,31 @@ class _ACYFirstState extends State<ACYFirst> {
                               shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(10)),
                             ),
-                            Divider(
+                            const Divider(
                               height: 12,
                             ),
                             ListTile(
-                              leading: Icon(Icons.add),
-                              title: Text('Add Assignment'),
+                              leading: const Icon(Icons.add),
+                              title: const Text('Add Assignment'),
                               contentPadding:
-                              EdgeInsets.symmetric(horizontal: 20),
+                              const EdgeInsets.symmetric(horizontal: 20),
                               tileColor: Colors.deepOrangeAccent.shade100,
                               shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(10)),
                             ),
-                            Divider(
+                            const Divider(
                               height: 12,
                             ),
                             ListTile(
-                              leading: Icon(Icons.add),
-                              title: Text('Add Video'),
+                              leading: const Icon(Icons.add),
+                              title: const Text('Add Video'),
                               contentPadding:
-                              EdgeInsets.symmetric(horizontal: 20),
+                              const EdgeInsets.symmetric(horizontal: 20),
                               tileColor: Colors.deepOrangeAccent.shade100,
                               shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(10)),
                               onTap: () {
 
-                                print('tap');
 
                               },
                             )
@@ -585,9 +568,9 @@ class _ACYFirstState extends State<ACYFirst> {
         context: context,
         builder: (context) => AlertDialog(
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-          title: Text('Add Topic'),
+          title: const Text('Add Topic'),
           scrollable: true,
-          contentPadding: EdgeInsets.symmetric(horizontal: 10,vertical: 6),
+          contentPadding: const EdgeInsets.symmetric(horizontal: 10,vertical: 6),
           content: Column(
             // mainAxisSize: MainAxisSize.min,
             children: [
@@ -595,17 +578,17 @@ class _ACYFirstState extends State<ACYFirst> {
                 decoration: InputDecoration(labelText: 'Topic Name',border:OutlineInputBorder(borderRadius: BorderRadius.circular(8))),
                 onChanged: (value) => topicName = value,
               ),
-              SizedBox(height: 8,),
+              const SizedBox(height: 8,),
               TextField(
                 decoration: InputDecoration(labelText: 'Video Link (Optional)',border:OutlineInputBorder(borderRadius: BorderRadius.circular(8))),
                 onChanged: (value) => videoLink = value,
               ),
-              SizedBox(height: 8,),
+              const SizedBox(height: 8,),
               TextField(
                 decoration: InputDecoration(labelText: 'Document Link (Optional)',border:OutlineInputBorder(borderRadius: BorderRadius.circular(8))),
                 onChanged: (value) => documentLink = value,
               ),
-              SizedBox(height: 8,),
+              const SizedBox(height: 8,),
               TextField(
                 maxLines: 3,
                 decoration: InputDecoration(labelText: 'Topic Note (Optional)',border:OutlineInputBorder(borderRadius: BorderRadius.circular(8))),
@@ -618,7 +601,7 @@ class _ACYFirstState extends State<ACYFirst> {
               onPressed: () {
                 Navigator.of(context).pop(false); // Return false to indicate cancellation
               },
-              child: Text('Cancel'),
+              child: const Text('Cancel'),
             ),
             ElevatedButton(
               onPressed: () {
@@ -650,21 +633,21 @@ class _ACYFirstState extends State<ACYFirst> {
                   showDialog(
                     context: context,
                     builder: (context) => AlertDialog(
-                      title: Text('Error'),
-                      content: Text('Please enter a topic name.'),
+                      title: const Text('Error'),
+                      content: const Text('Please enter a topic name.'),
                       actions: [
                         ElevatedButton(
                           onPressed: () {
                             Navigator.of(context).pop(); // Close the error dialog
                           },
-                          child: Text('OK'),
+                          child: const Text('OK'),
                         ),
                       ],
                     ),
                   );
                 }
               },
-              child: Text('Add'),
+              child: const Text('Add'),
             ),
           ],
         ),
@@ -706,7 +689,7 @@ class _ACYFirstState extends State<ACYFirst> {
       builder: (BuildContext context) {
         return AlertDialog(
           backgroundColor: Colors.deepOrangeAccent.shade100,
-          title: Text('Delete This Course?'),
+          title: const Text('Delete This Course?'),
           content: const Text(
               'This will delete the Course and it can not be recover.'),
           actions: [
@@ -730,12 +713,12 @@ class _ACYFirstState extends State<ACYFirst> {
   }
 
   void _makeCourse(BuildContext context, Map<String, dynamic> item, String semNo) {
-    final _formKey = GlobalKey<FormState>(); // Add a global key for the form
+    final formKey = GlobalKey<FormState>(); // Add a global key for the form
     String?
-    _selectedDepartment; // Add a variable to store the selected department
-    TextEditingController _subjectNameController = TextEditingController();
-    TextEditingController _courseCodeController = TextEditingController();
-    TextEditingController _passCodeController = TextEditingController();
+    selectedDepartment; // Add a variable to store the selected department
+    TextEditingController subjectNameController = TextEditingController();
+    TextEditingController courseCodeController = TextEditingController();
+    TextEditingController passCodeController = TextEditingController();
 
     Navigator.of(context).push(MaterialPageRoute<void>(
       fullscreenDialog: true,
@@ -758,12 +741,12 @@ class _ACYFirstState extends State<ACYFirst> {
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 40,vertical: 20),
                 child: Form(
-                  key: _formKey, // Assign the key to the form
+                  key: formKey, // Assign the key to the form
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       TextFormField(
-                        controller: _subjectNameController,
+                        controller: subjectNameController,
                         decoration: InputDecoration(
                           border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(10)),
@@ -778,7 +761,7 @@ class _ACYFirstState extends State<ACYFirst> {
                       ),
                       const SizedBox(height: 16.0),
                       TextFormField(
-                        controller: _courseCodeController,
+                        controller: courseCodeController,
                         decoration: InputDecoration(
                           border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(10)),
@@ -809,7 +792,7 @@ class _ACYFirstState extends State<ACYFirst> {
                                     borderRadius: BorderRadius.circular(10)),
                                 labelText: 'Select Department',
                               ),
-                              value: _selectedDepartment,
+                              value: selectedDepartment,
                               validator: (value) {
                                 if (value == null) {
                                   return 'Please select a department';
@@ -824,7 +807,7 @@ class _ACYFirstState extends State<ACYFirst> {
                               }).toList(),
                               onChanged: (String? value) {
                                 setState(() {
-                                  _selectedDepartment = value;
+                                  selectedDepartment = value;
                                 });
                               },
                             );
@@ -833,7 +816,7 @@ class _ACYFirstState extends State<ACYFirst> {
                       ),
                       const SizedBox(height: 16.0),
                       TextFormField(
-                        controller: _passCodeController,
+                        controller: passCodeController,
                         decoration: InputDecoration(
                           border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(10)),
@@ -856,14 +839,14 @@ class _ACYFirstState extends State<ACYFirst> {
                         ),
                         onPressed: () {
                           // Validate the form before submission
-                          if (_formKey.currentState!.validate()) {
+                          if (formKey.currentState!.validate()) {
                             // Handle form submission here
                             AcademicOperation().addCourseACY(
                               item['documentID'],
-                              _subjectNameController.text,
-                              _courseCodeController.text,
-                              _selectedDepartment.toString(),
-                              _passCodeController.text,
+                              subjectNameController.text,
+                              courseCodeController.text,
+                              selectedDepartment.toString(),
+                              passCodeController.text,
                               semNo,
                             );
                             loadData();
