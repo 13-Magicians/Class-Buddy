@@ -1,7 +1,10 @@
+// import 'package:flick_video_player/flick_video_player.dart';
 import 'package:flutter/material.dart';
+// import 'package:video_player/video_player.dart';
 import '../../../operations/lecture_course.dart';
 import '../../../services/fire_course_data.dart';
 import '../../../services/fireManageDep.dart';
+import '../../../screens/l_video_player.dart';
 
 
 class ACYFirst extends StatefulWidget {
@@ -13,18 +16,37 @@ class ACYFirst extends StatefulWidget {
   State<ACYFirst> createState() => _ACYFirstState();
 }
 
-class _ACYFirstState extends State<ACYFirst> {
+class _ACYFirstState extends State<ACYFirst> with WidgetsBindingObserver {
   List<Map<String, dynamic>> acYearList = [];
   List<Map<String, dynamic>> acYCourseListF = [];
   List<Map<String, dynamic>> acYCourseListS = [];
 
   List<TextEditingController> controllers = [];
+  // late FlickManager flickManager;
 
   @override
   void initState() {
     super.initState();
+    // WidgetsBinding.instance.addObserver(this);
     loadData();
   }
+
+  // @override
+  // void dispose() {
+  //   WidgetsBinding.instance.removeObserver(this);
+  //   flickManager.dispose();
+  //   super.dispose();
+  // }
+
+  // @override
+  // void didChangeAppLifecycleState(AppLifecycleState state) {
+  //   super.didChangeAppLifecycleState(state);
+  //   if (state == AppLifecycleState.paused) {
+  //     flickManager.flickControlManager?.autoPause();
+  //   } else if (state == AppLifecycleState.resumed) {
+  //     flickManager.flickControlManager?.autoResume();
+  //   }
+  // }
 
   loadData() async {
     acYearList = await AcademicOperation().getAcYears();
@@ -380,7 +402,10 @@ class _ACYFirstState extends State<ACYFirst> {
             ),
             leading: IconButton(
               icon: const Icon(Icons.arrow_back_rounded),
-              onPressed: () => Navigator.of(context).pop(),
+              onPressed: () {
+                Navigator.of(context).pop();
+              }
+
             ),
           ),
           body: Card(
@@ -411,51 +436,68 @@ class _ACYFirstState extends State<ACYFirst> {
                     ],
                   ),
                   const Text('Course content'),
-                  FutureBuilder<List<Map<String, dynamic>>>(
-                    future: AcademicOperation().getTopics(item, semNo, courseData['courseCode']),
-                    builder: (context, snapshot) {
-                      if (snapshot.connectionState == ConnectionState.waiting) {
-                        return const CircularProgressIndicator();
-                      } else {
-                        if (snapshot.hasError) {
-                          return Text('Error: ${snapshot.error}');
-                        } else {
-                          final data = snapshot.data;
-                          if (data == null || data.isEmpty) {
-                            return const Text('Nothing found');
-                          } else {
-                            return ExpansionPanelList.radio(
-                              expandedHeaderPadding: const EdgeInsets.all(0),
-                              children: data.map<ExpansionPanelRadio>((item) {
-                                return ExpansionPanelRadio(
-                                  value: item['topicName'],
-                                  headerBuilder: (context, isExpanded) {
-                                    return ListTile(
-                                      title: Text(item['topicName']),
-                                    );
-                                  },
-                                  body: Card(
-                                    child: ListTile(
-                                      title: Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        children: [
-                                          Text(item['topicNote']),
-                                          const SizedBox(height: 10),
-                                          if (item['videoLink'] != null)
-                                            Text('Video Link: ${item['videoLink']}'),
-                                          if (item['documentLink'] != null)
-                                            Text('Document Link: ${item['documentLink']}'),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                );
-                              }).toList(),
-                            );
-                          }
-                        }
-                      }
-                    },
+                  Flexible(
+                    child: SingleChildScrollView(
+                      child: Container(
+                        margin: EdgeInsets.all(20),
+                        decoration: BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(10)),color: Colors.amberAccent),
+                        child: FutureBuilder<List<Map<String, dynamic>>>(
+                          future: AcademicOperation().getTopics(item, semNo, courseData['courseCode']),
+                          builder: (context, snapshot) {
+                            if (snapshot.connectionState == ConnectionState.waiting) {
+                              return const CircularProgressIndicator();
+                            } else {
+                              if (snapshot.hasError) {
+                                return Text('Error: ${snapshot.error}');
+                              } else {
+                                final data = snapshot.data;
+                                if (data == null || data.isEmpty) {
+                                  return const Text('Nothing found');
+                                } else {
+                                  return ExpansionPanelList.radio(
+                                    expandedHeaderPadding: const EdgeInsets.all(0),
+                                    children: data.map<ExpansionPanelRadio>((item) {
+                                      return ExpansionPanelRadio(
+                                        canTapOnHeader: true,
+                                        value: item['topicName'],
+                                        headerBuilder: (context, isExpanded) {
+                                          return ListTile(
+                                            title: Text(item['topicName']),
+                                          );
+                                        },
+                                        body: Card(
+                                          child: Column(
+                                            children: [
+                                              ListTile(
+                                                title: Column(
+                                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                                  children: [
+                                                    Text(item['topicNote']),
+                                                    const SizedBox(height: 10),
+                                                    if (item['videoLink'] != null)
+                                                      Text('Video Link: ${item['videoLink']}'),
+                                                    if (item['documentLink'] != null)
+                                                      Text('Document Link: ${item['documentLink']}'),
+                                                  ],
+                                                ),
+                                              ),
+                                              if (item['videoLink'] != null && item['videoLink'] != 'none')
+                                                LecVideoPlayer(AcademicOperation().getYoutubeVideoStreamUrl(item['videoLink'])),
+
+
+                                            ],
+                                          ),
+                                        ),
+                                      );
+                                    }).toList(),
+                                  );
+                                }
+                              }
+                            }
+                          },
+                        ),
+                      ),
+                    ),
                   ),
 
                 ],

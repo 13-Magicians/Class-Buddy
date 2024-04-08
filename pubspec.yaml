@@ -45,6 +45,10 @@ dependencies:
   get_storage: ^2.1.1
   google_generative_ai: ^0.2.2
   flutter_markdown: ^0.6.22
+  video_player: ^2.8.5
+  material_color_utilities: ^0.8.0
+  flick_video_player: ^0.7.0
+  youtube_explode_dart: ^2.2.0
 
 
 

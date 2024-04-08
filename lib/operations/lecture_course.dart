@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:youtube_explode_dart/youtube_explode_dart.dart';
 import '../services/fire_course_data.dart';
 
 
@@ -73,6 +74,16 @@ class AcademicOperation {
     receivedList = await DbCourseMethods().getTopicsInSubject(acYear, semNo, courseCode);
 
     return receivedList;
+  }
+
+  Future<String> getYoutubeVideoStreamUrl(String youtubeUrl) async {
+    final yt = YoutubeExplode();
+    // final video = await yt.videos.get(youtubeUrl);
+    // Choose the desired stream based on quality, etc. (see YoutubeExplode documentation)
+    final streamManifest = await yt.videos.streamsClient.getManifest(youtubeUrl);
+    final audioOnlyStreams = streamManifest.muxed;
+    final firstAudioStream = audioOnlyStreams.bestQuality;
+    return firstAudioStream.url.toString();
   }
 
 
