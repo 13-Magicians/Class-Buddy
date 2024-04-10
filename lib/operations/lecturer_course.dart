@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:youtube_explode_dart/youtube_explode_dart.dart';
-import '../services/firebase_course_data.dart';
+import '../services/firebase_course_control.dart';
 
 
 class AcademicOperation {

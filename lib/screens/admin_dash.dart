@@ -1,11 +1,11 @@
-import 'package:classbuddy/operations/check_user.dart';
+import 'package:classbuddy/operations/user_handler.dart';
 import 'package:classbuddy/operations/error_handler.dart';
 import 'package:classbuddy/screens/chat/chat_with_ai.dart';
-import 'package:classbuddy/services/firebase_database.dart';
+import 'package:classbuddy/services/firebase_user_control.dart';
 import 'package:flutter/material.dart';
 import '../operations/lecturer_course.dart';
-import '../services/firebase_course_data.dart';
-import '../services/firebase_manage_department.dart';
+import '../services/firebase_course_control.dart';
+import '../services/firebase_department_control.dart';
 
 import 'admin_dash_component/profile_raw_data/profile_data.dart';
 

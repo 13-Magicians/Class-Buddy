@@ -1,4 +1,4 @@
-import 'package:classbuddy/services/authentication.dart';
+import 'package:classbuddy/services/firebase_authentication_control.dart';
 import 'package:flutter/material.dart';
 
 class CBAppLogin extends StatefulWidget {

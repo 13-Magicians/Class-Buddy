@@ -1,6 +1,6 @@
 
-import 'package:classbuddy/operations/check_user.dart';
-import 'package:classbuddy/services/firebase_database.dart';
+import 'package:classbuddy/operations/user_handler.dart';
+import 'package:classbuddy/services/firebase_user_control.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get_storage/get_storage.dart';
@@ -60,9 +60,6 @@ class AuthMethods {
     //------------------------
 
 
-
-
-
     if (userDetails != null) {
 
       Map<String, dynamic> userBData = {
@@ -74,8 +71,6 @@ class AuthMethods {
       };
 
       loggedUser.write('user', userBData);
-
-
 
       // final userIdValue = await DatabaseMethods().checkUser(userDetails.uid);
       final userIdValue = await CheckUser().userExist(userDetails.uid);
@@ -110,8 +105,6 @@ class AuthMethods {
       }
 
     }
-
-
 
 
   }

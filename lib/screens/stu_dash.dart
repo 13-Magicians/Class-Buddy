@@ -1,9 +1,7 @@
 import 'package:classbuddy/screens/chat/chat_with_ai.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_markdown/flutter_markdown.dart';
-import 'package:google_generative_ai/google_generative_ai.dart';
-import '../services/authentication.dart';
-import '../services/firebase_database.dart';
+import '../services/firebase_authentication_control.dart';
+import '../services/firebase_user_control.dart';
 import 'package:intl/intl.dart';
 
 

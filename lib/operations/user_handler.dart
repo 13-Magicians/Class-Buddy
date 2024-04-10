@@ -1,7 +1,7 @@
 
 import 'package:classbuddy/operations/error_handler.dart';
-import 'package:classbuddy/services/authentication.dart';
-import 'package:classbuddy/services/firebase_database.dart';
+import 'package:classbuddy/services/firebase_authentication_control.dart';
+import 'package:classbuddy/services/firebase_user_control.dart';
 
 class CheckUser {
 

@@ -2,8 +2,8 @@
 import 'package:flutter/material.dart';
 // import 'package:video_player/video_player.dart';
 import '../../../operations/lecturer_course.dart';
-import '../../../services/firebase_course_data.dart';
-import '../../../services/firebase_manage_department.dart';
+import '../../../services/firebase_course_control.dart';
+import '../../../services/firebase_department_control.dart';
 import '../../../screens/l_video_player.dart';
 
 

@@ -1,5 +1,5 @@
 import 'package:classbuddy/screens/chat/chat_with_ai.dart';
-import 'package:classbuddy/services/authentication.dart';
+import 'package:classbuddy/services/firebase_authentication_control.dart';
 import 'package:flutter/material.dart';
 import '../operations/lecturer_course.dart';
 import 'lec_dash_component/manage_my_course/first_year.dart';

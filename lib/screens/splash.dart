@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:simple_progress_indicators/simple_progress_indicators.dart';
 import '../main.dart';
-import '../services/authentication.dart';
+import '../services/firebase_authentication_control.dart';
 
 class CBSplashScr extends StatefulWidget {
   const CBSplashScr(version, {super.key});

@@ -2,8 +2,8 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-import '../../../services/authentication.dart';
-import '../../../services/firebase_database.dart';
+import '../../../services/firebase_authentication_control.dart';
+import '../../../services/firebase_user_control.dart';
 
 class AProfile extends StatefulWidget {
   const AProfile({super.key});

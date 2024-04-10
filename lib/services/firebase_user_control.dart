@@ -59,20 +59,6 @@ class DatabaseMethods {
       userList.add(userData);
     }
 
-    // if (doc.exists) {
-    //   Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
-    //   data.forEach((key, value) {
-    //     print(key);
-    //     print(value);
-    //     userList.add({key:value});
-    //   });
-    //   print(data);
-    //
-    //   print('---------------done-------------');
-    //   print(userList);
-    // } else {
-    //   print("Document does not exist on the database");
-    // }
     return userList;
   }
 
@@ -111,7 +97,6 @@ class DatabaseMethods {
         };
         studentUsers.add(userData);
       }
-
       return studentUsers;
 
 
