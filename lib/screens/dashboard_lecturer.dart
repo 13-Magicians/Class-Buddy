@@ -1,9 +1,9 @@
-import 'package:classbuddy/screens/chat/chat_with_ai.dart';
+import 'package:classbuddy/screens/common_components/chat_with_ai.dart';
 import 'package:classbuddy/services/firebase_authentication_control.dart';
 import 'package:flutter/material.dart';
-import '../operations/lecturer_course.dart';
-import 'lec_dash_component/manage_my_course/first_year.dart';
-import 'lec_dash_component/profile_raw_data/profile_data.dart';
+import '../operations/course_handler.dart';
+import 'dash_component_lecturer/manage_my_course/first_year.dart';
+import 'dash_component_lecturer/profile_raw_data/profile_data.dart';
 
 class LecDash extends StatefulWidget {
   const LecDash({super.key});

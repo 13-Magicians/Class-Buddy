@@ -1,9 +1,9 @@
-import 'package:classbuddy/screens/admin_dash.dart';
-import 'package:classbuddy/screens/lec_dash.dart';
-import 'package:classbuddy/screens/login.dart';
-import 'package:classbuddy/screens/on_boarding.dart';
-import 'package:classbuddy/screens/splash.dart';
-import 'package:classbuddy/screens/stu_dash.dart';
+import 'package:classbuddy/screens/dashboard_admin.dart';
+import 'package:classbuddy/screens/dashboard_lecturer.dart';
+import 'package:classbuddy/screens/screen_login.dart';
+import 'package:classbuddy/screens/screen_onboard.dart';
+import 'package:classbuddy/screens/screen_splash.dart';
+import 'package:classbuddy/screens/dashboard_student.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';

@@ -1,4 +1,4 @@
-import 'package:classbuddy/screens/chat/chat_with_ai.dart';
+import 'package:classbuddy/screens/common_components/chat_with_ai.dart';
 import 'package:flutter/material.dart';
 import '../services/firebase_authentication_control.dart';
 import '../services/firebase_user_control.dart';

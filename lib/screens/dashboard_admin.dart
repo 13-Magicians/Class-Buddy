@@ -1,9 +1,9 @@
 import 'package:classbuddy/operations/user_handler.dart';
 import 'package:classbuddy/operations/error_handler.dart';
-import 'package:classbuddy/screens/chat/chat_with_ai.dart';
+import 'package:classbuddy/screens/common_components/chat_with_ai.dart';
 import 'package:classbuddy/services/firebase_user_control.dart';
 import 'package:flutter/material.dart';
-import '../operations/lecturer_course.dart';
+import '../operations/course_handler.dart';
 import '../services/firebase_course_control.dart';
 import '../services/firebase_department_control.dart';
 

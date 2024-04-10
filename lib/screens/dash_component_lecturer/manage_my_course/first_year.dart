@@ -1,10 +1,10 @@
 // import 'package:flick_video_player/flick_video_player.dart';
 import 'package:flutter/material.dart';
 // import 'package:video_player/video_player.dart';
-import '../../../operations/lecturer_course.dart';
+import '../../../operations/course_handler.dart';
 import '../../../services/firebase_course_control.dart';
 import '../../../services/firebase_department_control.dart';
-import '../../../screens/l_video_player.dart';
+import '../../common_components/com_video_player.dart';
 
 
 class ACYFirst extends StatefulWidget {
