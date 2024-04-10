@@ -1,9 +1,9 @@
-import 'package:classbuddy/services/auth.dart';
+import 'package:classbuddy/services/authentication.dart';
 import 'package:flutter/material.dart';
-import '../operations/lecture_course.dart';
-import 'lec_dash_component/chat_ai/chatwithai.dart';
-import 'lec_dash_component/manage_mycourse/firstyear.dart';
-import 'lec_dash_component/profile_rawdata/profiledata.dart';
+import '../operations/lecturer_course.dart';
+import 'lec_dash_component/chat_ai/chat-with-ai.dart';
+import 'lec_dash_component/manage_my_course/first-year.dart';
+import 'lec_dash_component/profile_raw_data/profile_data.dart';
 
 class LecDash extends StatefulWidget {
   const LecDash({super.key});
@@ -23,12 +23,6 @@ class _LecDashState extends State<LecDash> {
     LecturerProfile(),
   ];
 
-  // void _onItemTapped(int index) {
-  //   setState(() {
-  //     currentPageIndex = index;
-  //   });
-  // }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -37,7 +31,7 @@ class _LecDashState extends State<LecDash> {
         child: _widgetOptions.elementAt(currentPageIndex),
       ),
       appBar: AppBar(
-          title: const Text('Hello Lecture'),
+          title: const Text('Hello Lecturer'),
           backgroundColor: const Color(0xFFF9DEC9),
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
@@ -117,7 +111,7 @@ class _ExploreLDState extends State<ExploreLD> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   const Text(
-                    "Hello Lecture",
+                    "Hello Lecturer",
                     style: TextStyle(fontSize: 20.0),
                   ),
                   IconButton(
@@ -132,12 +126,12 @@ class _ExploreLDState extends State<ExploreLD> {
                 children: [
                   ElevatedButton(
                       onPressed: () {
-                        authMethods().userSignOut(context);
+                        AuthMethods().userSignOut(context);
                       },
                       child: const Text('Press')),
                   ElevatedButton(
                       onPressed: () {
-                        authMethods().getCurrentUser();
+                        AuthMethods().getCurrentUser();
                       },
                       child: const Text('Get'))
                 ],

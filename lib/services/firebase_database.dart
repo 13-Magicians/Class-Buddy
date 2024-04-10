@@ -1,3 +1,4 @@
+import 'package:classbuddy/operations/error_handler.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class DatabaseMethods {
@@ -14,7 +15,7 @@ class DatabaseMethods {
 
   Future checkUser(String userId) async {
     DocumentSnapshot docSnap = await db.collection("Users").doc(userId).get();
-    var dSnapId;
+    String dSnapId;
     if (docSnap.exists) {
       dSnapId = docSnap.get('id');
     } else {
@@ -35,10 +36,8 @@ class DatabaseMethods {
     if (doc.exists) {
       Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
       userData.add(data);
-      print('---------------done-------------');
-      print(userData);
     } else {
-      print("Document does not exist on the database");
+      AppLogger.log('Document does not exist on the database');
     }
     return userData;
 
@@ -48,7 +47,7 @@ class DatabaseMethods {
   
   Future getAllUsers() async {
     QuerySnapshot querySnapshot = await db.collection('Users').get();
-    querySnapshot.docs.forEach((doc) {
+    for (var doc in querySnapshot.docs) {
       Map<String, dynamic> userData = {
         'email': doc['email'],
         'id': doc['id'],
@@ -58,8 +57,7 @@ class DatabaseMethods {
         'role': doc['role'],
       };
       userList.add(userData);
-      print('111111111111111--------done-------111111111111');
-    });
+    }
 
     // if (doc.exists) {
     //   Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
@@ -83,7 +81,7 @@ class DatabaseMethods {
 
     QuerySnapshot querySnapshot = await db.collection('Users').where(
         'role', isEqualTo: 'Admin').get();
-    querySnapshot.docs.forEach((doc) {
+    for (var doc in querySnapshot.docs) {
       Map<String, dynamic> userData = {
         'name': doc['name'],
         'email': doc['email'],
@@ -93,7 +91,7 @@ class DatabaseMethods {
         'role': doc['role'],
       };
       adminUsers.add(userData);
-    });
+    }
 
     return adminUsers;
   }
@@ -102,7 +100,7 @@ class DatabaseMethods {
       List<Map<String, dynamic>> studentUsers = [];
 
       QuerySnapshot querySnapshot = await db.collection('Users').where('role', isEqualTo: 'Student').get();
-      querySnapshot.docs.forEach((doc) {
+      for (var doc in querySnapshot.docs) {
         Map<String, dynamic> userData = {
           'name': doc['name'],
           'email': doc['email'],
@@ -112,7 +110,7 @@ class DatabaseMethods {
           'role': doc['role'],
         };
         studentUsers.add(userData);
-      });
+      }
 
       return studentUsers;
 

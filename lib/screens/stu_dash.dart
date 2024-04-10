@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:google_generative_ai/google_generative_ai.dart';
-import '../services/auth.dart';
-import '../services/fireDatabase.dart';
+import '../services/authentication.dart';
+import '../services/firebase_database.dart';
 import 'package:intl/intl.dart';
 
 
@@ -21,14 +21,14 @@ class _StuDashState extends State<StuDash> {
     stuExplore(),
     Text('Search Page', style: TextStyle(fontSize: 35, fontWeight: FontWeight.bold)),
     AIChat(),
-    sProfile(),
+    SProfile(),
   ];
 
-  void _onItemTapped(int index) {
-    setState(() {
-      currentPageIndex = index;
-    });
-  }
+  // void _onItemTapped(int index) {
+  //   setState(() {
+  //     currentPageIndex = index;
+  //   });
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -392,14 +392,14 @@ class MessageSet extends StatelessWidget {
 
 
 
-class sProfile extends StatefulWidget {
-  const sProfile({super.key});
+class SProfile extends StatefulWidget {
+  const SProfile({super.key});
 
   @override
-  State<sProfile> createState() => _sProfileState();
+  State<SProfile> createState() => _SProfileState();
 }
 
-class _sProfileState extends State<sProfile> {
+class _SProfileState extends State<SProfile> {
 
   List<Map<String, dynamic>> userData = [];
 
@@ -410,7 +410,7 @@ class _sProfileState extends State<sProfile> {
   }
 
   loadUserData() async {
-    final userId = await authMethods().getCurrentUser();
+    final userId = await AuthMethods().getCurrentUser();
     userData = await DatabaseMethods().getCurrentUserData(userId);
     setState(() {});
   }
@@ -423,7 +423,6 @@ class _sProfileState extends State<sProfile> {
     final user = userData.isNotEmpty ? userData.first : {};
     final name = user['name'] ?? '';
     final email = user['email'] ?? '';
-    print(user['lastLog'] ?? '');
     final lastLog = user['lastLog'] != null
         ? DateFormat(' EEE d MMM y \n hh:mm a').format(
       DateTime.fromMillisecondsSinceEpoch(user['lastLog'] as int),
@@ -477,7 +476,7 @@ class _sProfileState extends State<sProfile> {
                         SizedBox(height: 42),
                         ElevatedButton(
                           onPressed: () {
-                            authMethods().userSignOut(context);
+                            AuthMethods().userSignOut(context);
                           },
                           child: Text('Logout'),
                         ),

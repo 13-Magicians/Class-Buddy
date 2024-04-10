@@ -73,7 +73,7 @@ class ClassBuddy extends StatelessWidget {
       routes: <String,WidgetBuilder>{
         '/splash': (context) => CBSplashScr(version),
         '/onboard':(context) => OnBoarding(),
-        '/login':(context) => CB_Login(),
+        '/login':(context) => CBAppLogin(),
         '/dashLec':(context) => LecDash(),
         '/dashStu':(context) => StuDash(),
         '/dashAdmin':(context) => AdminDash(),

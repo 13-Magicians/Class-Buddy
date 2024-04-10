@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:simple_progress_indicators/simple_progress_indicators.dart';
 import '../main.dart';
-import '../services/auth.dart';
-
-
-
+import '../services/authentication.dart';
 
 class CBSplashScr extends StatefulWidget {
   const CBSplashScr(version, {super.key});
@@ -46,26 +43,25 @@ class _CBSplashScrState extends State<CBSplashScr>  with TickerProviderStateMixi
   }
 
   void checkUserAndNavigate() {
-    authMethods().getCurrentUser().then((userId) {
+    AuthMethods().getCurrentUser().then((userId) {
       if (userId != null) {
-        authMethods().signInWithGoogle(context);
+        AuthMethods().signInWithGoogle(context);
       } else {
         Navigator.pushReplacementNamed(context, '/onboard');
       }
     });
   }
 
-  bool _disposed = false; // Add a flag to track whether the widget has been disposed
+
+  bool _disposed = false;
 
   @override
   void dispose() {
-    if (!_disposed) { // Check if dispose has already been called
-      // _animationController.dispose();
-      _disposed = true; // Update the flag to indicate that dispose has been called
+    if (!_disposed) {
+      _disposed = true;
     }
     super.dispose();
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -95,28 +91,26 @@ class _CBSplashScrState extends State<CBSplashScr>  with TickerProviderStateMixi
                 ],
               )
           ),
-          Container(
-            child: Column(
-              children: [
-                Container(
-                  padding: EdgeInsets.symmetric(horizontal: 8.0),
-                  margin: EdgeInsets.only(top: 3.0),
-                  child: ProgressBar(
-                    backgroundColor: Colors.black12,
-                    value: _animationValue,
-                    gradient: LinearGradient(colors: [Colors.deepOrange,Colors.orange]),
-                  ),
+          Column(
+            children: [
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                margin: const EdgeInsets.only(top: 3.0),
+                child: ProgressBar(
+                  backgroundColor: Colors.black12,
+                  value: _animationValue,
+                  gradient: const LinearGradient(colors: [Colors.deepOrange,Colors.orange]),
                 ),
-                Container(
-                  margin: EdgeInsets.only(top:15.0),
-                  child: Text(version),
-                ),
-                Container(
-                  margin: EdgeInsets.only(top: 10.0),
-                  child: Text('Magicians',style: TextStyle(fontSize: 26.0,fontFamily: 'K2D',color: Colors.black54),),
-                )
-              ],
-            ),
+              ),
+              Container(
+                margin: const EdgeInsets.only(top:15.0),
+                child: const Text(version),
+              ),
+              Container(
+                margin: const EdgeInsets.only(top: 10.0),
+                child: const Text('Magicians',style: TextStyle(fontSize: 26.0,fontFamily: 'K2D',color: Colors.black54),),
+              )
+            ],
           ),
         ],
       ),
@@ -124,64 +118,3 @@ class _CBSplashScrState extends State<CBSplashScr>  with TickerProviderStateMixi
   }
 }
 
-
-
-
-
-
-
-
-// class CBSplashScr extends StatelessWidget {
-//   const CBSplashScr({super.key});
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     // Future.delayed(const Duration(seconds: 5), () {
-//     //   Navigator.of(context).pushReplacement(MaterialPageRoute(
-//     //       builder: (BuildContext context) => const CBHomeScr(),
-//     //   ));
-//     // });
-//     return Scaffold(
-//         body: Container(
-//           width:double.maxFinite ,
-//           color: Colors.greenAccent,
-//           child: Column(
-//             mainAxisAlignment: MainAxisAlignment.center,
-//             crossAxisAlignment: CrossAxisAlignment.center,
-//             children: <Widget>[
-//               const Text(
-//                 'First Text',
-//                 style: TextStyle(fontFamily: 'K2D-Medium',fontSize:30.0),
-//
-//               ),
-//               Column(
-//
-//                 children: [
-//                   const Text(
-//                     'Second Text',
-//                     style: TextStyle(fontFamily: 'K2D-Medium',fontSize:20.0),
-//
-//                   ),
-//                   ElevatedButton(
-//                       onPressed:() {
-//                         Navigator.of(context).pushNamed('/home');
-//                       },
-//                       child: const Text('Click Here',
-//                       style: TextStyle(
-//                         fontSize: 25.0,
-//                         fontWeight: FontWeight.bold,
-//                         color: Colors.black54,
-//                       )),
-//                   ),
-//                  
-//                 ],
-//
-//               ),
-//
-//
-//
-//             ],
-//           ),
-//         ));
-//   }
-// }

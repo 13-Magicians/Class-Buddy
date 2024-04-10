@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import '../../../services/auth.dart';
-import '../../../services/fireDatabase.dart';
+import '../../../services/authentication.dart';
+import '../../../services/firebase_database.dart';
 
 class LecturerProfile extends StatefulWidget {
   const LecturerProfile({super.key});
@@ -20,7 +20,7 @@ class _LecturerProfileState extends State<LecturerProfile> {
   }
 
   loadUserData() async {
-    final userId = await authMethods().getCurrentUser();
+    final userId = await AuthMethods().getCurrentUser();
     userData = await DatabaseMethods().getCurrentUserData(userId);
     setState(() {});
   }
@@ -89,7 +89,7 @@ class _LecturerProfileState extends State<LecturerProfile> {
                         const SizedBox(height: 42),
                         ElevatedButton(
                           onPressed: () {
-                            authMethods().userSignOut(context);
+                            AuthMethods().userSignOut(context);
                           },
                           child: const Text('Logout'),
                         ),

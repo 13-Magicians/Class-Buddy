@@ -1,48 +1,46 @@
 
-import 'package:classbuddy/services/auth.dart';
-import 'package:classbuddy/services/fireDatabase.dart';
+import 'package:classbuddy/operations/error_handler.dart';
+import 'package:classbuddy/services/authentication.dart';
+import 'package:classbuddy/services/firebase_database.dart';
 
-class checkUser {
+class CheckUser {
 
   //-------------------------------------
   //
   Future userExist(userId) async {
     final userExist = await DatabaseMethods().checkUser(userId);
     if (userExist != null) {
-      print(userExist);
-
     }else {
-      print("-------------error-----------");
     }
     return userExist;
 
   }
 
   Future getUser() async {
-     await authMethods().getCurrentUser();
+     await AuthMethods().getCurrentUser();
 
   }
 
-  setDefaultRole(String userId) {
-    Map<String, dynamic> userRole = {
-      "role": "Student",
-    };
-
-  }
+  // setDefaultRole(String userId) {
+  //   Map<String, dynamic> userRole = {
+  //     "role": "Student",
+  //   };
+  //
+  // }
 
   userRole(String userId) async {
     final retrieveUserRole = await DatabaseMethods().userRole(userId);
     if (retrieveUserRole == "Student") {
       return '/dashStu';
     }
-    else if(retrieveUserRole == "Lecture"){
+    else if(retrieveUserRole == "Lecturer"){
       return '/dashLec';
     }
     else if(retrieveUserRole == "Admin"){
       return '/dashAdmin';
     }
     else {
-      print('Something Error in userRole function');
+      AppLogger.log('Something Error in userRole function');
     }
     return null;
   }
@@ -52,22 +50,18 @@ class checkUser {
   Future retLecUserList() async {
     List<Map<String, dynamic>> lecturesList = [];
     List<Map<String, dynamic>> userList = await DatabaseMethods().getAllUsers();
-    userList.forEach((userData) {
+    for (var userData in userList) {
       if (userData['role'] == "Lecture") {
         lecturesList.add(userData);
       }
-      print(userData);
-    });
-    print('-==============================================-');
-    // if (userList[0].keys) {}
-    print(lecturesList);
+    }
     return lecturesList;
   }
 
-  Future retAdminUserList() async {
-    List<Map<String, dynamic>> AdminsList = [];
-
-  }
+  // Future retAdminUserList() async {
+  //   List<Map<String, dynamic>> AdminsList = [];
+  //
+  // }
 
   Future changeRole(userId, gRole) {
     Map<String, dynamic> userRole = {

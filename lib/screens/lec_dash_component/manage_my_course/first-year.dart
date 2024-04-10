@@ -1,9 +1,9 @@
 // import 'package:flick_video_player/flick_video_player.dart';
 import 'package:flutter/material.dart';
 // import 'package:video_player/video_player.dart';
-import '../../../operations/lecture_course.dart';
-import '../../../services/fire_course_data.dart';
-import '../../../services/fireManageDep.dart';
+import '../../../operations/lecturer_course.dart';
+import '../../../services/firebase_course_data.dart';
+import '../../../services/firebase_manage_department.dart';
 import '../../../screens/l_video_player.dart';
 
 
@@ -438,9 +438,8 @@ class _ACYFirstState extends State<ACYFirst> with WidgetsBindingObserver {
                   const Text('Course content'),
                   Flexible(
                     child: SingleChildScrollView(
-                      child: Container(
-                        margin: EdgeInsets.all(20),
-                        decoration: BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(10)),color: Colors.amberAccent),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.all(Radius.circular(10)),
                         child: FutureBuilder<List<Map<String, dynamic>>>(
                           future: AcademicOperation().getTopics(item, semNo, courseData['courseCode']),
                           builder: (context, snapshot) {
@@ -466,6 +465,9 @@ class _ACYFirstState extends State<ACYFirst> with WidgetsBindingObserver {
                                           );
                                         },
                                         body: Card(
+                                          surfaceTintColor: Colors.deepOrange,
+                                          margin: EdgeInsets.all(10),
+                                          elevation: 8,
                                           child: Column(
                                             children: [
                                               ListTile(
@@ -482,7 +484,10 @@ class _ACYFirstState extends State<ACYFirst> with WidgetsBindingObserver {
                                                 ),
                                               ),
                                               if (item['videoLink'] != null && item['videoLink'] != 'none')
-                                                LecVideoPlayer(AcademicOperation().getYoutubeVideoStreamUrl(item['videoLink'])),
+                                                Container(
+                                                    margin: EdgeInsets.only(right: 20),
+                                                    child: LecVideoPlayer(AcademicOperation().getYoutubeVideoStreamUrl(item['videoLink']))
+                                                ),
 
 
                                             ],
@@ -504,82 +509,82 @@ class _ACYFirstState extends State<ACYFirst> with WidgetsBindingObserver {
               ),
             ),
           ),
-          floatingActionButton: Padding(
-            padding: const EdgeInsets.all(18.0),
-            child: FloatingActionButton(
-              backgroundColor: Colors.deepOrangeAccent.shade100,
-              child: const Icon(Icons.display_settings_rounded),
-              onPressed: () {
-                showModalBottomSheet(
-                  isDismissible: true,
-                  context: context,
-                  builder: (context) {
-                    return Padding(
-                      padding: const EdgeInsets.all(20),
-                      child: SizedBox(
-                        height: 400,
-                        width: double.maxFinite,
-                        child: Column(
-                          children: [
-                            const Text(
-                              "Change Course Content",
-                              style: TextStyle(fontSize: 18),
-                            ),
-                            const SizedBox(
-                              height: 15,
-                            ),
-                            ListTile(
+          floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,floatingActionButtonAnimator: FloatingActionButtonAnimator.scaling,
+          floatingActionButton: FloatingActionButton(
+            mini: true,
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(30))),
+            backgroundColor: Colors.deepOrangeAccent.shade100,
+            child: const Icon(Icons.display_settings_rounded),
+            onPressed: () {
+              showModalBottomSheet(
+                isDismissible: true,
+                context: context,
+                builder: (context) {
+                  return Padding(
+                    padding: const EdgeInsets.all(20),
+                    child: SizedBox(
+                      height: 400,
+                      width: double.maxFinite,
+                      child: Column(
+                        children: [
+                          const Text(
+                            "Change Course Content",
+                            style: TextStyle(fontSize: 18),
+                          ),
+                          const SizedBox(
+                            height: 15,
+                          ),
+                          ListTile(
 
-                              leading: const Icon(Icons.add),
-                              title: const Text('Add Topics'),
-                              contentPadding:
-                              const EdgeInsets.symmetric(horizontal: 20),
-                              tileColor: Colors.deepOrangeAccent.shade100,
+                            leading: const Icon(Icons.add),
+                            title: const Text('Add Topics'),
+                            contentPadding:
+                            const EdgeInsets.symmetric(horizontal: 20),
+                            tileColor: Colors.deepOrangeAccent.shade100,
 
-                              onTap: () {
-                                Navigator.pop(context);
-                                _showAddLinkDialog(item, courseData, semNo);
+                            onTap: () {
+                              Navigator.pop(context);
+                              _showAddLinkDialog(item, courseData, semNo);
 
-                              },
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(10)),
-                            ),
-                            const Divider(
-                              height: 12,
-                            ),
-                            ListTile(
-                              leading: const Icon(Icons.add),
-                              title: const Text('Add Assignment'),
-                              contentPadding:
-                              const EdgeInsets.symmetric(horizontal: 20),
-                              tileColor: Colors.deepOrangeAccent.shade100,
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(10)),
-                            ),
-                            const Divider(
-                              height: 12,
-                            ),
-                            ListTile(
-                              leading: const Icon(Icons.add),
-                              title: const Text('Add Video'),
-                              contentPadding:
-                              const EdgeInsets.symmetric(horizontal: 20),
-                              tileColor: Colors.deepOrangeAccent.shade100,
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(10)),
-                              onTap: () {
+                            },
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10)),
+                          ),
+                          const Divider(
+                            height: 12,
+                          ),
+                          ListTile(
+                            leading: const Icon(Icons.add),
+                            title: const Text('Add Assignment'),
+                            contentPadding:
+                            const EdgeInsets.symmetric(horizontal: 20),
+                            tileColor: Colors.deepOrangeAccent.shade100,
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10)),
+                          ),
+                          const Divider(
+                            height: 12,
+                          ),
+                          ListTile(
+                            leading: const Icon(Icons.add),
+                            title: const Text('Add Video'),
+                            contentPadding:
+                            const EdgeInsets.symmetric(horizontal: 20),
+                            tileColor: Colors.deepOrangeAccent.shade100,
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10)),
+                            onTap: () {
 
 
-                              },
-                            )
-                          ],
-                        ),
+                            },
+                          )
+                        ],
                       ),
-                    );
-                  },
-                );
-              },
-            ),
+                    ),
+                  );
+                },
+              );
+            },
           ),
         );
       },

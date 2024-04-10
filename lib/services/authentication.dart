@@ -1,38 +1,22 @@
 
-import 'package:classbuddy/operations/checkUser.dart';
-import 'package:classbuddy/services/fireDatabase.dart';
+import 'package:classbuddy/operations/check_user.dart';
+import 'package:classbuddy/services/firebase_database.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
-class authMethods {
+class AuthMethods {
   final _auth = FirebaseAuth.instance;
   final GoogleSignIn _googleSignIn = GoogleSignIn();
 
 
-
-  //
-  // Future<String?> getCurrentUser() async {
-  //   Completer<String?> completer = Completer();
-  //
-  //   _auth.authStateChanges().listen((User? user) {
-  //     if (user != null) {
-  //       completer.complete(user.uid);
-  //     } else {
-  //       completer.complete(null);
-  //     }
-  //   });
-  //
-  //   return completer.future;
-  // }
-
-  getCurrentUser() async {
-    var userId;
-    await _auth.authStateChanges().listen((User? user) {
+  Future getCurrentUser() async {
+    String? userId;
+    _auth.authStateChanges().listen((User? user) {
       if (user != null) {
         userId = user.uid;
-        print(userId);
+
       } else {
         userId = null;
       }
@@ -94,7 +78,7 @@ class authMethods {
 
 
       // final userIdValue = await DatabaseMethods().checkUser(userDetails.uid);
-      final userIdValue = await checkUser().userExist(userDetails.uid);
+      final userIdValue = await CheckUser().userExist(userDetails.uid);
 
       if (userIdValue == userDetails.uid) {
         Map<String, dynamic> userLastLog = {
@@ -103,7 +87,7 @@ class authMethods {
         await DatabaseMethods()
             .updateUser(userDetails.uid, userLastLog)
             .then((value) async {
-              final scrPath = await checkUser().userRole(userDetails.uid);
+              final scrPath = await CheckUser().userRole(userDetails.uid);
               if (!context.mounted) return;
               Navigator.pushReplacementNamed(context, '$scrPath');
             });
@@ -132,7 +116,7 @@ class authMethods {
 
   }
 
-  userSignOut(BuildContext context) async {
+  userSignOut(context) async {
     GetStorage().erase();
     await FirebaseAuth.instance.signOut();
     await _googleSignIn.signOut();
@@ -142,9 +126,7 @@ class authMethods {
   userChanges() {
     _auth.userChanges().listen((User? user) {
       if (user == null) {
-        print('User is currently signed out!');
       } else {
-        print('User is signed in!');
       }
     });
   }

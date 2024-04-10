@@ -1,13 +1,14 @@
-import 'package:classbuddy/operations/checkUser.dart';
-import 'package:classbuddy/services/fireDatabase.dart';
+import 'package:classbuddy/operations/check_user.dart';
+import 'package:classbuddy/operations/error_handler.dart';
+import 'package:classbuddy/services/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:google_generative_ai/google_generative_ai.dart';
-import '../operations/lecture_course.dart';
-import '../services/auth.dart';
-import '../services/fire_course_data.dart';
-import '../services/fireManageDep.dart';
-import 'package:intl/intl.dart';
+import '../operations/lecturer_course.dart';
+import '../services/firebase_course_data.dart';
+import '../services/firebase_manage_department.dart';
+
+import 'admin_dash_component/profile_raw_data/profile_data.dart';
 
 class AdminDash extends StatefulWidget {
   const AdminDash({super.key});
@@ -23,9 +24,9 @@ class _AdminDashState extends State<AdminDash> {
   static const List<Widget> _widgetOptions = <Widget>[
     Text('Explore Page',
         style: TextStyle(fontSize: 35, fontWeight: FontWeight.bold)),
-    aMangeDep(),
+    AMangeDep(),
     AIChat(),
-    aProfile(),
+    AProfile(),
   ];
 
   // void _onItemTapped(int index) {
@@ -42,67 +43,65 @@ class _AdminDashState extends State<AdminDash> {
         child: _widgetOptions.elementAt(currentPageIndex),
       ),
       appBar: AppBar(
-        title: Text('Hello Admin'),
-        backgroundColor: Color(0xFFF8CFAE),
+        title: const Text('Hello Admin'),
+        backgroundColor: const Color(0xFFF8CFAE),
         shape:
             RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
         shadowColor: Colors.black,
         centerTitle: true,
         actions: [
-          Icon(Icons.notifications),
+          const Icon(Icons.notifications),
           Container(
             width: 20,
           )
         ],
       ),
-      bottomNavigationBar: Container(
-        child: NavigationBar(
-          backgroundColor: Color(0xFFF9DEC9),
-          labelBehavior: labelBehavior,
-          selectedIndex: currentPageIndex,
-          elevation: 0.0,
-          indicatorColor: Color(0xFFF78CA2),
-          animationDuration: Duration(milliseconds: 1000),
-          onDestinationSelected: (int index) {
-            setState(() {
-              currentPageIndex = index;
-            });
-          },
-          destinations: const [
-            NavigationDestination(
-              selectedIcon: Icon(Icons.explore_outlined),
-              icon: Icon(Icons.explore),
-              label: 'Explore',
-            ),
-            NavigationDestination(
-              selectedIcon: Icon(Icons.corporate_fare_outlined),
-              icon: Icon(Icons.corporate_fare),
-              label: 'Manage',
-            ),
-            NavigationDestination(
-                selectedIcon: Icon(Icons.chat_outlined),
-                icon: Icon(Icons.chat_rounded),
-                label: 'Chat'),
-            NavigationDestination(
-              selectedIcon: Icon(Icons.account_circle_outlined),
-              icon: Icon(Icons.account_circle),
-              label: 'Profile',
-            ),
-          ],
-        ),
+      bottomNavigationBar: NavigationBar(
+        backgroundColor: const Color(0xFFF9DEC9),
+        labelBehavior: labelBehavior,
+        selectedIndex: currentPageIndex,
+        elevation: 0.0,
+        indicatorColor: const Color(0xFFF78CA2),
+        animationDuration: const Duration(milliseconds: 1000),
+        onDestinationSelected: (int index) {
+          setState(() {
+            currentPageIndex = index;
+          });
+        },
+        destinations: const [
+          NavigationDestination(
+            selectedIcon: Icon(Icons.explore_outlined),
+            icon: Icon(Icons.explore),
+            label: 'Explore',
+          ),
+          NavigationDestination(
+            selectedIcon: Icon(Icons.corporate_fare_outlined),
+            icon: Icon(Icons.corporate_fare),
+            label: 'Manage',
+          ),
+          NavigationDestination(
+              selectedIcon: Icon(Icons.chat_outlined),
+              icon: Icon(Icons.chat_rounded),
+              label: 'Chat'),
+          NavigationDestination(
+            selectedIcon: Icon(Icons.account_circle_outlined),
+            icon: Icon(Icons.account_circle),
+            label: 'Profile',
+          ),
+        ],
       ),
     );
   }
 }
 
-class aMangeDep extends StatefulWidget {
-  const aMangeDep({super.key});
+class AMangeDep extends StatefulWidget {
+  const AMangeDep({super.key});
 
   @override
-  State<aMangeDep> createState() => _aMangeDepState();
+  State<AMangeDep> createState() => _AMangeDepState();
 }
 
-class _aMangeDepState extends State<aMangeDep> with TickerProviderStateMixin {
+class _AMangeDepState extends State<AMangeDep> with TickerProviderStateMixin {
   List<Map<String, dynamic>> depList = [];
   List<Map<String, dynamic>> admList = [];
   List<Map<String, dynamic>> lecList = [];
@@ -118,12 +117,11 @@ class _aMangeDepState extends State<aMangeDep> with TickerProviderStateMixin {
 
   loadData() async {
     depList = await DataOrgManage().departmentList();
-    lecList = await checkUser().retLecUserList();
+    lecList = await CheckUser().retLecUserList();
     admList = await DatabaseMethods().getAdminsOnly();
     usrList = await DatabaseMethods().getStudentsOnly();
     allUsrList = await DatabaseMethods().getAllUsers();
     acYearList = await DbCourseMethods().getAllCourse();
-    print(acYearList);
 
     setState(() {});
   }
@@ -131,17 +129,17 @@ class _aMangeDepState extends State<aMangeDep> with TickerProviderStateMixin {
   var userData = 'User';
   var items = List<String>.generate(10, (index) => 'Item $index');
 
-  // @override
+  @override
   Widget build(BuildContext context) {
-    TabController _mainPageDivController =
+    TabController mainPageDivController =
         TabController(length: 2, vsync: this,);
-    TabController _mOrgController = TabController(length: 4, vsync: this);
-    TabController _mAcadController =
+    TabController mOrgController = TabController(length: 4, vsync: this);
+    TabController mAcidController =
         TabController(length: 3, vsync: this,);
 
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      appBar: TabBar(controller: _mainPageDivController, tabs: [
+      appBar: TabBar(controller: mainPageDivController, tabs: const [
         Tab(
           text: 'Users',
         ),
@@ -151,39 +149,39 @@ class _aMangeDepState extends State<aMangeDep> with TickerProviderStateMixin {
       ]),
       body: TabBarView(
         physics: const NeverScrollableScrollPhysics(),
-        controller: _mainPageDivController,
+        controller: mainPageDivController,
         children: [
           //Users Section
           Container(
-            padding: EdgeInsets.all(2.0),
+            padding: const EdgeInsets.all(2.0),
             decoration: BoxDecoration(borderRadius: BorderRadius.circular(6.0)),
-            margin: EdgeInsets.all(4.0),
+            margin: const EdgeInsets.all(4.0),
             child: Column(
               children: [
                 Container(
-                  margin: EdgeInsetsDirectional.symmetric(
+                  margin: const EdgeInsetsDirectional.symmetric(
                       vertical: 8, horizontal: 4),
                   height: 60,
                   child: TabBar(
                     indicator: BoxDecoration(
                         color: Colors.orangeAccent,
-                        borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                        borderRadius: const BorderRadius.all(Radius.circular(10.0)),
                         boxShadow: [
                           BoxShadow(
                             color: Colors.grey.withOpacity(0.5),
                             spreadRadius: 5,
                             blurRadius: 7,
-                            offset: Offset(0, 3), // changes position of shadow
+                            offset: const Offset(0, 3), // changes position of shadow
                           ),
                         ]),
-                    indicatorPadding: EdgeInsets.all(2.0),
+                    indicatorPadding: const EdgeInsets.all(2.0),
                     indicatorSize: TabBarIndicatorSize.tab,
                     indicatorColor: Colors.deepOrange,
                     // automaticIndicatorColorAdjustment: true,
-                    controller: _mOrgController,
+                    controller: mOrgController,
                     // enableFeedback: true,
                     padding:
-                        EdgeInsets.symmetric(horizontal: 0.0, vertical: 0.0),
+                        const EdgeInsets.symmetric(horizontal: 0.0, vertical: 0.0),
                     dividerHeight: 0.0,
                     tabs: [
                       Tab(
@@ -192,43 +190,43 @@ class _aMangeDepState extends State<aMangeDep> with TickerProviderStateMixin {
                         // icon: Icon(Icons.home_work_outlined,
                         icon: Badge(
                           label: Text(allUsrList.length.toString()),
-                          child: Icon(Icons.groups_rounded),
+                          child: const Icon(Icons.groups_rounded),
                         ),
-                        iconMargin: EdgeInsets.all(6.0),
+                        iconMargin: const EdgeInsets.all(6.0),
                       ),
                       Tab(
-                        text: 'Lectures',
+                        text: 'Lecturers',
                         // icon: Icon(Icons.people_alt_outlined),
                         icon: Badge(
                           label: Text(lecList.length.toString()),
-                          child: Icon(Icons.people_alt_outlined),
+                          child: const Icon(Icons.people_alt_outlined),
                         ),
-                        iconMargin: EdgeInsets.all(6.0),
+                        iconMargin: const EdgeInsets.all(6.0),
                       ),
                       Tab(
                         text: 'Students',
                         // icon: Icon(Icons.groups_outlined),
                         icon: Badge(
                           label: Text(usrList.length.toString()),
-                          child: Icon(Icons.school_outlined),
+                          child: const Icon(Icons.school_outlined),
                         ),
-                        iconMargin: EdgeInsets.all(6.0),
+                        iconMargin: const EdgeInsets.all(6.0),
                       ),
                       Tab(
                         text: 'Admins',
                         // icon: Icon(Icons.admin_panel_settings_outlined),
                         icon: Badge(
                           label: Text(admList.length.toString()),
-                          child: Icon(Icons.admin_panel_settings_outlined),
+                          child: const Icon(Icons.admin_panel_settings_outlined),
                         ),
-                        iconMargin: EdgeInsets.all(6.0),
+                        iconMargin: const EdgeInsets.all(6.0),
                       ),
                     ],
                   ),
                 ),
                 Flexible(
                   child: TabBarView(
-                    controller: _mOrgController,
+                    controller: mOrgController,
                     children: [
                       // All User List Section
                       SizedBox(
@@ -239,12 +237,12 @@ class _aMangeDepState extends State<aMangeDep> with TickerProviderStateMixin {
                                 return Card(
                                   child: ListTile(
                                     contentPadding:
-                                        EdgeInsets.symmetric(horizontal: 18),
+                                        const EdgeInsets.symmetric(horizontal: 18),
                                     leading: CircleAvatar(
                                       backgroundImage: NetworkImage(
                                           allUsrList[index]['imgUrl']),
                                     ),
-                                    shape: RoundedRectangleBorder(
+                                    shape: const RoundedRectangleBorder(
                                         borderRadius: BorderRadius.all(
                                             Radius.circular(10.0))),
                                     minLeadingWidth: 50,
@@ -257,18 +255,16 @@ class _aMangeDepState extends State<aMangeDep> with TickerProviderStateMixin {
                                     trailing: Chip(
                                       label: Text(
                                           allUsrList[index]['role'].toString()),
-                                      padding: EdgeInsets.all(0),
+                                      padding: const EdgeInsets.all(0),
                                       side: BorderSide.none,
                                     ),
                                     onTap: () {
-                                      print('tap');
-                                      print(allUsrList.length);
                                     },
                                     horizontalTitleGap: 2.0,
                                   ),
                                 );
                               })),
-                      // Lecture Section
+                      // Lecturer Section
                       SizedBox(
                           child: ListView.builder(
                               scrollDirection: Axis.vertical,
@@ -277,12 +273,12 @@ class _aMangeDepState extends State<aMangeDep> with TickerProviderStateMixin {
                                 return Card(
                                   child: ListTile(
                                     contentPadding:
-                                        EdgeInsets.symmetric(horizontal: 8),
+                                        const EdgeInsets.symmetric(horizontal: 8),
                                     leading: CircleAvatar(
                                       backgroundImage: NetworkImage(
                                           lecList[index]['imgUrl']),
                                     ),
-                                    shape: RoundedRectangleBorder(
+                                    shape: const RoundedRectangleBorder(
                                         borderRadius: BorderRadius.all(
                                             Radius.circular(10.0))),
                                     minLeadingWidth: 50,
@@ -296,18 +292,17 @@ class _aMangeDepState extends State<aMangeDep> with TickerProviderStateMixin {
                                       icon: Chip(
                                         label: Text(
                                             lecList[index]['role'].toString()),
-                                        padding: EdgeInsets.all(0),
+                                        padding: const EdgeInsets.all(0),
                                         side: BorderSide.none,
                                       ),
                                       color: Colors.deepOrange,
                                       itemBuilder: (context) {
                                         return [
                                           PopupMenuItem(
-                                            child: Text("Admin"),
+                                            child: const Text("Admin"),
                                             onTap: () {
                                               if (lecList.length > 1) {
-                                                print(lecList[index]['id']);
-                                                checkUser().changeRole(
+                                                CheckUser().changeRole(
                                                     lecList[index]['id'],
                                                     "Admin");
                                                 loadData();
@@ -315,10 +310,10 @@ class _aMangeDepState extends State<aMangeDep> with TickerProviderStateMixin {
                                             },
                                           ),
                                           PopupMenuItem(
-                                            child: Text("Student"),
+                                            child: const Text("Student"),
                                             onTap: () {
                                               if (lecList.length > 1) {
-                                                checkUser().changeRole(
+                                                CheckUser().changeRole(
                                                     lecList[index]['id'],
                                                     "Student");
                                                 loadData();
@@ -329,8 +324,6 @@ class _aMangeDepState extends State<aMangeDep> with TickerProviderStateMixin {
                                       },
                                     ),
                                     onTap: () {
-                                      print('tap');
-                                      print(lecList.length);
                                     },
                                     horizontalTitleGap: 2.0,
                                   ),
@@ -348,7 +341,7 @@ class _aMangeDepState extends State<aMangeDep> with TickerProviderStateMixin {
                                       backgroundImage: NetworkImage(
                                           usrList[index]['imgUrl']),
                                     ),
-                                    shape: RoundedRectangleBorder(
+                                    shape: const RoundedRectangleBorder(
                                         borderRadius: BorderRadius.all(
                                             Radius.circular(10.0))),
                                     minLeadingWidth: 40,
@@ -362,28 +355,28 @@ class _aMangeDepState extends State<aMangeDep> with TickerProviderStateMixin {
                                       icon: Chip(
                                         label: Text(
                                             usrList[index]['role'].toString()),
-                                        padding: EdgeInsets.all(0),
+                                        padding: const EdgeInsets.all(0),
                                         side: BorderSide.none,
                                       ),
                                       color: Colors.deepOrange,
                                       itemBuilder: (context) {
                                         return [
                                           PopupMenuItem(
-                                            child: Text("Lecture"),
+                                            child: const Text("Lecturer"),
                                             onTap: () {
                                               if (usrList.length > 1) {
-                                                checkUser().changeRole(
+                                                CheckUser().changeRole(
                                                     usrList[index]['id'],
-                                                    "Lecture");
+                                                    "Lecturer");
                                                 loadData();
                                               }
                                             },
                                           ),
                                           PopupMenuItem(
-                                            child: Text("Admin"),
+                                            child: const Text("Admin"),
                                             onTap: () {
                                               if (usrList.length > 1) {
-                                                checkUser().changeRole(
+                                                CheckUser().changeRole(
                                                     usrList[index]['id'],
                                                     "Admin");
                                                 loadData();
@@ -394,7 +387,7 @@ class _aMangeDepState extends State<aMangeDep> with TickerProviderStateMixin {
                                       },
                                     ),
                                     onTap: () {
-                                      print('tap');
+
                                     },
                                     horizontalTitleGap: 2.0,
                                   ),
@@ -412,7 +405,7 @@ class _aMangeDepState extends State<aMangeDep> with TickerProviderStateMixin {
                                       backgroundImage: NetworkImage(
                                           admList[index]['imgUrl']),
                                     ),
-                                    shape: RoundedRectangleBorder(
+                                    shape: const RoundedRectangleBorder(
                                         borderRadius: BorderRadius.all(
                                             Radius.circular(10.0))),
                                     minLeadingWidth: 40,
@@ -426,28 +419,28 @@ class _aMangeDepState extends State<aMangeDep> with TickerProviderStateMixin {
                                       icon: Chip(
                                         label: Text(
                                             admList[index]['role'].toString()),
-                                        padding: EdgeInsets.all(0),
+                                        padding: const EdgeInsets.all(0),
                                         side: BorderSide.none,
                                       ),
                                       color: Colors.deepOrange,
                                       itemBuilder: (context) {
                                         return [
                                           PopupMenuItem(
-                                            child: Text("Lecture"),
+                                            child: const Text("Lecturer"),
                                             onTap: () {
                                               if (admList.length > 1) {
-                                                checkUser().changeRole(
+                                                CheckUser().changeRole(
                                                     admList[index]['id'],
-                                                    "Lecture");
+                                                    "Lecturer");
                                                 loadData();
                                               }
                                             },
                                           ),
                                           PopupMenuItem(
-                                            child: Text("Student"),
+                                            child: const Text("Student"),
                                             onTap: () {
                                               if (admList.length > 1) {
-                                                checkUser().changeRole(
+                                                CheckUser().changeRole(
                                                     admList[index]['id'],
                                                     "Student");
                                                 loadData();
@@ -458,7 +451,6 @@ class _aMangeDepState extends State<aMangeDep> with TickerProviderStateMixin {
                                       },
                                     ),
                                     onTap: () {
-                                      print('tap');
                                     },
                                     horizontalTitleGap: 2.0,
                                   ),
@@ -472,37 +464,37 @@ class _aMangeDepState extends State<aMangeDep> with TickerProviderStateMixin {
           ),
           //Academic Section
           Container(
-              padding: EdgeInsets.all(2.0),
+              padding: const EdgeInsets.all(2.0),
               decoration:
                   BoxDecoration(borderRadius: BorderRadius.circular(6.0)),
-              margin: EdgeInsets.all(4.0),
+              margin: const EdgeInsets.all(4.0),
               child: Column(
                 children: [
                   Container(
-                    margin: EdgeInsetsDirectional.symmetric(
+                    margin: const EdgeInsetsDirectional.symmetric(
                         vertical: 8, horizontal: 4),
                     height: 60,
                     child: TabBar(
                       indicator: BoxDecoration(
                           color: Colors.orangeAccent,
-                          borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                          borderRadius: const BorderRadius.all(Radius.circular(10.0)),
                           boxShadow: [
                             BoxShadow(
                               color: Colors.grey.withOpacity(0.5),
                               spreadRadius: 5,
                               blurRadius: 7,
                               offset:
-                                  Offset(0, 3), // changes position of shadow
+                                  const Offset(0, 3), // changes position of shadow
                             ),
                           ]),
-                      indicatorPadding: EdgeInsets.all(2.0),
+                      indicatorPadding: const EdgeInsets.all(2.0),
                       indicatorSize: TabBarIndicatorSize.tab,
                       indicatorColor: Colors.deepOrange,
                       // automaticIndicatorColorAdjustment: true,
-                      controller: _mAcadController,
+                      controller: mAcidController,
                       // enableFeedback: true,
                       padding:
-                          EdgeInsets.symmetric(horizontal: 0.0, vertical: 0.0),
+                          const EdgeInsets.symmetric(horizontal: 0.0, vertical: 0.0),
                       dividerHeight: 0.0,
                       tabs: [
                         Tab(
@@ -511,34 +503,34 @@ class _aMangeDepState extends State<aMangeDep> with TickerProviderStateMixin {
                           // icon: Icon(Icons.home_work_outlined,
                           icon: Badge(
                             label: Text(depList.length.toString()),
-                            child: Icon(Icons.home_work_outlined),
+                            child: const Icon(Icons.home_work_outlined),
                           ),
-                          iconMargin: EdgeInsets.all(6.0),
+                          iconMargin: const EdgeInsets.all(6.0),
                         ),
                         Tab(
                           text: 'Batch Year',
                           // icon: Icon(Icons.people_alt_outlined),
                           icon: Badge(
                             label: Text(acYearList.length.toString()),
-                            child: Icon(Icons.data_thresholding_outlined),
+                            child: const Icon(Icons.data_thresholding_outlined),
                           ),
-                          iconMargin: EdgeInsets.all(6.0),
+                          iconMargin: const EdgeInsets.all(6.0),
                         ),
                         Tab(
                           text: 'Students',
                           // icon: Icon(Icons.groups_outlined),
                           icon: Badge(
                             label: Text(usrList.length.toString()),
-                            child: Icon(Icons.school_outlined),
+                            child: const Icon(Icons.school_outlined),
                           ),
-                          iconMargin: EdgeInsets.all(6.0),
+                          iconMargin: const EdgeInsets.all(6.0),
                         ),
                       ],
                     ),
                   ),
                   Flexible(
                     child: TabBarView(
-                      controller: _mAcadController,
+                      controller: mAcidController,
                       children: [
                         // Department Section
                         SizedBox(
@@ -549,8 +541,8 @@ class _aMangeDepState extends State<aMangeDep> with TickerProviderStateMixin {
                               itemBuilder: (context, index) {
                                 return Card(
                                   child: ListTile(
-                                    leading: Icon(Icons.home_max_outlined),
-                                    shape: RoundedRectangleBorder(
+                                    leading: const Icon(Icons.home_max_outlined),
+                                    shape: const RoundedRectangleBorder(
                                         borderRadius: BorderRadius.all(
                                             Radius.circular(10.0))),
                                     minLeadingWidth: 40,
@@ -561,16 +553,14 @@ class _aMangeDepState extends State<aMangeDep> with TickerProviderStateMixin {
                                     focusColor: Colors.redAccent,
                                     tileColor: Colors.teal,
                                     onTap: () {
-                                      print('tap');
                                     },
                                     trailing: PopupMenuButton(
                                       color: Colors.deepOrange,
                                       itemBuilder: (context) {
                                         return [
                                           PopupMenuItem(
-                                            child: Text("Delete"),
+                                            child: const Text("Delete"),
                                             onTap: () {
-                                              print(depList[index]['id']);
                                               DataOrgManage().deleteDepartment(
                                                   depList[index]['id']);
                                               loadData();
@@ -599,10 +589,10 @@ class _aMangeDepState extends State<aMangeDep> with TickerProviderStateMixin {
                                   return Card(
                                     child: ListTile(
                                       contentPadding:
-                                          EdgeInsets.symmetric(horizontal: 8),
+                                          const EdgeInsets.symmetric(horizontal: 8),
                                       leading:
-                                          Icon(Icons.data_exploration_outlined),
-                                      shape: RoundedRectangleBorder(
+                                          const Icon(Icons.data_exploration_outlined),
+                                      shape: const RoundedRectangleBorder(
                                           borderRadius: BorderRadius.all(
                                               Radius.circular(10.0))),
                                       minLeadingWidth: 50,
@@ -618,7 +608,7 @@ class _aMangeDepState extends State<aMangeDep> with TickerProviderStateMixin {
                                         itemBuilder: (context) {
                                           return [
                                             PopupMenuItem(
-                                              child: Text("Delete"),
+                                              child: const Text("Delete"),
                                               onTap: () {
                                                 if (acYearList.length > 1) {
                                                   DbCourseMethods()
@@ -633,8 +623,6 @@ class _aMangeDepState extends State<aMangeDep> with TickerProviderStateMixin {
                                         },
                                       ),
                                       onTap: () {
-                                        print('tap');
-                                        print(lecList.length);
                                         AcademicOperation().getAcYears();
                                       },
                                       horizontalTitleGap: 2.0,
@@ -653,7 +641,7 @@ class _aMangeDepState extends State<aMangeDep> with TickerProviderStateMixin {
                                         backgroundImage: NetworkImage(
                                             usrList[index]['imgUrl']),
                                       ),
-                                      shape: RoundedRectangleBorder(
+                                      shape: const RoundedRectangleBorder(
                                           borderRadius: BorderRadius.all(
                                               Radius.circular(10.0))),
                                       minLeadingWidth: 40,
@@ -667,28 +655,28 @@ class _aMangeDepState extends State<aMangeDep> with TickerProviderStateMixin {
                                         icon: Chip(
                                           label: Text(usrList[index]['role']
                                               .toString()),
-                                          padding: EdgeInsets.all(0),
+                                          padding: const EdgeInsets.all(0),
                                           side: BorderSide.none,
                                         ),
                                         color: Colors.deepOrange,
                                         itemBuilder: (context) {
                                           return [
                                             PopupMenuItem(
-                                              child: Text("Lecture"),
+                                              child: const Text("Lecturer"),
                                               onTap: () {
                                                 if (usrList.length > 1) {
-                                                  checkUser().changeRole(
+                                                  CheckUser().changeRole(
                                                       usrList[index]['id'],
-                                                      "Lecture");
+                                                      "Lecturer");
                                                   loadData();
                                                 }
                                               },
                                             ),
                                             PopupMenuItem(
-                                              child: Text("Admin"),
+                                              child: const Text("Admin"),
                                               onTap: () {
                                                 if (usrList.length > 1) {
-                                                  checkUser().changeRole(
+                                                  CheckUser().changeRole(
                                                       usrList[index]['id'],
                                                       "Admin");
                                                   loadData();
@@ -699,7 +687,7 @@ class _aMangeDepState extends State<aMangeDep> with TickerProviderStateMixin {
                                         },
                                       ),
                                       onTap: () {
-                                        print('tap');
+
                                       },
                                       horizontalTitleGap: 2.0,
                                     ),
@@ -710,35 +698,32 @@ class _aMangeDepState extends State<aMangeDep> with TickerProviderStateMixin {
                   ),
                   Container(
                     height: 50,
-                    decoration: BoxDecoration(
+                    decoration: const BoxDecoration(
                         color: Colors.black12,
                         borderRadius: BorderRadius.all(Radius.circular(6))),
                     child: TabBarView(
-                      controller: _mAcadController,
+                      controller: mAcidController,
                       physics: const NeverScrollableScrollPhysics(),
                       children: [
                         ButtonBar(
                           alignment: MainAxisAlignment.center,
                           children: [
                             ElevatedButton(
-                              style: ButtonStyle(
+                              style: const ButtonStyle(
                                   backgroundColor: MaterialStatePropertyAll(
                                       Colors.greenAccent)),
                               onPressed: () {
-                                print("xxxxxxxxxx");
                                 showDialog(
                                   context: context,
                                   builder: (context) {
-                                    return AddDepartmentDialog();
+                                    return const AddDepartmentDialog();
                                   },
                                 ).then((value) {
                                   // This function will be called when the dialog is dismissed
-                                  print("Dialog closed");
-                                  // Call your function here
                                   loadData();
                                 });
                               },
-                              child: Icon(Icons.add_home_work_outlined),
+                              child: const Icon(Icons.add_home_work_outlined),
                             ),
                             // ElevatedButton(
                             //     onPressed: () {}, child: Icon(Icons.highlight_remove_outlined)),
@@ -748,30 +733,27 @@ class _aMangeDepState extends State<aMangeDep> with TickerProviderStateMixin {
                           alignment: MainAxisAlignment.center,
                           children: [
                             ElevatedButton(
-                              style: ButtonStyle(
+                              style: const ButtonStyle(
                                   backgroundColor: MaterialStatePropertyAll(
-                                      Colors.greenAccent)),
+                                      Colors.greenAccent)
+                              ),
                               onPressed: () {
-                                print("xxxxxxxxxx");
                                 showDialog(
                                   context: context,
                                   builder: (context) {
-                                    return AddAcademicYear();
+                                    return const AddAcademicYear();
                                   },
                                 ).then((value) {
-                                  // This function will be called when the dialog is dismissed
-                                  print("Dialog closed");
-                                  // Call your function here
                                   loadData();
                                 });
                               },
-                              child: Icon(Icons.data_saver_on_outlined),
+                              child: const Icon(Icons.data_saver_on_outlined),
                             ),
                             // ElevatedButton(
                             //     onPressed: () {}, child: Icon(Icons.highlight_remove_outlined)),
                           ],
                         ),
-                        Text('Third'),
+                        const Text('Third'),
                       ],
                     ),
                   )
@@ -784,38 +766,40 @@ class _aMangeDepState extends State<aMangeDep> with TickerProviderStateMixin {
 }
 
 class AddDepartmentDialog extends StatefulWidget {
+  const AddDepartmentDialog({super.key});
+
   @override
-  _AddDepartmentDialogState createState() => _AddDepartmentDialogState();
+  State<AddDepartmentDialog> createState() => _AddDepartmentDialogState();
 }
 
 class _AddDepartmentDialogState extends State<AddDepartmentDialog> {
   final TextEditingController fcCode = TextEditingController();
   final TextEditingController fcName = TextEditingController();
 
-  Future<void> btnOk() async {
+  Future<void> btnOk(context) async {
     if (fcCode.text.isNotEmpty && fcName.text.isNotEmpty) {
       await DataOrgManage().createDepartment(fcName.text, fcCode.text);
 
       try {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
+          const SnackBar(
             content: Text('Department added successfully'),
             backgroundColor: Colors.green,
           ),
         );
       } catch (e) {
-        print(e);
+        AppLogger.log(e);
       }
     } else {
       try {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
+          const SnackBar(
             content: Text('Please enter valid department code and name'),
             backgroundColor: Colors.red,
           ),
         );
       } catch (e) {
-        print(e);
+        AppLogger.log(e);
       }
     }
   }
@@ -823,18 +807,18 @@ class _AddDepartmentDialogState extends State<AddDepartmentDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: Text('Add New Department'),
+      title: const Text('Add New Department'),
       content: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
           TextField(
             controller: fcCode,
             autofocus: true,
-            decoration: InputDecoration(hintText: 'Dep code (eg:ICT,EET,BPT)'),
+            decoration: const InputDecoration(hintText: 'Dep code (eg:ICT,EET,BPT)'),
           ),
           TextField(
             controller: fcName,
-            decoration: InputDecoration(hintText: 'Department name'),
+            decoration: const InputDecoration(hintText: 'Department name'),
           ),
         ],
       ),
@@ -843,13 +827,13 @@ class _AddDepartmentDialogState extends State<AddDepartmentDialog> {
             onPressed: () {
               Navigator.pop(context);
             },
-            child: Text('Cancel')),
+            child: const Text('Cancel')),
         TextButton(
             onPressed: () {
-              btnOk();
+              btnOk(context);
               Navigator.pop(context);
             },
-            child: Text('OK'))
+            child: const Text('OK'))
       ],
       backgroundColor: Colors.lightGreenAccent,
     );
@@ -864,33 +848,33 @@ class AddAcademicYear extends StatefulWidget {
 }
 
 class _AddAcademicYearState extends State<AddAcademicYear> {
-  final TextEditingController AcYearName = TextEditingController();
+  final TextEditingController acYearName = TextEditingController();
   int? _selectedValue;
 
-  Future<void> aybtnOk() async {
-    if (AcYearName.text.isNotEmpty || _selectedValue != null) {
-      await DbCourseMethods().createAcademicYear(AcYearName.text, _selectedValue!);
+  Future<void> ayBtnOk(context) async {
+    if (acYearName.text.isNotEmpty || _selectedValue != null) {
+      await DbCourseMethods().createAcademicYear(acYearName.text, _selectedValue!);
 
       try {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
+          const SnackBar(
             content: Text('Academic Year added successfully'),
             backgroundColor: Colors.green,
           ),
         );
       } catch (e) {
-        print(e);
+        AppLogger.log(e);
       }
     } else {
       try {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
+          const SnackBar(
             content: Text('Please enter valid Academic Year name and no'),
             backgroundColor: Colors.red,
           ),
         );
       } catch (e) {
-        print(e);
+        AppLogger.log(e);
       }
     }
   }
@@ -898,18 +882,18 @@ class _AddAcademicYearState extends State<AddAcademicYear> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: Text('Add New Batch'),
+      title: const Text('Add New Batch'),
       content: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
           TextField(
-            controller: AcYearName,
+            controller: acYearName,
             autofocus: true,
-            decoration: InputDecoration(hintText: 'Batch Name Ex: 18-19-Batch'),
+            decoration: const InputDecoration(hintText: 'Batch Name Ex: 18-19-Batch'),
           ),
-          SizedBox(height: 30,),
-          Text(
-            'Select Acdemic Year:',
+          const SizedBox(height: 30,),
+          const Text(
+            'Select Academic Year:',
             style: TextStyle(fontSize: 16),
           ),
           Row(
@@ -923,7 +907,7 @@ class _AddAcademicYearState extends State<AddAcademicYear> {
                   });
                 },
               ),
-              Text('Pre'),
+              const Text('Pre'),
             ],
           ),
           Row(
@@ -945,7 +929,7 @@ class _AddAcademicYearState extends State<AddAcademicYear> {
                 ),
             ],
           ),
-          SizedBox(height: 10),
+          const SizedBox(height: 10),
         ],
       ),
       actions: [
@@ -953,13 +937,13 @@ class _AddAcademicYearState extends State<AddAcademicYear> {
             onPressed: () {
               Navigator.pop(context);
             },
-            child: Text('Cancel')),
+            child: const Text('Cancel')),
         TextButton(
             onPressed: () {
-              aybtnOk();
+              ayBtnOk(context);
               Navigator.pop(context);
             },
-            child: Text('OK'))
+            child: const Text('OK'))
       ],
       backgroundColor: Colors.lightGreenAccent,
     );
@@ -998,7 +982,7 @@ class _AIChatState extends State<AIChat> {
     return Scaffold(
       resizeToAvoidBottomInset: true,
       appBar: AppBar(
-        title: Container(child: Text('Chat :Powered by Generative AI')),
+        title: const Text('Chat :Powered by Generative AI'),
       ),
       body: Card(
         elevation: 6,
@@ -1027,7 +1011,7 @@ class _AIChatState extends State<AIChat> {
                     }),
               ),
               Padding(
-                padding: EdgeInsets.symmetric(vertical: 15, horizontal: 5),
+                padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 5),
                 child: Row(
                   children: [
                     Expanded(
@@ -1039,7 +1023,7 @@ class _AIChatState extends State<AIChat> {
                         onSubmitted: _sendChatMessage,
                       ),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 10,
                     ),
                     IconButton(
@@ -1047,8 +1031,8 @@ class _AIChatState extends State<AIChat> {
                           ? null
                           : () => _sendChatMessage(_textController.text),
                       icon: _loading
-                          ? CircularProgressIndicator()
-                          : Icon(Icons.send),
+                          ? const CircularProgressIndicator()
+                          : const Icon(Icons.send),
                     ),
                   ],
                 ),
@@ -1062,14 +1046,14 @@ class _AIChatState extends State<AIChat> {
 
   InputDecoration textFieldDecoration() {
     return InputDecoration(
-      contentPadding: EdgeInsets.all(15),
+      contentPadding: const EdgeInsets.all(15),
       hintText: 'Say Something...!',
       border: OutlineInputBorder(
-        borderRadius: BorderRadius.all(Radius.circular(14)),
+        borderRadius: const BorderRadius.all(Radius.circular(14)),
         borderSide: BorderSide(color: Theme.of(context).colorScheme.secondary),
       ),
       focusedBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.all(Radius.circular(14)),
+        borderRadius: const BorderRadius.all(Radius.circular(14)),
         borderSide: BorderSide(color: Theme.of(context).colorScheme.secondary),
       ),
     );
@@ -1111,7 +1095,7 @@ class _AIChatState extends State<AIChat> {
   void _scrollDown() {
     WidgetsBinding.instance.addPostFrameCallback((_) =>
         _scrollController.animateTo(_scrollController.position.maxScrollExtent,
-            duration: Duration(milliseconds: 750), curve: Curves.easeOutCirc));
+            duration: const Duration(milliseconds: 750), curve: Curves.easeOutCirc));
   }
 
   void _showError(String message) {
@@ -1119,7 +1103,7 @@ class _AIChatState extends State<AIChat> {
         context: context,
         builder: (context) {
           return AlertDialog(
-            title: Text('Something went wrong...!'),
+            title: const Text('Something went wrong...!'),
             content: SingleChildScrollView(
               child: SelectableText(message),
             ),
@@ -1128,7 +1112,7 @@ class _AIChatState extends State<AIChat> {
                   onPressed: () {
                     Navigator.of(context).pop();
                   },
-                  child: Text('OK'))
+                  child: const Text('OK'))
             ],
           );
         });
@@ -1153,9 +1137,9 @@ class MessageSet extends StatelessWidget {
       children: [
         Flexible(
           child: Container(
-            padding: EdgeInsets.symmetric(vertical: 15, horizontal: 20),
-            margin: EdgeInsets.only(bottom: 8),
-            constraints: BoxConstraints(maxWidth: 500),
+            padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 20),
+            margin: const EdgeInsets.only(bottom: 8),
+            constraints: const BoxConstraints(maxWidth: 500),
             decoration: BoxDecoration(
               color: isFromUser
                   ? Colors.deepOrangeAccent.shade200
@@ -1179,132 +1163,3 @@ class MessageSet extends StatelessWidget {
 
 
 
-class aProfile extends StatefulWidget {
-  const aProfile({super.key});
-
-  @override
-  State<aProfile> createState() => _aProfileState();
-}
-
-class _aProfileState extends State<aProfile> {
-  List<Map<String, dynamic>> userData = [];
-
-  @override
-  void initState() {
-    super.initState();
-    loadUserData();
-  }
-
-  loadUserData() async {
-    final userId = await authMethods().getCurrentUser();
-    userData = await DatabaseMethods().getCurrentUserData(userId);
-    setState(() {});
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final user = userData.isNotEmpty ? userData.first : {};
-    final name = user['name'] ?? '';
-    final email = user['email'] ?? '';
-    print(user['lastLog'] ?? '');
-    final lastLog = user['lastLog'] != null
-        ? DateFormat('\nhh:mm a  EEE d MMM y').format(
-            DateTime.fromMillisecondsSinceEpoch(user['lastLog'] as int),
-          )
-        : '';
-    // final String lastLog = DateFormat(' EEE d MMM y \n hh:mm a').format(DateTime.fromMillisecondsSinceEpoch((user['lastLog'] ?? '')));
-    // print(lastLog);
-    final role = user['role'] ?? '';
-    final imgUrl = user['imgUrl'] ?? 'http://www.gravatar.com/avatar/?d=mp';
-
-    return Scaffold(
-      resizeToAvoidBottomInset: false,
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.only(top: 120.0),
-          child: Stack(
-              alignment: Alignment.center,
-              clipBehavior: Clip.none,
-              children: [
-                Card(
-                  color: Colors.redAccent,
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(100),
-                          topRight: Radius.circular(100))),
-                  child: Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        // CircleAvatar(
-                        //   radius: 50.0,
-                        //   backgroundImage: NetworkImage(imgUrl),
-                        // ),
-                        Chip(
-                          padding: EdgeInsets.all(4),
-                          side: BorderSide.none,
-                          label: Text(role,
-                              style: TextStyle(fontWeight: FontWeight.bold)),
-                          backgroundColor: Color(0xFFFFDCDC),
-                          shape: RoundedRectangleBorder(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(25.0))),
-                        ),
-                        SizedBox(height: 26),
-                        Text(
-                          name,
-                          style: TextStyle(
-                              fontSize: 24, fontWeight: FontWeight.bold),
-                        ),
-                        SizedBox(height: 2),
-                        Text(
-                          email,
-                          style: TextStyle(fontSize: 16, color: Colors.grey),
-                        ),
-                        SizedBox(height: 42),
-                        Card(
-                          color: Colors.deepOrange.shade100,
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-                          elevation: 4,
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Text('Last Login: $lastLog',
-                                style: const TextStyle(fontSize: 14,fontWeight: FontWeight.w400)),
-                          ),
-                        ),
-                        SizedBox(height: 42),
-                        ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.deepOrangeAccent.shade100,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(16.0),
-                            ),
-                          ),
-                          onPressed: () {
-                            authMethods().userSignOut(context);
-                          },
-                          child: Text('Logout',style: TextStyle(color: Colors.black87),),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                Positioned(
-                  top: -55,
-                  child: CircleAvatar(
-                    radius: 65,
-                    backgroundColor: Colors.white,
-                    child: CircleAvatar(
-                      radius: 60,
-                      backgroundImage: NetworkImage(imgUrl),
-                      backgroundColor: Colors.transparent,
-                      // child: ClipOval(child: Image.network(imgUrl)),
-                    ),
-                  ),
-                ),
-              ]),
-        ),
-      ),
-    );
-  }
-}

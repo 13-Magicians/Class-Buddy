@@ -1,6 +1,6 @@
 // import 'package:flutter/cupertino.dart';
 //
-// import '../services/fireManageDep.dart';
+// import '../services/firebase_manage_department.dart';
 //
 // class manageDepartment {
 //
