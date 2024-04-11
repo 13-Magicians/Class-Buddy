@@ -4,8 +4,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class DbCourseMethods {
   FirebaseFirestore db = FirebaseFirestore.instance;
 
-
-
   Future<List<Map<String, dynamic>>> getAllCourse() async {
     List<Map<String, dynamic>> documentIdsList = [];
 
@@ -24,6 +22,17 @@ class DbCourseMethods {
     } catch (e) {
       print('Error creating document: $e');
     }
+  }
+
+  Future<void> changeAcademicYear(String documentId,int year) async {
+    try {
+      CollectionReference academicYearCollection = db.collection('AcademicYear');
+      await academicYearCollection.doc(documentId).set(<String, dynamic>{'currentYear':year});
+      print('Document with ID $documentId created successfully');
+    } catch (e) {
+      print('Error creating document: $e');
+    }
+
   }
 
   Future<void> deleteAcademicYear(String documentId) async {

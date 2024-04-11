@@ -4,6 +4,7 @@ import '../../../services/firebase_course_control.dart';
 import '../../../services/firebase_department_control.dart';
 import 'add_academic_years.dart';
 import 'add_department.dart';
+import 'change_academic_year.dart';
 
 class AcademicSection extends StatefulWidget {
   const AcademicSection({super.key});
@@ -216,6 +217,7 @@ class _AcademicSectionState extends State<AcademicSection>
                         Text(acYearList[index]['documentID']),
                         InkWell(
                           child: Chip(
+                            surfaceTintColor: Colors.greenAccent,
                             elevation: 4,
                             side: BorderSide(style: BorderStyle.none),
                             padding: EdgeInsets.all(0),
@@ -230,7 +232,7 @@ class _AcademicSectionState extends State<AcademicSection>
                               context: context,
                               builder: (context) {
                                 int year = acYearList[index]['currentYear'];
-                                return ChangeAcademicYearDialog(initialSelectedIndex: year); // Pass year directly
+                                return ChangeAcademicYearDialog(currentACYear: acYearList[index]['documentID'], initialSelectedIndex: year); // Pass year directly
                               },
                             ).then((value) {
                               loadData();
@@ -273,75 +275,5 @@ class _AcademicSectionState extends State<AcademicSection>
     );
   }
 
-
-
-
-
-
 }
 
-
-
-class ChangeAcademicYearDialog extends StatefulWidget {
-  final int initialSelectedIndex; // Pre-select year
-
-  const ChangeAcademicYearDialog({Key? key, required this.initialSelectedIndex})
-      : super(key: key);
-
-  @override
-  State<ChangeAcademicYearDialog> createState() => _ChangeAcademicYearDialogState();
-}
-
-class _ChangeAcademicYearDialogState extends State<ChangeAcademicYearDialog> {
-  int _selectedIndex = 0; // State variable for selected year
-
-  @override
-  void initState() {
-    super.initState();
-    _selectedIndex = widget.initialSelectedIndex; // Set initial year
-  }
-
-  final List<ButtonSegment<int>> segments = List.generate(5,
-        (index) => ButtonSegment<int>(
-          value: index,
-          label: Text(index.toString()),
-    ),
-  );
-
-
-  @override
-  Widget build(BuildContext context) {
-    return AlertDialog(
-      insetPadding: EdgeInsets.all(10),
-      title: const Text('Change Academic Year', style: TextStyle(fontSize: 20)),
-      content: SizedBox(
-        height: 50,
-        child: SegmentedButton<int>(
-          segments: segments,
-          selected: {_selectedIndex},
-          onSelectionChanged: (Set<int> selectedValues) {
-            if (selectedValues.isNotEmpty) {
-              setState(() {
-                _selectedIndex = selectedValues.first;
-              });
-            }
-          },
-        ),
-      ),
-      actions: <Widget>[
-        TextButton(
-          onPressed: () => Navigator.of(context).pop(),
-          child: const Text('Cancel'),
-        ),
-        TextButton(
-          onPressed: () {
-            // Handle user selection (e.g., print selected year)
-            print('Selected year: $_selectedIndex');
-            Navigator.of(context).pop();
-          },
-          child: const Text('OK'),
-        ),
-      ],
-    ); // Empty build method (removed AlertDialog)
-  }
-}

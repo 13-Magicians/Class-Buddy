@@ -40,7 +40,7 @@ class AuthMethods {
 
 
 
-  //
+
   // Future getCurrentUser() async {
   //   String? userId;
   //   _auth.authStateChanges().listen((User? user) {

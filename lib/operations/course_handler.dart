@@ -21,7 +21,8 @@ class AcademicOperation {
     return documentIds;
   }
 
-  Future changeACYear(year) async {
+  Future changeACYear(String currentYear,int year) async {
+    return DbCourseMethods().changeAcademicYear(currentYear, year);
 
   }
 
