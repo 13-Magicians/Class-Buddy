@@ -16,12 +16,15 @@ class AcademicOperation {
         'documentID': doc.id,
         'currentYear': doc['currentYear'],
       };
-
       documentIds.add(acY);
     }
-
     return documentIds;
   }
+
+  Future changeACYear(year) async {
+
+  }
+
 
 
   Future<void> addCourseACY(String documentID, String subjectName, String courseCode, String selectedDepartment, String passCode, String semNo) async {

@@ -3,14 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import '../../../services/firebase_authentication_control.dart';
 
-class AdminProfile extends StatefulWidget {
-  const AdminProfile({super.key});
+class StudentProfile extends StatefulWidget {
+  const StudentProfile({super.key});
 
   @override
-  State<AdminProfile> createState() => _AdminProfileState();
+  State<StudentProfile> createState() => _StudentProfileState();
 }
 
-class _AdminProfileState extends State<AdminProfile> {
+class _StudentProfileState extends State<StudentProfile> {
   @override
   void initState() {
     super.initState();
@@ -29,7 +29,7 @@ class _AdminProfileState extends State<AdminProfile> {
                   child: CircularProgressIndicator());
             } else {
               if (snapshot.hasError) {
-                return Text('Error : ${snapshot.error}');
+                return Text('Error --------: ${snapshot.error}');
               } else {
                 final data = snapshot.data;
                 if (data == null || data.isEmpty) {
@@ -126,8 +126,7 @@ class _AdminProfileState extends State<AdminProfile> {
                             ),
                           ),
                         ),
-                      ]
-                  );
+                      ]);
                 }
               }
             }

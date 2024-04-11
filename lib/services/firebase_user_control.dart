@@ -106,6 +106,25 @@ class DatabaseMethods {
     return db.collection("Users").doc(userId).update(gRole);
   }
 
+  Future getRoleBasedUser(String uRole) async {
+    List<Map<String, dynamic>> retUsers = [];
+    QuerySnapshot querySnapshot = await db.collection('Users').where('role', isEqualTo: uRole).get();
+    for (var doc in querySnapshot.docs) {
+      Map<String, dynamic> userData = {
+        'name': doc['name'],
+        'email': doc['email'],
+        'id': doc['id'],
+        'imgUrl': doc['imgUrl'],
+        'lastLogin': doc['lastLog'],
+        'role': doc['role'],
+      };
+      retUsers.add(userData);
+    }
+    return retUsers;
+
+  }
+
+
 
   
 

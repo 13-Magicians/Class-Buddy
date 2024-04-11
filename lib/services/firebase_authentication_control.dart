@@ -1,4 +1,4 @@
-
+import 'dart:async';
 import 'package:classbuddy/operations/user_handler.dart';
 import 'package:classbuddy/services/firebase_user_control.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -10,19 +10,49 @@ class AuthMethods {
   final _auth = FirebaseAuth.instance;
   final GoogleSignIn _googleSignIn = GoogleSignIn();
 
+  // getCurrentUser() {
+  //   _auth
+  //       .authStateChanges()
+  //       .listen((User? user) {
+  //         if (user != null) {
+  //           return user.uid;
+  //
+  //         }
+  //       }
+  //       );
+  // }
 
-  Future getCurrentUser() async {
-    String? userId;
+
+  Future<String?> getCurrentUser() async {
+    Completer<String?> completer = Completer<String?>();
+
     _auth.authStateChanges().listen((User? user) {
       if (user != null) {
-        userId = user.uid;
-
+        completer.complete(user.uid);
       } else {
-        userId = null;
+        completer.complete(null);
       }
     });
-    return userId;
+
+    return completer.future;
   }
+
+
+
+
+  //
+  // Future getCurrentUser() async {
+  //   String? userId;
+  //   _auth.authStateChanges().listen((User? user) {
+  //     if (user != null) {
+  //       userId = user.uid;
+  //
+  //     } else {
+  //       userId = null;
+  //     }
+  //   });
+  //   return userId;
+  // }
 
   getAccessToken() async {
     final FirebaseAuth firebaseAuth = FirebaseAuth.instance;

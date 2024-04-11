@@ -1,8 +1,6 @@
 import 'package:classbuddy/screens/common_components/chat_with_ai.dart';
 import 'package:flutter/material.dart';
-import '../services/firebase_authentication_control.dart';
-import '../services/firebase_user_control.dart';
-import 'package:intl/intl.dart';
+import 'dash_component_student/profile_raw_data/profile_data.dart';
 
 
 class StuDash extends StatefulWidget {
@@ -20,7 +18,7 @@ class _StuDashState extends State<StuDash> {
     stuExplore(),
     Text('Search Page', style: TextStyle(fontSize: 35, fontWeight: FontWeight.bold)),
     AIChat(),
-    SProfile(),
+    StudentProfile(),
   ];
 
   // void _onItemTapped(int index) {
@@ -173,120 +171,5 @@ class _SearchBarAppState extends State<SearchBarApp> {
 
   }
 }
-
-
-class SProfile extends StatefulWidget {
-  const SProfile({super.key});
-
-  @override
-  State<SProfile> createState() => _SProfileState();
-}
-
-class _SProfileState extends State<SProfile> {
-
-  List<Map<String, dynamic>> userData = [];
-
-  @override
-  void initState() {
-    super.initState();
-    loadUserData();
-  }
-
-  loadUserData() async {
-    final userId = await AuthMethods().getCurrentUser();
-    userData = await DatabaseMethods().getCurrentUserData(userId);
-    setState(() {});
-  }
-
-
-
-
-  @override
-  Widget build(BuildContext context) {
-    final user = userData.isNotEmpty ? userData.first : {};
-    final name = user['name'] ?? '';
-    final email = user['email'] ?? '';
-    final lastLog = user['lastLog'] != null
-        ? DateFormat(' EEE d MMM y \n hh:mm a').format(
-      DateTime.fromMillisecondsSinceEpoch(user['lastLog'] as int),
-    )
-        : '';
-    // final String lastLog = DateFormat(' EEE d MMM y \n hh:mm a').format(DateTime.fromMillisecondsSinceEpoch((user['lastLog'] ?? '')));
-    // print(lastLog);
-    final role = user['role'] ?? '';
-    final imgUrl = user['imgUrl'] ?? 'http://www.gravatar.com/avatar/?d=mp';
-    return Scaffold(
-      resizeToAvoidBottomInset: false,
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.only(top: 120.0),
-          child: Stack(
-              alignment: Alignment.center,
-              clipBehavior: Clip.none,
-              children: [
-                Card(
-                  color: Colors.redAccent,
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.only(topLeft: Radius.circular(100),topRight:Radius.circular(100) )),
-                  child: Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        // CircleAvatar(
-                        //   radius: 50.0,
-                        //   backgroundImage: NetworkImage(imgUrl),
-                        // ),
-                        Chip(
-                          padding: EdgeInsets.all(4),
-                          side: BorderSide.none,
-                          label:
-                          Text(role, style: TextStyle(fontWeight: FontWeight.bold)),
-                          backgroundColor: Color(0xFFFFDCDC),
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.all(Radius.circular(25.0))),
-                        ),
-                        SizedBox(height: 26),
-                        Text(
-                          name,
-                          style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-                        ),
-                        SizedBox(height: 2),
-                        Text(
-                          email,
-                          style: TextStyle(fontSize: 16, color: Colors.grey),
-                        ),
-                        SizedBox(height: 42),
-                        Text('Last Login:' + lastLog, style: TextStyle(fontSize: 14)),
-                        SizedBox(height: 42),
-                        ElevatedButton(
-                          onPressed: () {
-                            AuthMethods().userSignOut(context);
-                          },
-                          child: Text('Logout'),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                Positioned(
-                  top: -55,
-                  child: CircleAvatar(
-                    radius: 65,
-                    backgroundColor: Colors.white,
-                    child: CircleAvatar(
-                      radius: 60,
-                      backgroundImage: NetworkImage(imgUrl),
-                      backgroundColor: Colors.transparent,
-                      // child: ClipOval(child: Image.network(imgUrl)),
-                    ),
-                  ),
-                ),
-              ]),
-        ),
-      ),
-    );
-  }
-}
-
-
 
 

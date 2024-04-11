@@ -5,8 +5,6 @@ import 'package:classbuddy/services/firebase_user_control.dart';
 
 class CheckUser {
 
-  //-------------------------------------
-  //
   Future userExist(userId) async {
     final userExist = await DatabaseMethods().checkUser(userId);
     if (userExist != null) {
@@ -16,17 +14,10 @@ class CheckUser {
 
   }
 
-  Future getUser() async {
-     await AuthMethods().getCurrentUser();
-
+  Future getCurrentUserData() async {
+    final userId = await AuthMethods().getCurrentUser();
+    return await DatabaseMethods().getCurrentUserData(userId!);
   }
-
-  // setDefaultRole(String userId) {
-  //   Map<String, dynamic> userRole = {
-  //     "role": "Student",
-  //   };
-  //
-  // }
 
   userRole(String userId) async {
     final retrieveUserRole = await DatabaseMethods().userRole(userId);
@@ -51,7 +42,7 @@ class CheckUser {
     List<Map<String, dynamic>> lecturesList = [];
     List<Map<String, dynamic>> userList = await DatabaseMethods().getAllUsers();
     for (var userData in userList) {
-      if (userData['role'] == "Lecture") {
+      if (userData['role'] == "Lecturer") {
         lecturesList.add(userData);
       }
     }
@@ -70,6 +61,13 @@ class CheckUser {
 
     return DatabaseMethods().updateUserRole(userId, userRole);
   }
+
+  Future userListByRoles(uRole) async {
+    return await DatabaseMethods().getRoleBasedUser(uRole);
+
+  }
+
+
 
 
 }
