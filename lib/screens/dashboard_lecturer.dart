@@ -1,8 +1,16 @@
 import 'package:classbuddy/screens/common_components/chat_with_ai.dart';
+import 'package:classbuddy/screens/dash_component_lecturer/manage_my_course/my_fourth_year.dart';
 import 'package:classbuddy/services/firebase_authentication_control.dart';
 import 'package:flutter/material.dart';
-import '../operations/course_handler.dart';
-import 'dash_component_lecturer/manage_my_course/first_year.dart';
+import 'dash_component_lecturer/all_courses/all_first_year.dart';
+import 'dash_component_lecturer/all_courses/all_fourth_year.dart';
+import 'dash_component_lecturer/all_courses/all_orientation.dart';
+import 'dash_component_lecturer/all_courses/all_second_year.dart';
+import 'dash_component_lecturer/all_courses/all_third_year.dart';
+import 'dash_component_lecturer/manage_my_course/my_first_year.dart';
+import 'dash_component_lecturer/manage_my_course/my_orientation.dart';
+import 'dash_component_lecturer/manage_my_course/my_second_year.dart';
+import 'dash_component_lecturer/manage_my_course/my_third_year.dart';
 import 'dash_component_lecturer/profile_raw_data/profile_data.dart';
 
 class LecDash extends StatefulWidget {
@@ -156,38 +164,137 @@ class MangeCourse extends StatefulWidget {
 class _MangeCourseState extends State<MangeCourse>
     with TickerProviderStateMixin {
   List<Map<String, dynamic>> acYearList = [];
-  int currentPageIndex = 0;
+  int currentMCPageIndex = 0;
+  int currentACPageIndex = 0;
 
   List<Widget> _mcWidgetOptions = [];
+  List<Widget> _acWidgetOptions = [];
 
   @override
   void initState() {
     super.initState();
+    print('initState called');
     _mcWidgetOptions = [
       MenuCardsMC(
         onCardPressed: (index) {
-          setState(() {
-            currentPageIndex = index;
-          });
+          if (mounted) {
+            setState(() {
+              currentMCPageIndex = index;
+            });
+          }
         },
       ),
       ACYFirst(
         onCardPressed: (index) {
-          setState(() {
-            currentPageIndex = index;
-          });
+          if (mounted) {
+            setState(() {
+              currentMCPageIndex = index;
+            });
+          }
         },
       ),
       ACYSecond(
         onCardPressed: (index) {
-          setState(() {
-            currentPageIndex = index;
-          });
+          if (mounted) {
+            setState(() {
+              currentMCPageIndex = index;
+            });
+          }
         },
       ),
-      const Text('11Chat'),
+      ACYThird(
+        onCardPressed: (index) {
+          if (mounted) {
+            setState(() {
+              currentMCPageIndex = index;
+            });
+          }
+        },
+      ),
+      ACYFourth(
+        onCardPressed: (index) {
+          if (mounted) {
+            setState(() {
+              currentMCPageIndex = index;
+            });
+          }
+        },
+      ),
+      ACYPreO(
+        onCardPressed: (index) {
+          if (mounted) {
+            setState(() {
+              currentMCPageIndex = index;
+            });
+          }
+        },
+      ),
+    ];
+
+    _acWidgetOptions = [
+      MenuCardsAC(
+        onACCardPressed: (index) {
+          if (mounted) {
+            setState(() {
+              currentACPageIndex = index;
+            });
+          }
+        },
+      ),
+      AACYFirst(
+        onACCardPressed: (index) {
+          if (mounted) {
+            setState(() {
+              currentACPageIndex = index;
+            });
+          }
+        },
+      ),
+      AACYSecond(
+        onACCardPressed: (index) {
+          if (mounted) {
+            setState(() {
+              currentACPageIndex = index;
+            });
+          }
+        },
+      ),
+      AACYThird(
+        onACCardPressed: (index) {
+          if (mounted) {
+            setState(() {
+              currentACPageIndex = index;
+            });
+          }
+        },
+      ),
+      AACYFourth(
+        onACCardPressed: (index) {
+          if (mounted) {
+            setState(() {
+              currentACPageIndex = index;
+            });
+          }
+        },
+      ),
+      AACYPreO(
+        onACCardPressed: (index) {
+          if (mounted) {
+            setState(() {
+              currentACPageIndex = index;
+            });
+          }
+        },
+      ),
     ];
   }
+
+  @override
+  void dispose() {
+    print('dispose called');
+    super.dispose();
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -211,7 +318,7 @@ class _MangeCourseState extends State<MangeCourse>
                   text: 'My Course',
                 ),
                 Tab(
-                  text: 'Division',
+                  text: 'All Course',
                 )
               ],
             ),
@@ -221,22 +328,11 @@ class _MangeCourseState extends State<MangeCourse>
             controller: mCourController,
             children: [
               SizedBox(
-                child: _mcWidgetOptions.elementAt(currentPageIndex),
+                child: _mcWidgetOptions.elementAt(currentMCPageIndex),
               ),
               SizedBox(
-                child: Center(
-                  child: Column(
-                    children: [
-                      const Text('division'),
-                      ElevatedButton(
-                          onPressed: () {
-                            // AcademicOperation().getMyCourse();
-                          },
-                          child: const Text('press'))
-                    ],
-                  ),
-                ),
-              )
+                child: _acWidgetOptions.elementAt(currentACPageIndex),
+    ),
             ],
           )),
         ],
@@ -278,7 +374,7 @@ class _MenuCardsMCState extends State<MenuCardsMC> {
             ),
           ),
           SliverToBoxAdapter(
-            child: _orientationCard('Orientation ', 0),
+            child: _orientationCard('Orientation ', 5),
           ),
         ],
       ),
@@ -376,106 +472,137 @@ class _MenuCardsMCState extends State<MenuCardsMC> {
 
 }
 
-///////////////////////////////////// End of Manage Section ////////////////////
 
+class MenuCardsAC extends StatefulWidget {
+  final Function(int) onACCardPressed;
 
-////////////////////////////////// Sub parts ///////////////////////////////////
-
-class ListMyCourse extends StatefulWidget {
-  const ListMyCourse({super.key});
+  const MenuCardsAC({Key? key, required this.onACCardPressed}) : super(key: key);
 
   @override
-  State<ListMyCourse> createState() => _ListMyCourseState();
+  State<MenuCardsAC> createState() => _MenuCardsACState();
 }
 
-class _ListMyCourseState extends State<ListMyCourse> {
-  // List<Map<String, dynamic>> acYearList = [];
-
-  // void initState() {
-  //   super.initState();
-  //   loadData();
-  // }
-  //
-  // loadData() async {
-  //   // acYearList = await DataOrgManage().departmentList();
-  //
-  //   setState(() {});
-  // }
-
+class _MenuCardsACState extends State<MenuCardsAC> {
   @override
   Widget build(BuildContext context) {
-    return const Placeholder();
-  }
-}
-
-class ACYSecond extends StatefulWidget {
-  final Function(int) onCardPressed;
-
-  const ACYSecond({Key? key, required this.onCardPressed}) : super(key: key);
-
-  @override
-  State<ACYSecond> createState() => _ACYSecondState();
-}
-
-class _ACYSecondState extends State<ACYSecond> {
-  List<Map<String, dynamic>> acYearList = [];
-
-  @override
-  void initState() {
-    super.initState();
-    loadData();
-  }
-
-  loadData() async {
-    acYearList = await AcademicOperation().getAcYears();
-    acYearList.removeWhere((item) => item['currentYear'] < 2);
-
-    setState(() {});
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.all(2),
-      padding: const EdgeInsets.all(6),
-      decoration: const BoxDecoration(
-          borderRadius: BorderRadius.all(Radius.circular(6)),
-          color: Colors.black12),
-      child: Column(
-        children: [
-          ExpansionPanelList.radio(
-            animationDuration: const Duration(milliseconds: 800),
-            expandedHeaderPadding: const EdgeInsets.all(10.0),
-            initialOpenPanelValue: 1,
-            children: acYearList.map((item) {
-              return ExpansionPanelRadio(
-                backgroundColor: Colors.lightBlue,
-                canTapOnHeader: true,
-                headerBuilder: (BuildContext context, bool isExpanded) {
-                  return ListTile(
-                    title: Text(item['documentID']),
-                  );
-                },
-                body: Container(
-                  color: Colors.lightBlueAccent,
-                  child: const Card(
-                    child: Text('afsassas'),
-                  ),
-                  // Add any additional content you want to show when the panel is expanded
-                  // This can be any widget or UI you want to display
-                ),
-                value: item['documentID'],
-              );
-            }).toList(),
-            materialGapSize: 16,
+    return Padding(
+      padding: const EdgeInsets.all(10.0),
+      child: CustomScrollView(
+        slivers: [
+          SliverGrid(
+            gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+              maxCrossAxisExtent: MediaQuery.of(context).size.width / 2, // Set the max width of a card to half the screen width
+              crossAxisSpacing: 20,
+              mainAxisSpacing: 20,
+              childAspectRatio: 1/1, // Adjust the aspect ratio of the cards as needed
+            ),
+            delegate: SliverChildListDelegate(
+              [
+                _buildCard('First Year', 1),
+                _buildCard('Second Year', 2),
+                _buildCard('Third Year', 3),
+                _buildCard('Fourth Year', 4),
+              ],
+            ),
           ),
-          ElevatedButton(
-              onPressed: () {
-                widget.onCardPressed(0);
-              },
-              child: const Text('back'))
+          SliverToBoxAdapter(
+            child: _orientationCard('Orientation ', 5),
+          ),
         ],
       ),
     );
   }
+
+  Widget _buildCard(String year, int index) {
+    return Card(
+      elevation: 10,
+      surfaceTintColor: Colors.pink,
+      clipBehavior: Clip.hardEdge,
+      color: Colors.teal,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          SizedBox(
+            height: 60,
+            child: Center(
+              child: Text(
+                year,
+                style: const TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.tealAccent,
+                ),
+              ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(2),
+            child: InkWell(
+              splashColor: Colors.blue.withAlpha(30),
+              onTap: () {
+                widget.onACCardPressed(index); // Call the callback function
+              },
+              borderRadius: BorderRadius.circular(25),
+              child: const Icon(
+                Icons.arrow_circle_right_outlined,
+                size: 60,
+                color: Colors.greenAccent,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _orientationCard(String year, int index,) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 80),
+      child: Card(
+        margin: const EdgeInsets.all(20),
+        elevation: 10,
+        surfaceTintColor: Colors.pink,
+        clipBehavior: Clip.hardEdge,
+        color: Colors.teal,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            SizedBox(
+              height: 60,
+              child: Center(
+                child: Text(
+                  year,
+                  style: const TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.tealAccent,
+                  ),
+                ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(2),
+              child: InkWell(
+                splashColor: Colors.blue.withAlpha(30),
+                onTap: () {
+                  widget.onACCardPressed(index); // Call the callback function
+                },
+                borderRadius: BorderRadius.circular(25),
+                child: const Icon(
+                  Icons.arrow_circle_right_outlined,
+                  size: 60,
+                  color: Colors.greenAccent,
+                ),
+              ),
+            ),
+            const SizedBox(height: 30,)
+          ],
+        ),
+      ),
+    );
+  }
+
 }
+
+
+

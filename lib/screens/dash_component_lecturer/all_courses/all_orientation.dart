@@ -1,28 +1,26 @@
-// import 'package:flick_video_player/flick_video_player.dart';
+
 import 'package:flutter/material.dart';
-// import 'package:video_player/video_player.dart';
+import 'package:flutter_linkify/flutter_linkify.dart';
 import '../../../operations/course_handler.dart';
 import '../../../services/firebase_course_control.dart';
 import '../../../services/firebase_department_control.dart';
-import '../../common_components/com_video_player.dart';
+import '../../common_components/com_url_launcher.dart';
+import '../../common_components/com_web_view.dart';
 
-
-class ACYFirst extends StatefulWidget {
-  final Function(int) onCardPressed;
-
-  const ACYFirst({Key? key, required this.onCardPressed}) : super(key: key);
+class AACYPreO extends StatefulWidget {
+  final Function(int) onACCardPressed;
+  const AACYPreO({Key? key, required this.onACCardPressed}) : super(key: key);
 
   @override
-  State<ACYFirst> createState() => _ACYFirstState();
+  State<AACYPreO> createState() => _AACYPreOState();
 }
 
-class _ACYFirstState extends State<ACYFirst> with WidgetsBindingObserver {
+class _AACYPreOState extends State<AACYPreO> with WidgetsBindingObserver {
   List<Map<String, dynamic>> acYearList = [];
   List<Map<String, dynamic>> acYCourseListF = [];
   List<Map<String, dynamic>> acYCourseListS = [];
 
   List<TextEditingController> controllers = [];
-  // late FlickManager flickManager;
 
   @override
   void initState() {
@@ -31,27 +29,9 @@ class _ACYFirstState extends State<ACYFirst> with WidgetsBindingObserver {
     loadData();
   }
 
-  // @override
-  // void dispose() {
-  //   WidgetsBinding.instance.removeObserver(this);
-  //   flickManager.dispose();
-  //   super.dispose();
-  // }
-
-  // @override
-  // void didChangeAppLifecycleState(AppLifecycleState state) {
-  //   super.didChangeAppLifecycleState(state);
-  //   if (state == AppLifecycleState.paused) {
-  //     flickManager.flickControlManager?.autoPause();
-  //   } else if (state == AppLifecycleState.resumed) {
-  //     flickManager.flickControlManager?.autoResume();
-  //   }
-  // }
-
   loadData() async {
     acYearList = await AcademicOperation().getAcYears();
-    acYearList.removeWhere((item) => item['currentYear'] < 1);
-
+    acYearList.removeWhere((item) => item['currentYear'] < 0);
     setState(() {});
   }
 
@@ -68,7 +48,13 @@ class _ACYFirstState extends State<ACYFirst> with WidgetsBindingObserver {
         ),
         child: Column(
           children: [
-            ListTile(title: const Text('First Year First Semester'),tileColor: Colors.lightBlueAccent,shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),),
+            Card(
+              margin: const EdgeInsets.all(0),
+              child: ListTile(
+                title: const Text('Orientation Period'),
+                tileColor: Colors.teal,
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),),
+            ),
             const Divider(height: 10,indent: 50,endIndent: 50,thickness: 2,),
             ClipRRect(
               borderRadius: const BorderRadius.all(Radius.circular(8)),
@@ -97,7 +83,7 @@ class _ACYFirstState extends State<ACYFirst> with WidgetsBindingObserver {
                       child: Column(
                         children: [
                           SizedBox(
-                            width: 300,
+                            width: 200,
                             height: 50,
                             child: Card(
                               child: InkWell(
@@ -105,14 +91,14 @@ class _ACYFirstState extends State<ACYFirst> with WidgetsBindingObserver {
                                 const BorderRadius.all(Radius.circular(10)),
                                 splashColor: Colors.deepOrange,
                                 onTap: () {
-                                  _makeCourse(context, item, '11');
+                                  _makeCourse(context, item, '01');
                                 },
                                 child: const Row(
-                                  mainAxisAlignment:
-                                  MainAxisAlignment.spaceEvenly,
+                                  mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
                                     Icon(Icons.add_task_outlined),
-                                    Text('Add Course')
+                                    SizedBox(width: 20,),
+                                    Text('Add Course'),
                                   ],
                                 ),
                               ),
@@ -120,7 +106,7 @@ class _ACYFirstState extends State<ACYFirst> with WidgetsBindingObserver {
                           ),
                           FutureBuilder<List<Map<String, dynamic>>>(
                             future: AcademicOperation()
-                                .getMyCourse(item['documentID'],'11'),
+                                .getMyCourse(item['documentID'],'01'),
                             builder: (context,
                                 AsyncSnapshot<List<Map<String, dynamic>>>
                                 snapshot) {
@@ -178,7 +164,7 @@ class _ACYFirstState extends State<ACYFirst> with WidgetsBindingObserver {
                                                           context,
                                                           item[
                                                           'documentID'],
-                                                          courseData['id'],'11');
+                                                          courseData['id'],'01');
                                                     },
                                                   ),
                                                 ];
@@ -197,7 +183,7 @@ class _ACYFirstState extends State<ACYFirst> with WidgetsBindingObserver {
                                               courseInside(
                                                   context,
                                                   item['documentID'],
-                                                  courseData, '11');
+                                                  courseData, '01');
                                             },
                                           ),
                                         );
@@ -219,165 +205,16 @@ class _ACYFirstState extends State<ACYFirst> with WidgetsBindingObserver {
               ),
             ),
             const SizedBox(height: 12,),
-            Column(
-              children: [
-                ListTile(title: const Text('First Year Second Semester'),tileColor: Colors.lightBlueAccent,shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),),
-                const Divider(height: 10,indent: 50,endIndent: 50,thickness: 2,),
-                ClipRRect(
-                  borderRadius: const BorderRadius.all(Radius.circular(8)),
-                  child: ExpansionPanelList.radio(
-                    animationDuration: const Duration(milliseconds: 800),
-                    expandedHeaderPadding: const EdgeInsets.all(8.0),
-                    initialOpenPanelValue: 1,
-                    children: acYearList.map((item) {
-                      return ExpansionPanelRadio(
-                        backgroundColor: Colors.cyan.shade400,
-                        canTapOnHeader: true,
-                        headerBuilder: (BuildContext context, bool isExpanded) {
-                          return Container(
-                            padding: const EdgeInsets.all(6),
-                            child: ListTile(
-                              leading: const Icon(Icons.collections_bookmark_outlined),
-                              tileColor: Colors.cyanAccent.shade400,
-                              shape: const RoundedRectangleBorder(
-                                  borderRadius:
-                                  BorderRadius.all(Radius.circular(10))),
-                              title: Text(item['documentID']),
-                            ),
-                          );
-                        },
-                        body: SizedBox(
-                          child: Column(
-                            children: [
-                              SizedBox(
-                                width: 300,
-                                height: 50,
-                                child: Card(
-                                  child: InkWell(
-                                    borderRadius:
-                                    const BorderRadius.all(Radius.circular(10)),
-                                    splashColor: Colors.deepOrange,
-                                    onTap: () {
-                                      _makeCourse(context, item, '12');
-                                    },
-                                    child: const Row(
-                                      mainAxisAlignment:
-                                      MainAxisAlignment.spaceEvenly,
-                                      children: [
-                                        Icon(Icons.add_task_outlined),
-                                        Text('Add Course')
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              FutureBuilder<List<Map<String, dynamic>>>(
-                                future: AcademicOperation()
-                                    .getMyCourse(item['documentID'],'12'),
-                                builder: (context,
-                                    AsyncSnapshot<List<Map<String, dynamic>>>
-                                    snapshot) {
-                                  if (snapshot.connectionState ==
-                                      ConnectionState.waiting) {
-                                    return const CircularProgressIndicator();
-                                  } else {
-                                    if (snapshot.hasError) {
-                                      return Text('Error: ${snapshot.error}');
-                                    } else {
-                                      if (snapshot.data == null ||
-                                          snapshot.data!.isEmpty) {
-                                        return const ListTile(
-                                          title: Text('Nothing found'),
-                                        );
-                                      } else {
-                                        return ListView.builder(
-                                          padding: const EdgeInsets.all(4),
-                                          physics:
-                                          const NeverScrollableScrollPhysics(),
-                                          shrinkWrap: true,
-                                          itemCount: snapshot.data!.length,
-                                          itemBuilder: (context, index) {
-                                            final courseData =
-                                            snapshot.data![index];
-                                            final courseName =
-                                            courseData['id'] as String?;
-                                            return Card(
-                                              child: ListTile(
-                                                title: Text(
-                                                    courseName ?? 'Unknown'),
-                                                trailing: PopupMenuButton(
-                                                  color: Colors.cyan,
-                                                  elevation: 10,
-                                                  shape: RoundedRectangleBorder(
-                                                      borderRadius:
-                                                      BorderRadius.circular(
-                                                          25)),
-                                                  popUpAnimationStyle:
-                                                  AnimationStyle(
-                                                      curve:
-                                                      Curves.easeInOut,
-                                                      duration: const Duration(
-                                                          milliseconds:
-                                                          600)),
-                                                  itemBuilder: (context) {
-                                                    return [
-                                                      PopupMenuItem(
-                                                        padding:
-                                                        const EdgeInsets.only(
-                                                            left: 30),
-                                                        child: const Text('Delete'),
-                                                        onTap: () {
-                                                          deleteConfirmDialog(
-                                                              context,
-                                                              item[
-                                                              'documentID'],
-                                                              courseData['id'],'12');
-                                                        },
-                                                      ),
-                                                    ];
-                                                  },
-                                                ),
-                                                leading: const Icon(
-                                                    Icons.cyclone_outlined),
-                                                subtitle: Row(
-                                                  children: [
-                                                    Text(courseData[
-                                                    'subjectName']
-                                                        .toString()),
-                                                  ],
-                                                ),
-                                                onTap: () {
-                                                  courseInside(
-                                                      context,
-                                                      item['documentID'],
-                                                      courseData, '12');
-                                                },
-                                              ),
-                                            );
-                                          },
-                                        );
-                                      }
-                                    }
-                                  }
-                                },
-                              ),
-                            ],
-                          ),
-                        ),
-                        value: item['documentID'],
-                      );
-                    }).toList(),
-                    materialGapSize: 16,
-                    elevation: 8,
-                  ),
-                ),
-              ],
-            ),
             ElevatedButton(
                 onPressed: () {
-                  widget.onCardPressed(0);
+                  widget.onACCardPressed(0);
                 },
-                child: const Text('back'))
+                style: ButtonStyle(
+                    shape: MaterialStatePropertyAll(RoundedRectangleBorder(borderRadius: BorderRadius.circular(10))),
+                    backgroundColor: const MaterialStatePropertyAll(Colors.orange),
+                    minimumSize: const MaterialStatePropertyAll(Size(80, 40))
+                ),
+                child: const Text('Back',style: TextStyle(fontWeight: FontWeight.bold),))
           ],
         ),
       ),
@@ -385,7 +222,7 @@ class _ACYFirstState extends State<ACYFirst> with WidgetsBindingObserver {
   }
 
   void courseInside(
-      BuildContext context, String item, Map<String, dynamic> courseData, String semNo) {
+      BuildContext context, String acYear, Map<String, dynamic> courseData, String semNo) {
     Navigator.of(context).push(MaterialPageRoute<void>(
       fullscreenDialog: true,
       builder: (BuildContext context) {
@@ -401,11 +238,10 @@ class _ACYFirstState extends State<ACYFirst> with WidgetsBindingObserver {
               ],
             ),
             leading: IconButton(
-              icon: const Icon(Icons.arrow_back_rounded),
-              onPressed: () {
-                Navigator.of(context).pop();
-              }
-
+                icon: const Icon(Icons.arrow_back_rounded),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                }
             ),
           ),
           body: Card(
@@ -419,7 +255,7 @@ class _ACYFirstState extends State<ACYFirst> with WidgetsBindingObserver {
                   Row(
                     children: [
                       Chip(
-                        label: Text(item),
+                        label: Text(acYear),
                       ),
                       const SizedBox(
                         width: 10,
@@ -439,9 +275,9 @@ class _ACYFirstState extends State<ACYFirst> with WidgetsBindingObserver {
                   Flexible(
                     child: SingleChildScrollView(
                       child: ClipRRect(
-                        borderRadius: BorderRadius.all(Radius.circular(10)),
+                        borderRadius: const BorderRadius.all(Radius.circular(10)),
                         child: FutureBuilder<List<Map<String, dynamic>>>(
-                          future: AcademicOperation().getTopics(item, semNo, courseData['courseCode']),
+                          future: AcademicOperation().getTopics(acYear, semNo, courseData['courseCode']),
                           builder: (context, snapshot) {
                             if (snapshot.connectionState == ConnectionState.waiting) {
                               return const CircularProgressIndicator();
@@ -466,8 +302,8 @@ class _ACYFirstState extends State<ACYFirst> with WidgetsBindingObserver {
                                         },
                                         body: Card(
                                           surfaceTintColor: Colors.deepOrange,
-                                          margin: EdgeInsets.all(10),
-                                          elevation: 8,
+                                          margin: const EdgeInsets.all(10),
+                                          elevation: 4,
                                           child: Column(
                                             children: [
                                               ListTile(
@@ -476,20 +312,59 @@ class _ACYFirstState extends State<ACYFirst> with WidgetsBindingObserver {
                                                   children: [
                                                     Text(item['topicNote']),
                                                     const SizedBox(height: 10),
-                                                    if (item['videoLink'] != null)
-                                                      Text('Video Link: ${item['videoLink']}'),
-                                                    if (item['documentLink'] != null)
-                                                      Text('Document Link: ${item['documentLink']}'),
+                                                    if (item['videoLink'] != null && item['videoLink'] != 'none')
+                                                      Row(children: [
+                                                        const Text('Video Link: '),
+                                                        SelectableLinkify(
+                                                          style: const TextStyle(color: Colors.blue),
+                                                          text: "Click Here to Open",
+                                                          onTap: () {
+                                                            externalLink(context, item['topicName'], item['videoLink']);
+                                                          },
+                                                        ),
+                                                      ],),
+
+                                                    if (item['documentLink'] != null && item['videoLink'] != 'none')
+                                                      Row(children: [
+                                                        const Text('Document Link: '),
+                                                        SelectableLinkify(
+                                                          style: const TextStyle(color: Colors.blue),
+                                                          text: "Click Here to Open",
+                                                          onTap: () {
+                                                            ExtraUrlLunch().elaunchUrl(item['documentLink']);
+                                                          },
+                                                        ),
+                                                      ],),
+
+                                                    Row(
+                                                      mainAxisAlignment: MainAxisAlignment.end,
+                                                      children: [
+                                                        Card(
+                                                          elevation: 8,
+                                                          child: Padding(
+                                                            padding: const EdgeInsets.all(6.0),
+                                                            child: InkWell(
+                                                              child: const Icon(Icons.edit_note,size: 25,),onTap: () => {},),
+                                                          ),
+                                                        ),
+                                                        Card(
+                                                          elevation: 8,
+                                                          child: Padding(
+                                                            padding: const EdgeInsets.all(6.0),
+                                                            child: InkWell(
+                                                                child: const Icon(Icons.delete_forever_outlined,size: 25,),
+                                                                onTap: () {
+                                                                  AcademicOperation().removeTopic(acYear, semNo, courseData['courseCode'],item['docId']);
+                                                                  Navigator.of(context).pop();
+                                                                }
+                                                            ),
+                                                          ),
+                                                        )
+                                                      ],
+                                                    )
                                                   ],
                                                 ),
                                               ),
-                                              if (item['videoLink'] != null && item['videoLink'] != 'none')
-                                                Container(
-                                                    margin: EdgeInsets.only(right: 20),
-                                                    child: LecVideoPlayer(AcademicOperation().getYoutubeVideoStreamUrl(item['videoLink']))
-                                                ),
-
-
                                             ],
                                           ),
                                         ),
@@ -504,7 +379,6 @@ class _ACYFirstState extends State<ACYFirst> with WidgetsBindingObserver {
                       ),
                     ),
                   ),
-
                 ],
               ),
             ),
@@ -512,7 +386,7 @@ class _ACYFirstState extends State<ACYFirst> with WidgetsBindingObserver {
           floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,floatingActionButtonAnimator: FloatingActionButtonAnimator.scaling,
           floatingActionButton: FloatingActionButton(
             mini: true,
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(30))),
+            shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(30))),
             backgroundColor: Colors.deepOrangeAccent.shade100,
             child: const Icon(Icons.display_settings_rounded),
             onPressed: () {
@@ -544,7 +418,7 @@ class _ACYFirstState extends State<ACYFirst> with WidgetsBindingObserver {
 
                             onTap: () {
                               Navigator.pop(context);
-                              _showAddLinkDialog(item, courseData, semNo);
+                              _showAddLinkDialog(acYear, courseData, semNo);
 
                             },
                             shape: RoundedRectangleBorder(
@@ -573,10 +447,7 @@ class _ACYFirstState extends State<ACYFirst> with WidgetsBindingObserver {
                             tileColor: Colors.deepOrangeAccent.shade100,
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(10)),
-                            onTap: () {
-
-
-                            },
+                            onTap: () {},
                           )
                         ],
                       ),
@@ -591,23 +462,12 @@ class _ACYFirstState extends State<ACYFirst> with WidgetsBindingObserver {
     ));
   }
 
-
-
-
-
-
-
-
-
-
-
   Future<void> _showAddLinkDialog(item, courseData, semNo) async {
     List<Map<String, dynamic>> subjectTopic = [];
     String topicName = '';
     String videoLink = '';
     String documentLink = '';
     String topicNote = '';
-
     bool addLink = true;
 
     while (addLink) {
@@ -671,8 +531,6 @@ class _ACYFirstState extends State<ACYFirst> with WidgetsBindingObserver {
                     'topicNote': topicNote,
                   };
                   subjectTopic.add(subjectTopicData);
-
-
                   AcademicOperation().addTopic(item, courseData, subjectTopicData, semNo);
                   Navigator.of(context).pop(false);
                 } else {
@@ -715,14 +573,6 @@ class _ACYFirstState extends State<ACYFirst> with WidgetsBindingObserver {
       }
     }
   }
-
-
-
-
-
-
-
-
 
   Future<void> btnDelete(item, courseData, String semNo) async {
     await DbCourseMethods().deleteCourse(item, courseData, semNo);
@@ -921,5 +771,4 @@ Future<List<String>> _getCourseOptions() async {
   departmentList.map((department) => department['id'].toString()).toList();
   return courseOptions;
 }
-
 

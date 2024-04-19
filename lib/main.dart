@@ -1,3 +1,4 @@
+import 'package:classbuddy/screens/common_components/com_web_view.dart';
 import 'package:classbuddy/screens/dashboard_admin.dart';
 import 'package:classbuddy/screens/dashboard_lecturer.dart';
 import 'package:classbuddy/screens/screen_login.dart';
@@ -69,7 +70,7 @@ class ClassBuddy extends StatelessWidget {
       title: 'Class Buddy',
       theme: ThemeData.light(),
       home: const CBSplashScr(version),
-      // home: const AdminDash(),
+      // home: const OpenExternalLink(),
       routes: <String,WidgetBuilder>{
         '/splash': (context) => CBSplashScr(version),
         '/onboard':(context) => OnBoarding(),

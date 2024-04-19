@@ -80,6 +80,11 @@ class DbCourseMethods {
     return await db.collection('AcademicYear').doc(acYear).collection(semNo).doc(courseCode).collection('topics').add(subjectTopic);
   }
 
+  Future removeTopicFromCourse(acYear,String semNo,String courseCode,String docId) async {
+    await db.collection('AcademicYear').doc(acYear).collection(semNo).doc(courseCode).collection('topics').doc(docId).delete();
+  }
+
+
   Future<List<Map<String, dynamic>>> getTopicsInSubject (acYear, semNo,courseCode) async {
     List<Map<String, dynamic>> receivedList = [];
     QuerySnapshot querySnapshot = await db.collection('AcademicYear').doc(acYear).collection(semNo).doc(courseCode).collection('topics').get();
@@ -89,6 +94,7 @@ class DbCourseMethods {
         'documentLink':doc['documentLink'],
         'topicNote':doc['topicNote'],
         'videoLink':doc['videoLink'],
+        'docId':doc.id,
       });
     }
 

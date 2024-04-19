@@ -39,19 +39,13 @@ class AcademicOperation {
       'creator':userData['id'],
       'passCode':passCode,
     };
-
     DbCourseMethods().createCourse(documentID, courseCode, courseOriginData, semNo);
 
-
-    // Implement your API call to send the data to the database
-    // Use the provided subjectName, courseCode, and selectedDepartment to send the data
   }
 
   Future<List<Map<String, dynamic>>> getMyCourse(acYear, String semNo) async {
-
     List<Map<String, dynamic>> myCourseList = [];
     List<Map<String, dynamic>> courseList = [];
-
     courseList = await DbCourseMethods().getCourseInAY(acYear, semNo);
     final localUser = GetStorage();
     final userData = localUser.read('user');
@@ -59,13 +53,8 @@ class AcademicOperation {
       if (userData['id'] == element['creator']) {
         myCourseList.add(element);
       }
-
     }
-
-
     return myCourseList;
-
-
   }
 
   Future addTopic(acYear, Map<String, dynamic> courseData, Map<String, dynamic> subjectTopic,String semNo) async  {
@@ -76,8 +65,11 @@ class AcademicOperation {
     // List<Map<String, dynamic>> topicList = [];
     List<Map<String, dynamic>> receivedList = [];
     receivedList = await DbCourseMethods().getTopicsInSubject(acYear, semNo, courseCode);
-
     return receivedList;
+  }
+
+  Future removeTopic(String acYear, String semNo, String courseCode, String documentId) async {
+    DbCourseMethods().removeTopicFromCourse(acYear, semNo, courseCode, documentId);
   }
 
   Future<String> getYoutubeVideoStreamUrl(String youtubeUrl) async {
@@ -89,8 +81,5 @@ class AcademicOperation {
     final firstVideoStream = videoStreams.withHighestBitrate();
     return firstVideoStream.url.toString();
   }
-
-
-
 
 }

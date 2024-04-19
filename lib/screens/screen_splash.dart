@@ -42,8 +42,8 @@ class _CBSplashScrState extends State<CBSplashScr>  with TickerProviderStateMixi
     });
   }
 
-  void checkUserAndNavigate() {
-    AuthMethods().getCurrentUser().then((userId) {
+  Future<void> checkUserAndNavigate() async {
+    await AuthMethods().getCurrentUser().then((userId) {
       if (userId != null) {
         AuthMethods().signInWithGoogle(context);
       } else {

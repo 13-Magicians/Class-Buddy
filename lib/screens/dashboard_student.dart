@@ -1,5 +1,6 @@
 import 'package:classbuddy/screens/common_components/chat_with_ai.dart';
 import 'package:flutter/material.dart';
+import 'dash_component_student/courses/course_section.dart';
 import 'dash_component_student/profile_raw_data/profile_data.dart';
 
 
@@ -16,7 +17,8 @@ class _StuDashState extends State<StuDash> {
       NavigationDestinationLabelBehavior.alwaysShow;
   static const List<Widget> _widgetOptions = <Widget>[
     stuExplore(),
-    Text('Search Page', style: TextStyle(fontSize: 35, fontWeight: FontWeight.bold)),
+    CourseSection(),
+    // Text('Search Page', style: TextStyle(fontSize: 35, fontWeight: FontWeight.bold)),
     AIChat(),
     StudentProfile(),
   ];

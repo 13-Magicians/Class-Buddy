@@ -1,4 +1,12 @@
+class StudentOperations {
 
+  Future<List<Map<String, dynamic>>> getMyCourses() async {
+    List<Map<String, dynamic>> courseList = [];
+    return courseList;
+  }
+
+
+}
 
 
 // class AcademicOperation {
