@@ -15,7 +15,7 @@ class _CourseSectionState extends State<CourseSection> {
     return const Scaffold(body: Column(
       children: [
         Text('My Courses'),
-        MyCourses(),
+        // MyCourses(),
 
       ],
     ),);
