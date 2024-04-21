@@ -70,7 +70,7 @@ class ClassBuddy extends StatelessWidget {
       title: 'Class Buddy',
       theme: ThemeData.light(),
       home: const CBSplashScr(version),
-      // home: const OpenExternalLink(),
+      // home: const StuDash(),
       routes: <String,WidgetBuilder>{
         '/splash': (context) => CBSplashScr(version),
         '/onboard':(context) => OnBoarding(),

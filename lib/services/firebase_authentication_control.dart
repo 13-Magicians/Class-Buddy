@@ -25,12 +25,16 @@ class AuthMethods {
 
   Future<String?> getCurrentUser() async {
     Completer<String?> completer = Completer<String?>();
+    bool completed = false;
 
     _auth.authStateChanges().listen((User? user) {
-      if (user != null) {
-        completer.complete(user.uid);
-      } else {
-        completer.complete(null);
+      if (!completed) {
+        if (user != null) {
+          completer.complete(user.uid);
+        } else {
+          completer.complete(null);
+        }
+        completed = true;
       }
     });
 

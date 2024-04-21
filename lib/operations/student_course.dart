@@ -5,6 +5,21 @@ class StudentOperations {
     return courseList;
   }
 
+  Future enrollToCourse() async {
+
+
+  }
+
+
+
+
+
+
+
+
+
+
+
 
 }
 
