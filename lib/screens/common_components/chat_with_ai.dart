@@ -40,7 +40,7 @@ class _AIChatState extends State<AIChat> {
       ),
       body: Card(
         elevation: 6,
-        color: Colors.orangeAccent.shade100,
+        color: Colors.orange.shade50,
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 14),
           child: Column(
@@ -196,8 +196,8 @@ class MessageSet extends StatelessWidget {
             constraints: const BoxConstraints(maxWidth: 500),
             decoration: BoxDecoration(
               color: isFromUser
-                  ? Colors.deepOrangeAccent.shade200
-                  : Colors.cyan.shade100,
+                  ? Colors.red.shade200
+                  : Colors.red.shade100,
               borderRadius: BorderRadius.circular(12),
             ),
             child: Column(
