@@ -41,6 +41,7 @@ class _AIChatState extends State<AIChat> {
       body: Card(
         elevation: 6,
         color: Colors.orange.shade50,
+
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 14),
           child: Column(
