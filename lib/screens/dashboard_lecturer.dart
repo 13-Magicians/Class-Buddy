@@ -309,7 +309,7 @@ class _MangeCourseState extends State<MangeCourse>
           Container(
             decoration: const BoxDecoration(
               borderRadius: BorderRadius.all(Radius.circular(8)),
-              color: Colors.lightGreen,
+              color: Colors.redAccent,
             ),
             child: TabBar(
               controller: mCourController,
