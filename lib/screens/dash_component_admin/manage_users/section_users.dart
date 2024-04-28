@@ -32,6 +32,9 @@ class _UsersSectionState extends State<UsersSection>
   }
 
   @override
+  Future<void> dispose() async => super.dispose();
+
+  @override
   Widget build(BuildContext context) {
     TabController mOrgController = TabController(length: 4, vsync: this);
     return Container(

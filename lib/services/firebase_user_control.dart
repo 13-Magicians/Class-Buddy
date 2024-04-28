@@ -55,7 +55,6 @@ class DatabaseMethods {
         'lastLogin': doc['lastLog'],
         'name': doc['name'],
         'role': doc['role'],
-        'academicYear': doc['academicYear'],
       };
       userList.add(userData);
     }

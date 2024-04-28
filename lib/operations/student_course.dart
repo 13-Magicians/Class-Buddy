@@ -4,13 +4,18 @@ import 'package:get_storage/get_storage.dart';
 class StudentOperations {
 
 
-  Future getAllCourses(semNo) async {
+  Future<List<Map<String, dynamic>>> getAllCourses(String semNo) async {
     List<Map<String, dynamic>> courseList = [];
     final localUser = GetStorage();
     final userData = localUser.read('user');
     final acYear = userData['academicYear'];
+    print(acYear);
 
-    StudentCourseCtrl().getAllCourse(acYear,semNo);
+    courseList = await StudentCourseCtrl().getAllCourse(acYear,semNo);
+
+    print('111111111111111111');
+    print(courseList);
+    print('222222222222222222');
 
     return courseList;
   }
@@ -23,24 +28,6 @@ class StudentOperations {
   Future enrollToCourse() async {
 
   }
-
-  // Future getMyCourses(acYear) async {
-  //   List<Map<String, dynamic>> courseList = [];
-  //   final localUser = GetStorage();
-  //   final userData = localUser.read('user');
-  //
-  //   return courseList;
-  // }
-
-
-
-
-
-
-
-
-
-
 
 
 }

@@ -1,4 +1,5 @@
 import 'package:classbuddy/operations/user_handler.dart';
+import 'package:classbuddy/screens/dash_component_student/courses/all_courses/firstyear.dart';
 import 'package:flutter/material.dart';
 import '../../../operations/student_course.dart';
 import 'all_courses/orientation.dart';
@@ -141,7 +142,9 @@ class _AllCourseMenuState extends State<AllCourseMenu> {
                   icon: const Icon(Icons.arrow_forward_ios_outlined)
               ),
               leading: const Icon(Icons.sailing),
-
+              onTap: () {
+                Navigator.push(context, MaterialPageRoute(builder: (context) => const DisplayAllCourseFirstYear()),);
+              },
 
             ),
           ),
