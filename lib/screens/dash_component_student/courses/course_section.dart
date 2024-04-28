@@ -1,5 +1,7 @@
+import 'package:classbuddy/operations/user_handler.dart';
 import 'package:flutter/material.dart';
 import '../../../operations/student_course.dart';
+import 'all_courses/orientation.dart';
 
 class CourseSection extends StatefulWidget {
   const CourseSection({super.key});
@@ -11,14 +13,17 @@ class CourseSection extends StatefulWidget {
 class _CourseSectionState extends State<CourseSection> {
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(body: Column(
-      children: [
-        Text('My Courses'),
-        MyCourseMenu(),
-        // MyCourses(),
-        Text('All Courses'),
-        AllCourseMenu(),
-      ],
+    return const Scaffold(body: SingleChildScrollView(
+      scrollDirection: Axis.vertical,
+      child: Column(
+        children: [
+          Text('My Courses'),
+          MyCourseMenu(),
+          // MyCourses(),
+          Text('All Courses'),
+          AllCourseMenu(),
+        ],
+      ),
     ),);
   }
 }
@@ -34,70 +39,69 @@ class MyCourseMenu extends StatefulWidget {
 class _MyCourseMenuState extends State<MyCourseMenu> {
   @override
   Widget build(BuildContext context) {
-    return Flexible(
-        child:Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Column(
-            children: [
-              Card(
-                color: Colors.amber,
-                child: ListTile(
-                  title: const Text('    Orientation'),
-                  trailing: IconButton(onPressed: () {},
-                      icon: const Icon(Icons.arrow_forward_ios_outlined)
-                  ),
-                  leading: const Icon(Icons.sailing),
-
-                ),
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Column(
+        children: [
+          Card(
+            color: Colors.amber,
+            child: ListTile(
+              title: const Text('    Orientation'),
+              trailing: IconButton(onPressed: () {},
+                  icon: const Icon(Icons.arrow_forward_ios_outlined)
               ),
-              Card(
-                color: Colors.amber,
-                child: ListTile(
-                  title: const Text('    First Year'),
-                  trailing: IconButton(onPressed: () {}, 
-                      icon: const Icon(Icons.arrow_forward_ios_outlined)
-                  ),
-                  leading: const Icon(Icons.sailing),
+              leading: const Icon(Icons.sailing),
+              onTap: () => CheckUser().getUserACY(),
 
-
-                ),
+            ),
+          ),
+          Card(
+            color: Colors.amber,
+            child: ListTile(
+              title: const Text('    First Year'),
+              trailing: IconButton(onPressed: () {},
+                  icon: const Icon(Icons.arrow_forward_ios_outlined)
               ),
-              Card(
-                color: Colors.amber,
-                child: ListTile(
-                  title: const Text('    Second Year'),
-                  trailing: IconButton(onPressed: () {},
-                      icon: const Icon(Icons.arrow_forward_ios_outlined)
-                  ),
-                  leading: const Icon(Icons.sailing),
+              leading: const Icon(Icons.sailing),
 
-                ),
+
+            ),
+          ),
+          Card(
+            color: Colors.amber,
+            child: ListTile(
+              title: const Text('    Second Year'),
+              trailing: IconButton(onPressed: () {},
+                  icon: const Icon(Icons.arrow_forward_ios_outlined)
               ),
-              Card(
-                color: Colors.amber,
-                child: ListTile(
-                  title: const Text('    Third Year'),
-                  trailing: IconButton(onPressed: () {},
-                      icon: const Icon(Icons.arrow_forward_ios_outlined)
-                  ),
-                  leading: const Icon(Icons.sailing),
+              leading: const Icon(Icons.sailing),
 
-                ),
+            ),
+          ),
+          Card(
+            color: Colors.amber,
+            child: ListTile(
+              title: const Text('    Third Year'),
+              trailing: IconButton(onPressed: () {},
+                  icon: const Icon(Icons.arrow_forward_ios_outlined)
               ),
-              Card(
-                color: Colors.amber,
-                child: ListTile(
-                  title: const Text('    Fourth Year'),
-                  trailing: IconButton(onPressed: () {},
-                      icon: const Icon(Icons.arrow_forward_ios_outlined)
-                  ),
-                  leading: const Icon(Icons.sailing),
+              leading: const Icon(Icons.sailing),
 
-                ),
+            ),
+          ),
+          Card(
+            color: Colors.amber,
+            child: ListTile(
+              title: const Text('    Fourth Year'),
+              trailing: IconButton(onPressed: () {},
+                  icon: const Icon(Icons.arrow_forward_ios_outlined)
               ),
+              leading: const Icon(Icons.sailing),
 
-            ],),
-        )
+            ),
+          ),
+
+        ],),
     );
   }
 }
@@ -112,70 +116,70 @@ class AllCourseMenu extends StatefulWidget {
 class _AllCourseMenuState extends State<AllCourseMenu> {
   @override
   Widget build(BuildContext context) {
-    return Flexible(
-        child:Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Column(
-            children: [
-              Card(
-                color: Colors.amber,
-                child: ListTile(
-                  title: const Text('    Orientation'),
-                  trailing: IconButton(onPressed: () {},
-                      icon: const Icon(Icons.arrow_forward_ios_outlined)
-                  ),
-                  leading: const Icon(Icons.sailing),
-
-                ),
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Column(
+        children: [
+          Card(
+            color: Colors.amber,
+            child: ListTile(
+              title: const Text('    Orientation'),
+              trailing: IconButton(onPressed: () {},
+                  icon: const Icon(Icons.arrow_forward_ios_outlined)
               ),
-              Card(
-                color: Colors.amber,
-                child: ListTile(
-                  title: const Text('    First Year'),
-                  trailing: IconButton(onPressed: () {},
-                      icon: const Icon(Icons.arrow_forward_ios_outlined)
-                  ),
-                  leading: const Icon(Icons.sailing),
-
-
-                ),
+              leading: const Icon(Icons.sailing),
+              onTap: () {
+                Navigator.push(context, MaterialPageRoute(builder: (context) => const DisplayAllCourseOrientation()),);
+              },
+            ),
+          ),
+          Card(
+            color: Colors.amber,
+            child: ListTile(
+              title: const Text('    First Year'),
+              trailing: IconButton(onPressed: () {},
+                  icon: const Icon(Icons.arrow_forward_ios_outlined)
               ),
-              Card(
-                color: Colors.amber,
-                child: ListTile(
-                  title: const Text('    Second Year'),
-                  trailing: IconButton(onPressed: () {},
-                      icon: const Icon(Icons.arrow_forward_ios_outlined)
-                  ),
-                  leading: const Icon(Icons.sailing),
+              leading: const Icon(Icons.sailing),
 
-                ),
+
+            ),
+          ),
+          Card(
+            color: Colors.amber,
+            child: ListTile(
+              title: const Text('    Second Year'),
+              trailing: IconButton(onPressed: () {},
+                  icon: const Icon(Icons.arrow_forward_ios_outlined)
               ),
-              Card(
-                color: Colors.amber,
-                child: ListTile(
-                  title: const Text('    Third Year'),
-                  trailing: IconButton(onPressed: () {},
-                      icon: const Icon(Icons.arrow_forward_ios_outlined)
-                  ),
-                  leading: const Icon(Icons.sailing),
+              leading: const Icon(Icons.sailing),
 
-                ),
+            ),
+          ),
+          Card(
+            color: Colors.amber,
+            child: ListTile(
+              title: const Text('    Third Year'),
+              trailing: IconButton(onPressed: () {},
+                  icon: const Icon(Icons.arrow_forward_ios_outlined)
               ),
-              Card(
-                color: Colors.amber,
-                child: ListTile(
-                  title: const Text('    Fourth Year'),
-                  trailing: IconButton(onPressed: () {},
-                      icon: const Icon(Icons.arrow_forward_ios_outlined)
-                  ),
-                  leading: const Icon(Icons.sailing),
+              leading: const Icon(Icons.sailing),
 
-                ),
+            ),
+          ),
+          Card(
+            color: Colors.amber,
+            child: ListTile(
+              title: const Text('    Fourth Year'),
+              trailing: IconButton(onPressed: () {},
+                  icon: const Icon(Icons.arrow_forward_ios_outlined)
               ),
+              leading: const Icon(Icons.sailing),
 
-            ],),
-        )
+            ),
+          ),
+
+        ],),
     );
   }
 }

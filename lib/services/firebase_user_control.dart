@@ -55,6 +55,7 @@ class DatabaseMethods {
         'lastLogin': doc['lastLog'],
         'name': doc['name'],
         'role': doc['role'],
+        'academicYear': doc['academicYear'],
       };
       userList.add(userData);
     }
@@ -65,8 +66,7 @@ class DatabaseMethods {
   Future getAdminsOnly() async {
     List<Map<String, dynamic>> adminUsers = [];
 
-    QuerySnapshot querySnapshot = await db.collection('Users').where(
-        'role', isEqualTo: 'Admin').get();
+    QuerySnapshot querySnapshot = await db.collection('Users').where('role', isEqualTo: 'Admin').get();
     for (var doc in querySnapshot.docs) {
       Map<String, dynamic> userData = {
         'name': doc['name'],
@@ -124,8 +124,22 @@ class DatabaseMethods {
 
   }
 
+  Future updateUserACY(String userId ,Map<String, dynamic> userACY) async {
+    db.collection("Users").doc(userId).update(userACY);
+  }
+
+  Future getACYUser(userID) async {
+    Map<String, dynamic> nUserData = {};
+    DocumentSnapshot doc = await db.collection("Users").doc(userID).get();
+    if (doc.exists) {
+      Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
+      nUserData = data;
+    } else {
+      AppLogger.log('Document does not exist on the database');
+    }
+    return nUserData;
+  }
 
 
-  
 
 }

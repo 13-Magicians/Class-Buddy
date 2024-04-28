@@ -91,7 +91,7 @@ class _ACYThirdState extends State<ACYThird> with WidgetsBindingObserver {
                                 const BorderRadius.all(Radius.circular(10)),
                                 splashColor: Colors.deepOrange,
                                 onTap: () {
-                                  _makeCourse(context, item, '21');
+                                  _makeCourse(context, item, '31');
                                 },
                                 child: const Row(
                                   mainAxisAlignment: MainAxisAlignment.center,

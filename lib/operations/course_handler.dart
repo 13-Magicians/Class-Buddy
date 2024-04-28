@@ -27,7 +27,6 @@ class AcademicOperation {
   }
 
 
-
   Future<void> addCourseACY(String documentID, String subjectName, String courseCode, String selectedDepartment, String passCode, String semNo) async {
     final localUser = GetStorage();
     final userData = localUser.read('user');
@@ -81,5 +80,8 @@ class AcademicOperation {
     final firstVideoStream = videoStreams.withHighestBitrate();
     return firstVideoStream.url.toString();
   }
+
+
+
 
 }

@@ -2,6 +2,7 @@
 import 'package:classbuddy/operations/error_handler.dart';
 import 'package:classbuddy/services/firebase_authentication_control.dart';
 import 'package:classbuddy/services/firebase_user_control.dart';
+import 'package:get_storage/get_storage.dart';
 
 class CheckUser {
 
@@ -65,6 +66,46 @@ class CheckUser {
   Future userListByRoles(uRole) async {
     return await DatabaseMethods().getRoleBasedUser(uRole);
 
+  }
+
+  Future userACYUpdate(String acYear) async {
+    final localUser = GetStorage();
+    final userData = localUser.read('user');
+    Map<String, dynamic> userACY = {
+      'academicYear': acYear,
+    };
+
+    Map<String, dynamic> reUserData = {
+      'email': userData['email'],
+      'id': userData['id'],
+      'imgUrl': userData['imgUrl'],
+      'lastLogin': userData['lastLog'],
+      'name': userData['name'],
+      'role': userData['role'],
+      'academicYear': acYear,
+    };
+    localUser.write('user', reUserData);
+
+
+    DatabaseMethods().updateUserACY(userData['id'], userACY);
+
+  }
+
+  Future getUserACY() async {
+    final localUser = GetStorage();
+    final userData = localUser.read('user');
+    final userID = userData['id'];
+
+    Map<String, dynamic> acyUserDataX = {};
+    List<Map<String, dynamic>> acyUserData = [];
+    acyUserDataX = await DatabaseMethods().getACYUser(userID);
+    // acyUserDataX.forEach((key, value) {
+    //   acyUserData.add(value);
+    // });
+
+
+    print(acyUserDataX);
+    return acyUserDataX;
   }
 
 

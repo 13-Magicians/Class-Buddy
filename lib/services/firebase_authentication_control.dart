@@ -102,6 +102,7 @@ class AuthMethods {
         "name": userDetails.displayName,
         "imgUrl": userDetails.photoURL,
         "accessToken":credential.accessToken,
+
       };
 
       loggedUser.write('user', userBData);

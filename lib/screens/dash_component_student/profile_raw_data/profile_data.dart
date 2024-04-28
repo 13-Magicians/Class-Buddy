@@ -1,6 +1,7 @@
 import 'package:classbuddy/operations/user_handler.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import '../../../operations/course_handler.dart';
 import '../../../services/firebase_authentication_control.dart';
 
 class StudentProfile extends StatefulWidget {
@@ -11,9 +12,17 @@ class StudentProfile extends StatefulWidget {
 }
 
 class _StudentProfileState extends State<StudentProfile> {
+  List<Map<String, dynamic>> acYearList = [];
   @override
   void initState() {
     super.initState();
+    loadData();
+  }
+
+  loadData() async {
+    acYearList = await AcademicOperation().getAcYears();
+    print(acYearList);
+    setState(() {});
   }
 
   @override
@@ -42,6 +51,7 @@ class _StudentProfileState extends State<StudentProfile> {
                       ? DateFormat('\nhh:mm a  EEE d MMM y').format(
                     DateTime.fromMillisecondsSinceEpoch(user['lastLog'] as int),) : '';
                   final role = user['role'] ?? '';
+                  final acyear = user['academicYear'] ?? '';
                   final imgUrl = user['imgUrl'] ?? 'http://www.gravatar.com/avatar/?d=mp';
                   return Stack(
                       alignment: Alignment.center,
@@ -81,6 +91,22 @@ class _StudentProfileState extends State<StudentProfile> {
                                   const TextStyle(fontSize: 16, color: Colors.grey),
                                 ),
                                 const SizedBox(height: 42),
+                                Card(
+                                  color: Colors.amber,
+                                  child: Container(
+                                    width: 300,
+                                    padding: EdgeInsets.all(8.0),
+                                    child: DocumentSelector(
+                                      currentYear: acyear,
+                                      documents: acYearList,
+                                      onChanged: (selectedDocumentId) {
+                                        // Handle selection here
+                                        print('Selected Document ID: $selectedDocumentId');
+                                        CheckUser().userACYUpdate(selectedDocumentId);
+                                      },
+                                    ),
+                                  ),
+                                ),
                                 Card(
                                   color: Colors.deepOrange.shade100,
                                   shape: RoundedRectangleBorder(
@@ -132,6 +158,52 @@ class _StudentProfileState extends State<StudentProfile> {
             }
           },
         ),
+      ),
+    );
+  }
+}
+
+class DocumentSelector extends StatefulWidget {
+  final String currentYear;
+  final List<Map<String, dynamic>> documents;
+  final void Function(String) onChanged;
+
+  const DocumentSelector({
+    Key? key,
+    required this.currentYear,
+    required this.documents,
+    required this.onChanged,
+  }) : super(key: key);
+
+  @override
+  _DocumentSelectorState createState() => _DocumentSelectorState();
+}
+
+class _DocumentSelectorState extends State<DocumentSelector> {
+  String? _selectedDocumentId;
+
+
+
+  @override
+  Widget build(BuildContext context) {
+    return DropdownButtonFormField<String>(
+      value: _selectedDocumentId,
+      onChanged: (newValue) {
+        setState(() {
+          _selectedDocumentId = newValue;
+          widget.onChanged(newValue!);
+        });
+      },
+      items: widget.documents.map<DropdownMenuItem<String>>((document) {
+        return DropdownMenuItem<String>(
+          value: document['documentID'],
+          child: Text(document['documentID']),
+        );
+      }).toList(),
+      decoration: InputDecoration(hintText: 'Select Academic Year',
+        contentPadding: EdgeInsets.all(8),
+        labelText: widget.currentYear,
+        border: OutlineInputBorder(),
       ),
     );
   }
