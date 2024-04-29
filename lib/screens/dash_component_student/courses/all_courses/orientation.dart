@@ -65,6 +65,9 @@ class _DisplayAllCourseOrientationState extends State<DisplayAllCourseOrientatio
                     onSubmitted: (passcode) {
                       // Do something with the submitted passcode
                       print('Submitted passcode: $passcode');
+                      StudentOperations().enrollToCourse('01', course['courseCode'], passcode);
+
+
                     },
                   );
                 },
@@ -76,6 +79,8 @@ class _DisplayAllCourseOrientationState extends State<DisplayAllCourseOrientatio
       },
     );
   }
+
+  // popup dialog
 
 }
 

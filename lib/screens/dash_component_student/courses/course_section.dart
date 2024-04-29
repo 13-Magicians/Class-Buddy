@@ -3,6 +3,7 @@ import 'package:classbuddy/screens/dash_component_student/courses/all_courses/fi
 import 'package:flutter/material.dart';
 import '../../../operations/student_course.dart';
 import 'all_courses/orientation.dart';
+import 'my_courses/orientation.dart';
 
 class CourseSection extends StatefulWidget {
   const CourseSection({super.key});
@@ -52,7 +53,9 @@ class _MyCourseMenuState extends State<MyCourseMenu> {
                   icon: const Icon(Icons.arrow_forward_ios_outlined)
               ),
               leading: const Icon(Icons.sailing),
-              onTap: () => CheckUser().getUserACY(),
+              onTap: () {
+                Navigator.push(context, MaterialPageRoute(builder: (context) => const DisplayMyCourseOrientation()),);
+              },
 
             ),
           ),
@@ -191,31 +194,31 @@ class _AllCourseMenuState extends State<AllCourseMenu> {
 
 
 
-
-
-class MyCourses extends StatefulWidget {
-  const MyCourses({super.key});
-
-  @override
-  State<MyCourses> createState() => _MyCoursesState();
-}
-
-class _MyCoursesState extends State<MyCourses> {
-  @override
-  Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: FutureBuilder<List<Map<String, dynamic>>>(
-          future: StudentOperations().getMyCourses(),
-          builder: (context, snapshot) {
-            return ListView.builder(
-              itemBuilder: (context, index) {
-                return const Placeholder();
-
-            },);
-          },),
-    );
-  }
-}
+//
+//
+// class MyCourses extends StatefulWidget {
+//   const MyCourses({super.key});
+//
+//   @override
+//   State<MyCourses> createState() => _MyCoursesState();
+// }
+//
+// class _MyCoursesState extends State<MyCourses> {
+//   @override
+//   Widget build(BuildContext context) {
+//     return SingleChildScrollView(
+//       child: FutureBuilder<List<Map<String, dynamic>>>(
+//           future: StudentOperations().getMyCourses(),
+//           builder: (context, snapshot) {
+//             return ListView.builder(
+//               itemBuilder: (context, index) {
+//                 return const Placeholder();
+//
+//             },);
+//           },),
+//     );
+//   }
+// }
 
 
 
