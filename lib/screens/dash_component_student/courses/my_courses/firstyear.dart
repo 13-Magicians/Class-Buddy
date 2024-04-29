@@ -62,7 +62,7 @@ class _DisplayMyCourseFirstYearState extends State<DisplayMyCourseFirstYear> {
   Widget buildCourseList(List<Map<String, dynamic>> courses) {
     if (courses.isEmpty) {
       return Center(
-        child: Text('Nothing found'),
+        child: Text('Nothing found\n or\n You need to select Academic Year in Profile section',),
       );
     }
     return ListView.builder(

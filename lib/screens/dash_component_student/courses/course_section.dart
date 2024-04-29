@@ -3,7 +3,11 @@ import 'package:classbuddy/screens/dash_component_student/courses/all_courses/fi
 import 'package:flutter/material.dart';
 import '../../../operations/student_course.dart';
 import 'all_courses/orientation.dart';
+import 'my_courses/firstyear.dart';
+import 'my_courses/fourthyear.dart';
 import 'my_courses/orientation.dart';
+import 'my_courses/secondyear.dart';
+import 'my_courses/thirdyear.dart';
 
 class CourseSection extends StatefulWidget {
   const CourseSection({super.key});
@@ -67,6 +71,9 @@ class _MyCourseMenuState extends State<MyCourseMenu> {
                   icon: const Icon(Icons.arrow_forward_ios_outlined)
               ),
               leading: const Icon(Icons.sailing),
+              onTap: () {
+                Navigator.push(context, MaterialPageRoute(builder: (context) => const DisplayMyCourseFirstYear()),);
+              },
 
 
             ),
@@ -79,6 +86,10 @@ class _MyCourseMenuState extends State<MyCourseMenu> {
                   icon: const Icon(Icons.arrow_forward_ios_outlined)
               ),
               leading: const Icon(Icons.sailing),
+              onTap: () {
+                Navigator.push(context, MaterialPageRoute(builder: (context) => const DisplayMyCourseSecondYear()),);
+              },
+
 
             ),
           ),
@@ -90,6 +101,9 @@ class _MyCourseMenuState extends State<MyCourseMenu> {
                   icon: const Icon(Icons.arrow_forward_ios_outlined)
               ),
               leading: const Icon(Icons.sailing),
+              onTap: () {
+                Navigator.push(context, MaterialPageRoute(builder: (context) => const DisplayMyCourseThirdYear()),);
+              },
 
             ),
           ),
@@ -101,6 +115,9 @@ class _MyCourseMenuState extends State<MyCourseMenu> {
                   icon: const Icon(Icons.arrow_forward_ios_outlined)
               ),
               leading: const Icon(Icons.sailing),
+              onTap: () {
+                Navigator.push(context, MaterialPageRoute(builder: (context) => const DisplayMyCourseFourthYear()),);
+              },
 
             ),
           ),
@@ -159,6 +176,9 @@ class _AllCourseMenuState extends State<AllCourseMenu> {
                   icon: const Icon(Icons.arrow_forward_ios_outlined)
               ),
               leading: const Icon(Icons.sailing),
+              onTap: () {
+                Navigator.push(context, MaterialPageRoute(builder: (context) => const DisplayMyCourseOrientation()),);
+              },
 
             ),
           ),
@@ -170,6 +190,9 @@ class _AllCourseMenuState extends State<AllCourseMenu> {
                   icon: const Icon(Icons.arrow_forward_ios_outlined)
               ),
               leading: const Icon(Icons.sailing),
+              onTap: () {
+                Navigator.push(context, MaterialPageRoute(builder: (context) => const DisplayMyCourseOrientation()),);
+              },
 
             ),
           ),
@@ -181,6 +204,9 @@ class _AllCourseMenuState extends State<AllCourseMenu> {
                   icon: const Icon(Icons.arrow_forward_ios_outlined)
               ),
               leading: const Icon(Icons.sailing),
+              onTap: () {
+                Navigator.push(context, MaterialPageRoute(builder: (context) => const DisplayMyCourseOrientation()),);
+              },
 
             ),
           ),
