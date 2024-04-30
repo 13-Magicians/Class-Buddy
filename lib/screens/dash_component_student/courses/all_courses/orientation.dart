@@ -42,7 +42,7 @@ class _DisplayAllCourseOrientationState extends State<DisplayAllCourseOrientatio
   }
 
   Widget buildCourseList(List<Map<String, dynamic>> courses) {
-    if (courses.isEmpty || courses == null) {
+    if (courses.isEmpty) {
       return Center(
         child: Text('Nothing found\n or\n You need to select Academic Year in Profile section',),
       );

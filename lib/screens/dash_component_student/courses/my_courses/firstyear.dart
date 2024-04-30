@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../../operations/student_course.dart';
+import 'courseinside.dart';
 
 class DisplayMyCourseFirstYear extends StatefulWidget {
   const DisplayMyCourseFirstYear({super.key});
@@ -27,11 +28,11 @@ class _DisplayMyCourseFirstYearState extends State<DisplayMyCourseFirstYear> {
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return Center(child: CircularProgressIndicator());
-                  } else if (snapshot.hasError) {
-                    return Center(child: Text('Error: ${snapshot.error}'));
+                  // } else if (snapshot.hasError) {
+                  //   return Center(child: Text('Error: ${snapshot.error}'));
                   } else {
                     final courses = snapshot.data ?? [];
-                    return buildCourseList(courses);
+                    return buildCourseList(courses,'11');
                   }
                 },
               ),
@@ -44,11 +45,11 @@ class _DisplayMyCourseFirstYearState extends State<DisplayMyCourseFirstYear> {
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return Center(child: CircularProgressIndicator());
-                  } else if (snapshot.hasError) {
-                    return Center(child: Text('Error: ${snapshot.error}'));
+                  // } else if (snapshot.hasError) {
+                  //   return Center(child: Text('Error: ${snapshot.error}'));
                   } else {
                     final courses = snapshot.data ?? [];
-                    return buildCourseList(courses);
+                    return buildCourseList(courses,'12');
                   }
                 },
               ),
@@ -59,7 +60,7 @@ class _DisplayMyCourseFirstYearState extends State<DisplayMyCourseFirstYear> {
     );
   }
 
-  Widget buildCourseList(List<Map<String, dynamic>> courses) {
+  Widget buildCourseList(List<Map<String, dynamic>> courses, String semNo) {
     if (courses.isEmpty) {
       return Center(
         child: Text('Nothing found\n or\n You need to select Academic Year in Profile section',),
@@ -76,7 +77,7 @@ class _DisplayMyCourseFirstYearState extends State<DisplayMyCourseFirstYear> {
             title: Text(course['courseCode'] ?? ''),
             subtitle: Text(course['subjectName'] ?? ''),
             onTap: () {
-
+              Navigator.push(context, MaterialPageRoute(builder: (context) => MyCourseInside(course['courseCode'],course['subjectName'],semNo)),);
             },
             // Add other information if needed
           ),

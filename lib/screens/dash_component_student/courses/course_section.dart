@@ -1,8 +1,9 @@
-import 'package:classbuddy/operations/user_handler.dart';
 import 'package:classbuddy/screens/dash_component_student/courses/all_courses/firstyear.dart';
 import 'package:flutter/material.dart';
-import '../../../operations/student_course.dart';
+import 'all_courses/fourthyear.dart';
 import 'all_courses/orientation.dart';
+import 'all_courses/secondyear.dart';
+import 'all_courses/thirdyear.dart';
 import 'my_courses/firstyear.dart';
 import 'my_courses/fourthyear.dart';
 import 'my_courses/orientation.dart';
@@ -177,7 +178,7 @@ class _AllCourseMenuState extends State<AllCourseMenu> {
               ),
               leading: const Icon(Icons.sailing),
               onTap: () {
-                Navigator.push(context, MaterialPageRoute(builder: (context) => const DisplayMyCourseOrientation()),);
+                Navigator.push(context, MaterialPageRoute(builder: (context) => const DisplayAllCourseSecondYear()),);
               },
 
             ),
@@ -191,7 +192,7 @@ class _AllCourseMenuState extends State<AllCourseMenu> {
               ),
               leading: const Icon(Icons.sailing),
               onTap: () {
-                Navigator.push(context, MaterialPageRoute(builder: (context) => const DisplayMyCourseOrientation()),);
+                Navigator.push(context, MaterialPageRoute(builder: (context) => const DisplayAllCourseThirdYear()),);
               },
 
             ),
@@ -205,7 +206,7 @@ class _AllCourseMenuState extends State<AllCourseMenu> {
               ),
               leading: const Icon(Icons.sailing),
               onTap: () {
-                Navigator.push(context, MaterialPageRoute(builder: (context) => const DisplayMyCourseOrientation()),);
+                Navigator.push(context, MaterialPageRoute(builder: (context) => const DisplayAllCourseFourthYear()),);
               },
 
             ),
@@ -215,36 +216,4 @@ class _AllCourseMenuState extends State<AllCourseMenu> {
     );
   }
 }
-
-
-
-
-
-//
-//
-// class MyCourses extends StatefulWidget {
-//   const MyCourses({super.key});
-//
-//   @override
-//   State<MyCourses> createState() => _MyCoursesState();
-// }
-//
-// class _MyCoursesState extends State<MyCourses> {
-//   @override
-//   Widget build(BuildContext context) {
-//     return SingleChildScrollView(
-//       child: FutureBuilder<List<Map<String, dynamic>>>(
-//           future: StudentOperations().getMyCourses(),
-//           builder: (context, snapshot) {
-//             return ListView.builder(
-//               itemBuilder: (context, index) {
-//                 return const Placeholder();
-//
-//             },);
-//           },),
-//     );
-//   }
-// }
-
-
 

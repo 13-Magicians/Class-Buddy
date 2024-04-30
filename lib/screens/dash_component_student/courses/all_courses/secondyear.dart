@@ -32,7 +32,7 @@ class _DisplayAllCourseSecondYearState extends State<DisplayAllCourseSecondYear>
                     return Center(child: Text('Error: ${snapshot.error}'));
                   } else {
                     final courses = snapshot.data ?? [];
-                    return buildCourseList(courses);
+                    return buildCourseList(courses, '21');
                   }
                 },
               ),
@@ -49,7 +49,7 @@ class _DisplayAllCourseSecondYearState extends State<DisplayAllCourseSecondYear>
                     return Center(child: Text('Error: ${snapshot.error}'));
                   } else {
                     final courses = snapshot.data ?? [];
-                    return buildCourseList(courses);
+                    return buildCourseList(courses, '22');
                   }
                 },
               ),
@@ -60,10 +60,10 @@ class _DisplayAllCourseSecondYearState extends State<DisplayAllCourseSecondYear>
     );
   }
 
-  Widget buildCourseList(List<Map<String, dynamic>> courses) {
+  Widget buildCourseList(List<Map<String, dynamic>> courses, String semNo) {
     if (courses.isEmpty) {
       return Center(
-        child: Text('Nothing found'),
+        child: Text('Nothing found\n or\n You need to select Academic Year in Profile section'),
       );
     }
     return ListView.builder(
@@ -84,6 +84,7 @@ class _DisplayAllCourseSecondYearState extends State<DisplayAllCourseSecondYear>
                     onSubmitted: (passcode) {
                       // Do something with the submitted passcode
                       print('Submitted passcode: $passcode');
+                      StudentOperations().enrollToCourse(semNo, course['courseCode'], passcode);
                     },
                   );
                 },

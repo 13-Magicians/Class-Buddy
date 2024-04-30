@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:classbuddy/services/firebase_std_course_control.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get_storage/get_storage.dart';
@@ -64,26 +66,27 @@ class StudentOperations {
 
   }
 
+  Future<Map<String, dynamic>> getMyCourseData(String semNo,String courseId) async {
+    final localUser = GetStorage();
+    final userData = localUser.read('user');
+    final acYear = userData['academicYear'];
+
+    return await StudentCourseCtrl().getInCourseData(acYear, semNo, courseId);
+
+  }
+
+  Future<List<Map<String, dynamic>>> getMyCourseTopic(String semNo, String courseId) async {
+    final localUser = GetStorage();
+    final userData = localUser.read('user');
+    final acYear = userData['academicYear'];
+    return await StudentCourseCtrl().getInCourseTopic(acYear, semNo, courseId);
+
+  }
+
+
+
 
 
 
 }
 
-
-// class AcademicOperation {
-//   FirebaseFirestore db = FirebaseFirestore.instance;
-//
-//   Future getAcYears() async {
-//     QuerySnapshot querySnapshot = await db.collection('AcademicYear').get();
-//     List<String> documentIds = [];
-//
-//     querySnapshot.docs.forEach((doc) {
-//       documentIds.add(doc.id);
-//     });
-//     print("=====================================");
-//
-//     print(documentIds);
-//
-//   }
-//
-// }

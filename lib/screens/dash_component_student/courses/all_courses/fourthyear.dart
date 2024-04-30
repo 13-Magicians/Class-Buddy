@@ -3,14 +3,14 @@ import 'package:flutter/material.dart';
 
 import '../../../../operations/student_course.dart';
 
-class DisplayAllCourseFirstYear extends StatefulWidget {
-  const DisplayAllCourseFirstYear({super.key});
+class DisplayAllCourseFourthYear extends StatefulWidget {
+  const DisplayAllCourseFourthYear({super.key});
 
   @override
-  State<DisplayAllCourseFirstYear> createState() => _DisplayAllCourseFirstYearState();
+  State<DisplayAllCourseFourthYear> createState() => _DisplayAllCourseFourthYearState();
 }
 
-class _DisplayAllCourseFirstYearState extends State<DisplayAllCourseFirstYear> {
+class _DisplayAllCourseFourthYearState extends State<DisplayAllCourseFourthYear> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -32,7 +32,7 @@ class _DisplayAllCourseFirstYearState extends State<DisplayAllCourseFirstYear> {
                     return Center(child: Text('Error: ${snapshot.error}'));
                   } else {
                     final courses = snapshot.data ?? [];
-                    return buildCourseList(courses);
+                    return buildCourseList(courses, '41');
                   }
                 },
               ),
@@ -49,7 +49,7 @@ class _DisplayAllCourseFirstYearState extends State<DisplayAllCourseFirstYear> {
                     return Center(child: Text('Error: ${snapshot.error}'));
                   } else {
                     final courses = snapshot.data ?? [];
-                    return buildCourseList(courses);
+                    return buildCourseList(courses, '42');
                   }
                 },
               ),
@@ -60,10 +60,10 @@ class _DisplayAllCourseFirstYearState extends State<DisplayAllCourseFirstYear> {
     );
   }
 
-  Widget buildCourseList(List<Map<String, dynamic>> courses) {
+  Widget buildCourseList(List<Map<String, dynamic>> courses, String semNo) {
     if (courses.isEmpty) {
       return Center(
-        child: Text('Nothing found'),
+        child: Text('Nothing found\n or\n You need to select Academic Year in Profile section'),
       );
     }
     return ListView.builder(
@@ -84,6 +84,7 @@ class _DisplayAllCourseFirstYearState extends State<DisplayAllCourseFirstYear> {
                     onSubmitted: (passcode) {
                       // Do something with the submitted passcode
                       print('Submitted passcode: $passcode');
+                      StudentOperations().enrollToCourse(semNo, course['courseCode'], passcode);
                     },
                   );
                 },

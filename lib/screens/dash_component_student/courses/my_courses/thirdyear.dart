@@ -27,8 +27,8 @@ class _DisplayMyCourseThirdYearState extends State<DisplayMyCourseThirdYear> {
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return Center(child: CircularProgressIndicator());
-                  } else if (snapshot.hasError) {
-                    return Center(child: Text('Error: ${snapshot.error}'));
+                  // } else if (snapshot.hasError) {
+                  //   return Center(child: Text('Error: ${snapshot.error}'));
                   } else {
                     final courses = snapshot.data ?? [];
                     return buildCourseList(courses);
@@ -44,8 +44,8 @@ class _DisplayMyCourseThirdYearState extends State<DisplayMyCourseThirdYear> {
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return Center(child: CircularProgressIndicator());
-                  } else if (snapshot.hasError) {
-                    return Center(child: Text('Error: ${snapshot.error}'));
+                  // } else if (snapshot.hasError) {
+                  //   return Center(child: Text('Error: ${snapshot.error}'));
                   } else {
                     final courses = snapshot.data ?? [];
                     return buildCourseList(courses);
