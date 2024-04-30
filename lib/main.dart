@@ -1,4 +1,3 @@
-import 'package:classbuddy/screens/common_components/com_web_view.dart';
 import 'package:classbuddy/screens/dashboard_admin.dart';
 import 'package:classbuddy/screens/dashboard_lecturer.dart';
 import 'package:classbuddy/screens/screen_login.dart';
@@ -6,9 +5,7 @@ import 'package:classbuddy/screens/screen_onboard.dart';
 import 'package:classbuddy/screens/screen_splash.dart';
 import 'package:classbuddy/screens/dashboard_student.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:device_preview/device_preview.dart';
 import 'package:get_storage/get_storage.dart';
 import 'firebase_options.dart';
 
@@ -20,11 +17,11 @@ Future<void> main() async {
   await GetStorage.init();
 
   runApp(
-    // ClassBuddy(),
-    DevicePreview(
-      enabled: !kReleaseMode,
-      builder: (context) => const ClassBuddy(),
-    ),
+    const ClassBuddy()
+    // DevicePreview(
+    //   enabled: !kReleaseMode,
+    //   builder: (context) => const ClassBuddy(),
+    // ),
   );
 }
 
@@ -65,8 +62,6 @@ class ClassBuddy extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      locale: DevicePreview.locale(context),
-      builder: DevicePreview.appBuilder,
       title: 'Class Buddy',
       theme: ThemeData.light(),
       home: const CBSplashScr(version),

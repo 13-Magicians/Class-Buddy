@@ -21,16 +21,11 @@ class _StuDashState extends State<StuDash> {
   static const List<Widget> _widgetOptions = <Widget>[
     stuExplore(),
     CourseSection(),
-    // Text('Search Page', style: TextStyle(fontSize: 35, fontWeight: FontWeight.bold)),
     AIChat(),
     StudentProfile(),
   ];
 
-  // void _onItemTapped(int index) {
-  //   setState(() {
-  //     currentPageIndex = index;
-  //   });
-  // }
+
 
   @override
   Widget build(BuildContext context) {
