@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../../operations/student_course.dart';
+import 'courseinside.dart';
 
 class DisplayMyCourseSecondYear extends StatefulWidget {
   const DisplayMyCourseSecondYear({super.key});
@@ -31,7 +32,7 @@ class _DisplayMyCourseSecondYearState extends State<DisplayMyCourseSecondYear> {
                   //   return Center(child: Text('Error: ${snapshot.error}'));
                   } else {
                     final courses = snapshot.data ?? [];
-                    return buildCourseList(courses);
+                    return buildCourseList(courses,'21');
                   }
                 },
               ),
@@ -48,7 +49,7 @@ class _DisplayMyCourseSecondYearState extends State<DisplayMyCourseSecondYear> {
                   //   return Center(child: Text('Error: ${snapshot.error}'));
                   } else {
                     final courses = snapshot.data ?? [];
-                    return buildCourseList(courses);
+                    return buildCourseList(courses,'22');
                   }
                 },
               ),
@@ -59,7 +60,7 @@ class _DisplayMyCourseSecondYearState extends State<DisplayMyCourseSecondYear> {
     );
   }
 
-  Widget buildCourseList(List<Map<String, dynamic>> courses) {
+  Widget buildCourseList(List<Map<String, dynamic>> courses, String semNo) {
     if (courses.isEmpty) {
       return Center(
         child: Text('Nothing found\n or\n You need to select Academic Year in Profile section',),
@@ -76,7 +77,7 @@ class _DisplayMyCourseSecondYearState extends State<DisplayMyCourseSecondYear> {
             title: Text(course['courseCode'] ?? ''),
             subtitle: Text(course['subjectName'] ?? ''),
             onTap: () {
-
+              Navigator.push(context, MaterialPageRoute(builder: (context) => MyCourseInside(course['courseCode'],course['subjectName'],semNo)),);
             },
             // Add other information if needed
           ),

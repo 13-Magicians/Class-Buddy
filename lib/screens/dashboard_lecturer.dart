@@ -2,6 +2,8 @@ import 'package:classbuddy/screens/common_components/chat_with_ai.dart';
 import 'package:classbuddy/screens/dash_component_lecturer/manage_my_course/my_fourth_year.dart';
 import 'package:classbuddy/services/firebase_authentication_control.dart';
 import 'package:flutter/material.dart';
+import 'common_components/explo_carosel.dart';
+import 'common_components/info_card.dart';
 import 'dash_component_lecturer/all_courses/all_first_year.dart';
 import 'dash_component_lecturer/all_courses/all_fourth_year.dart';
 import 'dash_component_lecturer/all_courses/all_orientation.dart';
@@ -25,8 +27,8 @@ class _LecDashState extends State<LecDash> {
   NavigationDestinationLabelBehavior labelBehavior =
       NavigationDestinationLabelBehavior.alwaysShow;
   static const List<Widget> _widgetOptions = <Widget>[
+    LecExplore(),
     MangeCourse(),
-    ExploreLD(),
     AIChat(),
     LecturerProfile(),
   ];
@@ -603,6 +605,103 @@ class _MenuCardsACState extends State<MenuCardsAC> {
   }
 
 }
+
+class LecExplore extends StatefulWidget {
+  const LecExplore({super.key});
+
+  @override
+  State<LecExplore> createState() => _LecExploreState();
+}
+
+class _LecExploreState extends State<LecExplore> {
+  @override
+  Widget build(BuildContext context) {
+    return SafeArea(
+        child: Scaffold(
+          appBar: AppBar(flexibleSpace: SearchBarApp()),
+          body: Column(
+            children: [
+              Flexible(child: Container(height: 300,
+                  child: CustomCarouselFB2())),
+              Padding(
+                padding: const EdgeInsets.all(18.0),
+                child: InfoCard(title: 'New Course', onMoreTap: () {},),
+              ),
+            ],
+          ),
+
+
+        )
+    );
+  }
+}
+
+class SearchBarApp extends StatefulWidget {
+  const SearchBarApp({super.key});
+
+  @override
+  State<SearchBarApp> createState() => _SearchBarAppState();
+}
+
+class _SearchBarAppState extends State<SearchBarApp> {
+
+  @override
+  Widget build(BuildContext context) {
+
+
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: SearchAnchor(
+          builder: (BuildContext context, SearchController controller) {
+            return SearchBar(
+              onSubmitted: (value) {
+                print(value);
+              },
+              hintText: 'Search Course',
+              backgroundColor: MaterialStatePropertyAll(Colors.redAccent),
+              shape: MaterialStatePropertyAll(RoundedRectangleBorder(borderRadius: BorderRadius.circular(12))),
+              controller: controller,
+              padding: const MaterialStatePropertyAll<EdgeInsets>(
+                  EdgeInsets.symmetric(horizontal: 16.0)),
+              onTap: () {
+                controller.openView();
+              },
+              onChanged: (_) {
+                controller.openView();
+              },
+              leading: const Icon(Icons.search),
+              trailing: <Widget>[
+                Tooltip(
+                  message: 'Search Course',
+                  child: IconButton(
+                    onPressed: () {
+
+                    },
+                    icon: const Icon(Icons.arrow_forward),
+                  ),
+                )
+              ],
+            );
+          }, suggestionsBuilder:
+          (BuildContext context, SearchController controller) {
+        return List<ListTile>.generate(5, (int index) {
+          final String item = 'item $index';
+          return ListTile(
+            title: Text(item),
+            onTap: () {
+              setState(() {
+                controller.closeView(item);
+              });
+            },
+          );
+        });
+      }),
+    );
+
+
+  }
+}
+
 
 
 

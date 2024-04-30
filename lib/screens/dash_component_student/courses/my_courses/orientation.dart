@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../../operations/student_course.dart';
+import 'courseinside.dart';
 
 class DisplayMyCourseOrientation extends StatefulWidget {
   const DisplayMyCourseOrientation({super.key});
@@ -30,7 +31,7 @@ class _DisplayMyCourseOrientationState extends State<DisplayMyCourseOrientation>
                   //   return Center(child: Text('Error: ${snapshot.error}'));
                   } else {
                     final courses = snapshot.data ?? [];
-                    return buildCourseList(courses);
+                    return buildCourseList(courses,'01');
 
                   }
                 },
@@ -42,7 +43,7 @@ class _DisplayMyCourseOrientationState extends State<DisplayMyCourseOrientation>
     );
   }
 
-  Widget buildCourseList(List<Map<String, dynamic>> courses) {
+  Widget buildCourseList(List<Map<String, dynamic>> courses,String semNo) {
     if (courses.isEmpty) {
       return Center(
         child: Text('Nothing found\n or\n You need to select Academic Year in Profile section'),
@@ -59,7 +60,7 @@ class _DisplayMyCourseOrientationState extends State<DisplayMyCourseOrientation>
             title: Text(course['courseCode'] ?? ''),
             subtitle: Text(course['subjectName'] ?? ''),
             onTap: () {
-
+              Navigator.push(context, MaterialPageRoute(builder: (context) => MyCourseInside(course['courseCode'],course['subjectName'],semNo)),);
             },
             // Add other information if needed
           ),

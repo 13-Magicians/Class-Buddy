@@ -4,6 +4,8 @@ import 'package:classbuddy/services/firebase_user_control.dart';
 import 'package:flutter/material.dart';
 import '../services/firebase_course_control.dart';
 import '../services/firebase_department_control.dart';
+import 'common_components/explo_carosel.dart';
+import 'common_components/info_card.dart';
 import 'dash_component_admin/manage_academic/section_academic.dart';
 import 'dash_component_admin/manage_users/section_users.dart';
 import 'dash_component_admin/profile_raw_data/profile_data.dart';
@@ -22,8 +24,7 @@ class _AdminDashState extends State<AdminDash> {
   NavigationDestinationLabelBehavior labelBehavior =
       NavigationDestinationLabelBehavior.alwaysShow;
   static const List<Widget> _widgetOptions = <Widget>[
-    Text('Explore Page',
-        style: TextStyle(fontSize: 35, fontWeight: FontWeight.bold)),
+    AdminExplore(),
     AMangeDep(),
     AIChat(),
     AdminProfile(),
@@ -153,3 +154,102 @@ class _AMangeDepState extends State<AMangeDep> with TickerProviderStateMixin {
     );
   }
 }
+
+class AdminExplore extends StatefulWidget {
+  const AdminExplore({super.key});
+
+  @override
+  State<AdminExplore> createState() => _AdminExploreState();
+}
+
+class _AdminExploreState extends State<AdminExplore> {
+  @override
+  Widget build(BuildContext context) {
+    return SafeArea(
+        child: Scaffold(
+          appBar: AppBar(flexibleSpace: SearchBarApp()),
+          body: Column(
+            children: [
+              Flexible(child: Container(height: 300,
+                  child: CustomCarouselFB2())),
+              Padding(
+                padding: const EdgeInsets.all(18.0),
+                child: InfoCard(title: 'New Course', onMoreTap: () {},),
+              ),
+            ],
+          ),
+
+
+        )
+    );
+  }
+}
+
+class SearchBarApp extends StatefulWidget {
+  const SearchBarApp({super.key});
+
+  @override
+  State<SearchBarApp> createState() => _SearchBarAppState();
+}
+
+class _SearchBarAppState extends State<SearchBarApp> {
+
+  @override
+  Widget build(BuildContext context) {
+
+
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: SearchAnchor(
+          builder: (BuildContext context, SearchController controller) {
+            return SearchBar(
+              onSubmitted: (value) {
+                print(value);
+              },
+              hintText: 'Search Course',
+              backgroundColor: MaterialStatePropertyAll(Colors.redAccent),
+              shape: MaterialStatePropertyAll(RoundedRectangleBorder(borderRadius: BorderRadius.circular(12))),
+              controller: controller,
+              padding: const MaterialStatePropertyAll<EdgeInsets>(
+                  EdgeInsets.symmetric(horizontal: 16.0)),
+              onTap: () {
+                controller.openView();
+              },
+              onChanged: (_) {
+                controller.openView();
+              },
+              leading: const Icon(Icons.search),
+              trailing: <Widget>[
+                Tooltip(
+                  message: 'Search Course',
+                  child: IconButton(
+                    onPressed: () {
+
+                    },
+                    icon: const Icon(Icons.arrow_forward),
+                  ),
+                )
+              ],
+            );
+          }, suggestionsBuilder:
+          (BuildContext context, SearchController controller) {
+        return List<ListTile>.generate(5, (int index) {
+          final String item = 'item $index';
+          return ListTile(
+            title: Text(item),
+            onTap: () {
+              setState(() {
+                controller.closeView(item);
+              });
+            },
+          );
+        });
+      }),
+    );
+
+
+  }
+}
+
+
+

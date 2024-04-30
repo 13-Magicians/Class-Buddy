@@ -24,10 +24,21 @@ class _CourseSectionState extends State<CourseSection> {
       scrollDirection: Axis.vertical,
       child: Column(
         children: [
-          Text('My Courses'),
+          SizedBox(height: 10,),
+          Card(
+            color: Colors.deepOrangeAccent,
+              child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: 50,vertical: 8),
+            child: Text('My Courses'),
+          )),
           MyCourseMenu(),
           // MyCourses(),
-          Text('All Courses'),
+          Card(
+              color: Colors.deepOrangeAccent,
+              child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: 50,vertical: 8),
+            child: Text('All Courses'),
+          )),
           AllCourseMenu(),
         ],
       ),
@@ -51,7 +62,7 @@ class _MyCourseMenuState extends State<MyCourseMenu> {
       child: Column(
         children: [
           Card(
-            color: Colors.amber,
+            color: Colors.deepOrange.shade100,
             child: ListTile(
               title: const Text('    Orientation'),
               trailing: IconButton(onPressed: () {},
@@ -65,7 +76,7 @@ class _MyCourseMenuState extends State<MyCourseMenu> {
             ),
           ),
           Card(
-            color: Colors.amber,
+            color: Colors.deepOrange.shade100,
             child: ListTile(
               title: const Text('    First Year'),
               trailing: IconButton(onPressed: () {},
@@ -80,7 +91,7 @@ class _MyCourseMenuState extends State<MyCourseMenu> {
             ),
           ),
           Card(
-            color: Colors.amber,
+            color: Colors.deepOrange.shade100,
             child: ListTile(
               title: const Text('    Second Year'),
               trailing: IconButton(onPressed: () {},
@@ -95,7 +106,7 @@ class _MyCourseMenuState extends State<MyCourseMenu> {
             ),
           ),
           Card(
-            color: Colors.amber,
+            color: Colors.deepOrange.shade100,
             child: ListTile(
               title: const Text('    Third Year'),
               trailing: IconButton(onPressed: () {},
@@ -109,7 +120,7 @@ class _MyCourseMenuState extends State<MyCourseMenu> {
             ),
           ),
           Card(
-            color: Colors.amber,
+            color: Colors.deepOrange.shade100,
             child: ListTile(
               title: const Text('    Fourth Year'),
               trailing: IconButton(onPressed: () {},
@@ -143,7 +154,7 @@ class _AllCourseMenuState extends State<AllCourseMenu> {
       child: Column(
         children: [
           Card(
-            color: Colors.amber,
+            color: Colors.deepOrange.shade100,
             child: ListTile(
               title: const Text('    Orientation'),
               trailing: IconButton(onPressed: () {},
@@ -156,7 +167,7 @@ class _AllCourseMenuState extends State<AllCourseMenu> {
             ),
           ),
           Card(
-            color: Colors.amber,
+            color: Colors.deepOrange.shade100,
             child: ListTile(
               title: const Text('    First Year'),
               trailing: IconButton(onPressed: () {},
@@ -170,7 +181,7 @@ class _AllCourseMenuState extends State<AllCourseMenu> {
             ),
           ),
           Card(
-            color: Colors.amber,
+            color: Colors.deepOrange.shade100,
             child: ListTile(
               title: const Text('    Second Year'),
               trailing: IconButton(onPressed: () {},
@@ -184,7 +195,7 @@ class _AllCourseMenuState extends State<AllCourseMenu> {
             ),
           ),
           Card(
-            color: Colors.amber,
+            color: Colors.deepOrange.shade100,
             child: ListTile(
               title: const Text('    Third Year'),
               trailing: IconButton(onPressed: () {},
@@ -198,7 +209,7 @@ class _AllCourseMenuState extends State<AllCourseMenu> {
             ),
           ),
           Card(
-            color: Colors.amber,
+            color: Colors.deepOrange.shade100,
             child: ListTile(
               title: const Text('    Fourth Year'),
               trailing: IconButton(onPressed: () {},
