@@ -31,9 +31,6 @@ class _AcademicSectionState extends State<AcademicSection>
     setState(() {});
   }
 
-  // var userData = 'User';
-  // var items = List<String>.generate(10, (index) => 'Item $index');
-
   @override
   Widget build(BuildContext context) {
     TabController mAcidController =

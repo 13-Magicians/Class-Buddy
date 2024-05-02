@@ -69,8 +69,4 @@ class _DisplayMyCourseOrientationState extends State<DisplayMyCourseOrientation>
     );
   }
 
-
-
-
-
 }

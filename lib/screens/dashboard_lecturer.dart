@@ -168,7 +168,6 @@ class _MangeCourseState extends State<MangeCourse>
   List<Map<String, dynamic>> acYearList = [];
   int currentMCPageIndex = 0;
   int currentACPageIndex = 0;
-
   List<Widget> _mcWidgetOptions = [];
   List<Widget> _acWidgetOptions = [];
 
@@ -296,7 +295,6 @@ class _MangeCourseState extends State<MangeCourse>
     print('dispose called');
     super.dispose();
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -471,13 +469,10 @@ class _MenuCardsMCState extends State<MenuCardsMC> {
       ),
     );
   }
-
 }
-
 
 class MenuCardsAC extends StatefulWidget {
   final Function(int) onACCardPressed;
-
   const MenuCardsAC({Key? key, required this.onACCardPressed}) : super(key: key);
 
   @override
@@ -603,7 +598,6 @@ class _MenuCardsACState extends State<MenuCardsAC> {
       ),
     );
   }
-
 }
 
 class LecExplore extends StatefulWidget {
@@ -647,8 +641,6 @@ class _SearchBarAppState extends State<SearchBarApp> {
 
   @override
   Widget build(BuildContext context) {
-
-
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: SearchAnchor(
@@ -697,8 +689,6 @@ class _SearchBarAppState extends State<SearchBarApp> {
         });
       }),
     );
-
-
   }
 }
 

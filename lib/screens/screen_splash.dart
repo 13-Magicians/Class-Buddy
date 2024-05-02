@@ -18,7 +18,6 @@ class _CBSplashScrState extends State<CBSplashScr>  with TickerProviderStateMixi
   @override
   void initState() {
     super.initState();
-
     _animationController = AnimationController(
       vsync: this,
       duration: const Duration(seconds: 5),
@@ -51,8 +50,6 @@ class _CBSplashScrState extends State<CBSplashScr>  with TickerProviderStateMixi
       }
     });
   }
-
-
   bool _disposed = false;
 
   @override

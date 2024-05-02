@@ -3,7 +3,6 @@ import 'package:get_storage/get_storage.dart';
 import 'package:youtube_explode_dart/youtube_explode_dart.dart';
 import '../services/firebase_course_control.dart';
 
-
 class AcademicOperation {
   FirebaseFirestore db = FirebaseFirestore.instance;
 
@@ -23,9 +22,7 @@ class AcademicOperation {
 
   Future changeACYear(String currentYear,int year) async {
     return DbCourseMethods().changeAcademicYear(currentYear, year);
-
   }
-
 
   Future<void> addCourseACY(String documentID, String subjectName, String courseCode, String selectedDepartment, String passCode, String semNo) async {
     final localUser = GetStorage();
@@ -80,8 +77,5 @@ class AcademicOperation {
     final firstVideoStream = videoStreams.withHighestBitrate();
     return firstVideoStream.url.toString();
   }
-
-
-
 
 }

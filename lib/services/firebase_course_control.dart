@@ -1,12 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-
 class DbCourseMethods {
   FirebaseFirestore db = FirebaseFirestore.instance;
 
   Future<List<Map<String, dynamic>>> getAllCourse() async {
     List<Map<String, dynamic>> documentIdsList = [];
-
     QuerySnapshot querySnapshot = await FirebaseFirestore.instance.collection('AcademicYear').get();
     for (var doc in querySnapshot.docs) {
       documentIdsList.add({'documentId': doc.id});
@@ -32,7 +30,6 @@ class DbCourseMethods {
     } catch (e) {
       print('Error creating document: $e');
     }
-
   }
 
   Future<void> deleteAcademicYear(String documentId) async {
@@ -45,15 +42,11 @@ class DbCourseMethods {
   }
 
   // course functions
-
   Future createCourse(String documentID, courseCode, Map<String, dynamic> courseOriginData, String semNo) async {
     await db.collection('AcademicYear').doc(documentID).collection(semNo).doc(courseCode).set(courseOriginData);
   }
 
   Future<List<Map<String, dynamic>>> getCourseInAY(String documentID, String semNo) async {
-    // List<Map<String, dynamic>> subCollectionNames = [];
-
-    // QuerySnapshot<Map<String, dynamic>> academicYearSnapshot = await db
     List<Map<String, dynamic>> subCollectionNames = [];
     await db
         .collection('AcademicYear')
@@ -67,14 +60,12 @@ class DbCourseMethods {
         subCollectionNames.add(data);
       }
     });
-
     return subCollectionNames;
   }
 
   Future deleteCourse(documentID,courseCode, String semNo) async {
     db.collection('AcademicYear').doc(documentID).collection(semNo).doc(courseCode).delete();
   }
-
 
   Future addTopicToCourse(acYear, Map<String, dynamic> subjectTopic,String semNo,String courseCode) async {
     return await db.collection('AcademicYear').doc(acYear).collection(semNo).doc(courseCode).collection('topics').add(subjectTopic);
@@ -83,7 +74,6 @@ class DbCourseMethods {
   Future removeTopicFromCourse(acYear,String semNo,String courseCode,String docId) async {
     await db.collection('AcademicYear').doc(acYear).collection(semNo).doc(courseCode).collection('topics').doc(docId).delete();
   }
-
 
   Future<List<Map<String, dynamic>>> getTopicsInSubject (acYear, semNo,courseCode) async {
     List<Map<String, dynamic>> receivedList = [];
@@ -97,10 +87,6 @@ class DbCourseMethods {
         'docId':doc.id,
       });
     }
-
     return receivedList;
   }
-
-
-
 }

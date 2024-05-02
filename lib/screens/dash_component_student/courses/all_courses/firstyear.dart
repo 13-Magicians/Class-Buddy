@@ -1,6 +1,4 @@
-
 import 'package:flutter/material.dart';
-
 import '../../../../operations/student_course.dart';
 
 class DisplayAllCourseFirstYear extends StatefulWidget {

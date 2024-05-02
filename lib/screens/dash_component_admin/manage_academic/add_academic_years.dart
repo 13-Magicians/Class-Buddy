@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 import '../../../operations/error_handler.dart';
 import '../../../services/firebase_course_control.dart';
 

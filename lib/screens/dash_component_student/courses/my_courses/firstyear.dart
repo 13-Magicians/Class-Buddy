@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 import '../../../../operations/student_course.dart';
 import 'courseinside.dart';
 
@@ -85,9 +84,4 @@ class _DisplayMyCourseFirstYearState extends State<DisplayMyCourseFirstYear> {
       },
     );
   }
-
-
-
-
-
 }

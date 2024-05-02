@@ -1,11 +1,9 @@
 import 'package:classbuddy/screens/common_components/chat_with_ai.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'common_components/explo_carosel.dart';
 import 'common_components/info_card.dart';
 import 'dash_component_student/courses/course_section.dart';
 import 'dash_component_student/profile_raw_data/profile_data.dart';
-
 
 class StuDash extends StatefulWidget {
   const StuDash({super.key});
@@ -24,8 +22,6 @@ class _StuDashState extends State<StuDash> {
     AIChat(),
     StudentProfile(),
   ];
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -109,8 +105,6 @@ class _stuExploreState extends State<stuExplore> {
               ),
             ],
           ),
-
-
         )
     );
   }
@@ -127,8 +121,6 @@ class _SearchBarAppState extends State<SearchBarApp> {
 
   @override
   Widget build(BuildContext context) {
-
-
     return Padding(
           padding: const EdgeInsets.all(8.0),
           child: SearchAnchor(
@@ -177,7 +169,6 @@ class _SearchBarAppState extends State<SearchBarApp> {
             });
           }),
         );
-
 
   }
 }

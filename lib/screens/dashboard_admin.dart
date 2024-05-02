@@ -10,8 +10,6 @@ import 'dash_component_admin/manage_academic/section_academic.dart';
 import 'dash_component_admin/manage_users/section_users.dart';
 import 'dash_component_admin/profile_raw_data/profile_data.dart';
 
-
-
 class AdminDash extends StatefulWidget {
   const AdminDash({super.key});
 
@@ -29,8 +27,6 @@ class _AdminDashState extends State<AdminDash> {
     AIChat(),
     AdminProfile(),
   ];
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -196,8 +192,6 @@ class _SearchBarAppState extends State<SearchBarApp> {
 
   @override
   Widget build(BuildContext context) {
-
-
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: SearchAnchor(
@@ -246,8 +240,6 @@ class _SearchBarAppState extends State<SearchBarApp> {
         });
       }),
     );
-
-
   }
 }
 

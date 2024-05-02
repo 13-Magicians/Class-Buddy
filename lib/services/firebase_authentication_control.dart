@@ -10,23 +10,9 @@ class AuthMethods {
   final _auth = FirebaseAuth.instance;
   final GoogleSignIn _googleSignIn = GoogleSignIn();
 
-  // getCurrentUser() {
-  //   _auth
-  //       .authStateChanges()
-  //       .listen((User? user) {
-  //         if (user != null) {
-  //           return user.uid;
-  //
-  //         }
-  //       }
-  //       );
-  // }
-
-
   Future<String?> getCurrentUser() async {
     Completer<String?> completer = Completer<String?>();
     bool completed = false;
-
     _auth.authStateChanges().listen((User? user) {
       if (!completed) {
         if (user != null) {
@@ -40,23 +26,6 @@ class AuthMethods {
 
     return completer.future;
   }
-
-
-
-
-
-  // Future getCurrentUser() async {
-  //   String? userId;
-  //   _auth.authStateChanges().listen((User? user) {
-  //     if (user != null) {
-  //       userId = user.uid;
-  //
-  //     } else {
-  //       userId = null;
-  //     }
-  //   });
-  //   return userId;
-  // }
 
   getAccessToken() async {
     final FirebaseAuth firebaseAuth = FirebaseAuth.instance;
@@ -73,7 +42,6 @@ class AuthMethods {
 
   }
 
-
   signInWithGoogle(BuildContext context) async {
     final FirebaseAuth firebaseAuth = FirebaseAuth.instance;
     final GoogleSignIn googleSignIn = GoogleSignIn();
@@ -89,11 +57,6 @@ class AuthMethods {
     UserCredential result = await firebaseAuth.signInWithCredential(credential);
     User? userDetails = result.user;
 
-    // Create email validation
-
-    //------------------------
-
-
     if (userDetails != null) {
 
       Map<String, dynamic> userBData = {
@@ -102,14 +65,11 @@ class AuthMethods {
         "name": userDetails.displayName,
         "imgUrl": userDetails.photoURL,
         "accessToken":credential.accessToken,
-
       };
-
       loggedUser.write('user', userBData);
 
       // final userIdValue = await DatabaseMethods().checkUser(userDetails.uid);
       final userIdValue = await CheckUser().userExist(userDetails.uid);
-
       if (userIdValue == userDetails.uid) {
         Map<String, dynamic> userLastLog = {
           "lastLog": DateTime.now().millisecondsSinceEpoch,
@@ -130,7 +90,6 @@ class AuthMethods {
           "imgUrl": userDetails.photoURL,
           "role":"Student",
           "lastLog": DateTime.now().microsecondsSinceEpoch,
-
         };
         await DatabaseMethods()
             .addUser(userDetails.uid, userInfoMap)
@@ -138,19 +97,14 @@ class AuthMethods {
           Navigator.pushReplacementNamed(context, '/dashStu');
         });
       }
-
     }
-
-
   }
-
   userSignOut(context) async {
     GetStorage().erase();
     await FirebaseAuth.instance.signOut();
     await _googleSignIn.signOut();
     Navigator.pushReplacementNamed(context, '/login');
   }
-
   userChanges() {
     _auth.userChanges().listen((User? user) {
       if (user == null) {

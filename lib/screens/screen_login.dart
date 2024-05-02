@@ -110,7 +110,6 @@ class _CBAppLoginState extends State<CBAppLogin> {
                   height: 45.0,
                   margin: const EdgeInsets.only(top: 40.0),
                   child:
-
                   ElevatedButton(
                     onPressed: _loading ? null : () => _signInWithGoogle(context),
                     style: ElevatedButton.styleFrom(
@@ -156,6 +155,4 @@ class _CBAppLoginState extends State<CBAppLogin> {
       });
     }
   }
-
-
 }

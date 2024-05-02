@@ -12,7 +12,6 @@ class DatabaseMethods {
     return db.collection("Users").doc(userId).update(userLastLog);
   }
 
-
   Future checkUser(String userId) async {
     DocumentSnapshot docSnap = await db.collection("Users").doc(userId).get();
     String dSnapId;
@@ -40,7 +39,6 @@ class DatabaseMethods {
       AppLogger.log('Document does not exist on the database');
     }
     return userData;
-
   }
 
   List<Map<String, dynamic>> userList = [];
@@ -58,13 +56,11 @@ class DatabaseMethods {
       };
       userList.add(userData);
     }
-
     return userList;
   }
 
   Future getAdminsOnly() async {
     List<Map<String, dynamic>> adminUsers = [];
-
     QuerySnapshot querySnapshot = await db.collection('Users').where('role', isEqualTo: 'Admin').get();
     for (var doc in querySnapshot.docs) {
       Map<String, dynamic> userData = {
@@ -77,13 +73,11 @@ class DatabaseMethods {
       };
       adminUsers.add(userData);
     }
-
     return adminUsers;
   }
 
     Future getStudentsOnly() async {
       List<Map<String, dynamic>> studentUsers = [];
-
       QuerySnapshot querySnapshot = await db.collection('Users').where('role', isEqualTo: 'Student').get();
       for (var doc in querySnapshot.docs) {
         Map<String, dynamic> userData = {
@@ -97,8 +91,6 @@ class DatabaseMethods {
         studentUsers.add(userData);
       }
       return studentUsers;
-
-
   }
 
   Future updateUserRole(userId, gRole) async {
@@ -120,7 +112,6 @@ class DatabaseMethods {
       retUsers.add(userData);
     }
     return retUsers;
-
   }
 
   Future updateUserACY(String userId ,Map<String, dynamic> userACY) async {
@@ -138,7 +129,4 @@ class DatabaseMethods {
     }
     return nUserData;
   }
-
-
-
 }

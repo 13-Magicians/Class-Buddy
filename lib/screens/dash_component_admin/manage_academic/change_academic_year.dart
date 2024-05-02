@@ -1,5 +1,3 @@
-
-
 import 'package:flutter/material.dart';
 
 import '../../../operations/course_handler.dart';
@@ -32,7 +30,6 @@ class _ChangeAcademicYearDialogState extends State<ChangeAcademicYearDialog> {
       label: Text(index.toString()),
     ),
   );
-
 
   @override
   Widget build(BuildContext context) {

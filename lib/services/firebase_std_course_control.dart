@@ -5,9 +5,7 @@ class StudentCourseCtrl {
   FirebaseFirestore db = FirebaseFirestore.instance;
 
   Future<List<Map<String, dynamic>>> getAllCourse(acYear, semNo) async {
-
     List<Map<String, dynamic>> documentIdsList = [];
-
     await db
         .collection('AcademicYear')
         .doc(acYear)
@@ -20,7 +18,6 @@ class StudentCourseCtrl {
         documentIdsList.add(data);
       }
     });
-
     return documentIdsList;
   }
   
@@ -38,12 +35,9 @@ class StudentCourseCtrl {
 
   Future<List<Map<String, dynamic>>> getMyEnrolled(String acYear, String semNo, String userID) async {
     List<Map<String, dynamic>> enrolledDocs = [];
-
     QuerySnapshot querySnapshot = await db.collection('AcademicYear').doc(acYear).collection(semNo).get();
-
     for (var doc in querySnapshot.docs) {
       QuerySnapshot enrolledSnapshot = await db.collection('AcademicYear').doc(acYear).collection(semNo).doc(doc.id).collection('enrolled').get();
-
       for (var enrolledDoc in enrolledSnapshot.docs) {
         if (enrolledDoc.id == userID) {
           Map<String, dynamic>? enrolledData = doc.data() as Map<String, dynamic>?; // Explicit casting
@@ -54,10 +48,8 @@ class StudentCourseCtrl {
         }
       }
     }
-
     return enrolledDocs;
   }
-
 
   Future getInCourseData(String acYear, String semNo, String courseId) async {
     DocumentSnapshot doc = await db.collection('AcademicYear').doc(acYear).collection(semNo).doc(courseId).get();
@@ -71,10 +63,7 @@ class StudentCourseCtrl {
         'email':data['email'],
         'imgUrl':data['imgUrl'],
       };
-
-    } else {
-
-    }
+    } else {}
     return courseData;
   }
 
@@ -87,8 +76,6 @@ class StudentCourseCtrl {
     }
     print(topiclist);
     return topiclist;
-
-
   }
 
 

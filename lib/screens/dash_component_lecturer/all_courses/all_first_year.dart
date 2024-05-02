@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import '../../../operations/course_handler.dart';
-// import '../../../services/firebase_department_control.dart';
-
 
 class AACYFirst extends StatefulWidget {
   final Function(int) onACCardPressed;
@@ -15,7 +13,6 @@ class _AACYFirstState extends State<AACYFirst> with WidgetsBindingObserver {
   List<Map<String, dynamic>> acYearList = [];
   List<Map<String, dynamic>> acYCourseListF = [];
   List<Map<String, dynamic>> acYCourseListS = [];
-
   List<TextEditingController> controllers = [];
 
   @override
@@ -24,8 +21,6 @@ class _AACYFirstState extends State<AACYFirst> with WidgetsBindingObserver {
     // WidgetsBinding.instance.addObserver(this);
     loadData();
   }
-
-
 
   loadData() async {
     acYearList = await AcademicOperation().getAcYears();
@@ -287,11 +282,3 @@ class _AACYFirstState extends State<AACYFirst> with WidgetsBindingObserver {
   }
 
 }
-
-// Future<List<String>> _getCourseOptions() async {
-//   List<Map<String, dynamic>> departmentList =
-//       await DataOrgManage().departmentList();
-//   List<String> courseOptions =
-//       departmentList.map((department) => department['id'].toString()).toList();
-//   return courseOptions;
-// }

@@ -1,6 +1,4 @@
-
 import 'package:flutter/material.dart';
-
 import '../../../../operations/student_course.dart';
 
 class DisplayAllCourseFourthYear extends StatefulWidget {
@@ -96,7 +94,6 @@ class _DisplayAllCourseFourthYearState extends State<DisplayAllCourseFourthYear>
       },
     );
   }
-
 }
 
 class PasscodeInputDialog extends StatelessWidget {
@@ -107,7 +104,6 @@ class PasscodeInputDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     String passcode = '';
-
     return AlertDialog(
       title: Text('Enter Passcode'),
       content: TextField(

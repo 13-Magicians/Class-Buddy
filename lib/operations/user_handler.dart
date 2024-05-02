@@ -50,11 +50,6 @@ class CheckUser {
     return lecturesList;
   }
 
-  // Future retAdminUserList() async {
-  //   List<Map<String, dynamic>> AdminsList = [];
-  //
-  // }
-
   Future changeRole(userId, gRole) {
     Map<String, dynamic> userRole = {
       'role': "$gRole",
@@ -65,7 +60,6 @@ class CheckUser {
 
   Future userListByRoles(uRole) async {
     return await DatabaseMethods().getRoleBasedUser(uRole);
-
   }
 
   Future userACYUpdate(String acYear) async {
@@ -85,8 +79,6 @@ class CheckUser {
       'academicYear': acYear,
     };
     localUser.write('user', reUserData);
-
-
     DatabaseMethods().updateUserACY(userData['id'], userACY);
 
   }
@@ -95,20 +87,10 @@ class CheckUser {
     final localUser = GetStorage();
     final userData = localUser.read('user');
     final userID = userData['id'];
-
     Map<String, dynamic> acyUserDataX = {};
     List<Map<String, dynamic>> acyUserData = [];
     acyUserDataX = await DatabaseMethods().getACYUser(userID);
-    // acyUserDataX.forEach((key, value) {
-    //   acyUserData.add(value);
-    // });
-
-
-    print(acyUserDataX);
     return acyUserDataX;
   }
-
-
-
 
 }

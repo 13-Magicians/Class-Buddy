@@ -1,12 +1,7 @@
-
-
 import 'package:cloud_firestore/cloud_firestore.dart';
-
 
 class DataOrgManage {
   FirebaseFirestore db = FirebaseFirestore.instance;
-
-
 
   Future createDepartment (String fcName, String fcCode) async {
     try {
@@ -18,10 +13,8 @@ class DataOrgManage {
     }
   }
 
-  
   Future removeDepartment() {
     return db.collection("Organization").doc("Department").delete();
-    
   }
 
   Future<void> deleteDepartment(String departmentId) async {
@@ -35,8 +28,6 @@ class DataOrgManage {
     }
   }
 
-
-
   Future departmentList() async {
     List<Map<String, dynamic>> depList = [];
     DocumentSnapshot doc = await db.collection("Organization").doc("Department").get();
@@ -48,13 +39,6 @@ class DataOrgManage {
       };
       depList.add(department);
     });
-
     return depList;
   }
-
-
-  
-
-  
-  
 }

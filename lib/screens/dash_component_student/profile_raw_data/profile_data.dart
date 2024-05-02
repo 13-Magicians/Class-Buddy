@@ -182,8 +182,6 @@ class DocumentSelector extends StatefulWidget {
 class _DocumentSelectorState extends State<DocumentSelector> {
   String? _selectedDocumentId;
 
-
-
   @override
   Widget build(BuildContext context) {
     return DropdownButtonFormField<String>(

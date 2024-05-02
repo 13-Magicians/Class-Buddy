@@ -72,7 +72,6 @@ class _MyCourseMenuState extends State<MyCourseMenu> {
               onTap: () {
                 Navigator.push(context, MaterialPageRoute(builder: (context) => const DisplayMyCourseOrientation()),);
               },
-
             ),
           ),
           Card(
@@ -86,8 +85,6 @@ class _MyCourseMenuState extends State<MyCourseMenu> {
               onTap: () {
                 Navigator.push(context, MaterialPageRoute(builder: (context) => const DisplayMyCourseFirstYear()),);
               },
-
-
             ),
           ),
           Card(
@@ -101,8 +98,6 @@ class _MyCourseMenuState extends State<MyCourseMenu> {
               onTap: () {
                 Navigator.push(context, MaterialPageRoute(builder: (context) => const DisplayMyCourseSecondYear()),);
               },
-
-
             ),
           ),
           Card(
@@ -205,7 +200,6 @@ class _AllCourseMenuState extends State<AllCourseMenu> {
               onTap: () {
                 Navigator.push(context, MaterialPageRoute(builder: (context) => const DisplayAllCourseThirdYear()),);
               },
-
             ),
           ),
           Card(
@@ -219,7 +213,6 @@ class _AllCourseMenuState extends State<AllCourseMenu> {
               onTap: () {
                 Navigator.push(context, MaterialPageRoute(builder: (context) => const DisplayAllCourseFourthYear()),);
               },
-
             ),
           ),
 

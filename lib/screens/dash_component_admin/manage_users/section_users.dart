@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 import '../../../operations/user_handler.dart';
 import '../../../services/firebase_user_control.dart';
 
